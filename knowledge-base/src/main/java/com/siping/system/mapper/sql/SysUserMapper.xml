@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.siping.system.mapper.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="com.siping.system.bean.SysUser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="add_by" property="addBy" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_pass" property="userPass" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="INTEGER" />
+    <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+    <result column="user_depart" property="userDepart" jdbcType="VARCHAR" />
+    <result column="user_position" property="userPosition" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, add_time, add_by, update_time, update_by, user_name, user_pass, nick_name, user_type, 
+    user_email, user_depart, user_position
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.siping.system.bean.SysUser" >
+    insert into sys_user (id, add_time, add_by, 
+      update_time, update_by, user_name, 
+      user_pass, nick_name, user_type, 
+      user_email, user_depart, user_position
+      )
+    values (#{id,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, #{addBy,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{userPass,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}, 
+      #{userEmail,jdbcType=VARCHAR}, #{userDepart,jdbcType=VARCHAR}, #{userPosition,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.siping.system.bean.SysUser" >
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="addBy != null" >
+        add_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userPass != null" >
+        user_pass,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="userEmail != null" >
+        user_email,
+      </if>
+      <if test="userDepart != null" >
+        user_depart,
+      </if>
+      <if test="userPosition != null" >
+        user_position,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addBy != null" >
+        #{addBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null" >
+        #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="userEmail != null" >
+        #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userDepart != null" >
+        #{userDepart,jdbcType=VARCHAR},
+      </if>
+      <if test="userPosition != null" >
+        #{userPosition,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.siping.system.bean.SysUser" >
+    update sys_user
+    <set >
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addBy != null" >
+        add_by = #{addBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null" >
+        user_pass = #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="userEmail != null" >
+        user_email = #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userDepart != null" >
+        user_depart = #{userDepart,jdbcType=VARCHAR},
+      </if>
+      <if test="userPosition != null" >
+        user_position = #{userPosition,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.siping.system.bean.SysUser" >
+    update sys_user
+    set add_time = #{addTime,jdbcType=TIMESTAMP},
+      add_by = #{addBy,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_pass = #{userPass,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=INTEGER},
+      user_email = #{userEmail,jdbcType=VARCHAR},
+      user_depart = #{userDepart,jdbcType=VARCHAR},
+      user_position = #{userPosition,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <sql id="conditions" >
+    <trim prefix="where" prefixOverrides="and|or" >
+       1 = 1
+      <if test="id != null" >
+        and t.id = #{id}
+      </if>
+      <if test="addTime != null" >
+        and t.add_time = #{addTime}
+      </if>
+      <if test="addBy != null" >
+        and t.add_by = #{addBy}
+      </if>
+      <if test="updateTime != null" >
+        and t.update_time = #{updateTime}
+      </if>
+      <if test="updateBy != null" >
+        and t.update_by = #{updateBy}
+      </if>
+      <if test="userName != null" >
+        and t.user_name = #{userName}
+      </if>
+      <if test="userPass != null" >
+        and t.user_pass = #{userPass}
+      </if>
+      <if test="nickName != null" >
+        and t.nick_name = #{nickName}
+      </if>
+      <if test="userType != null" >
+        and t.user_type = #{userType}
+      </if>
+      <if test="userEmail != null" >
+        and t.user_email = #{userEmail}
+      </if>
+      <if test="userDepart != null" >
+        and t.user_depart = #{userDepart}
+      </if>
+      <if test="userPosition != null" >
+        and t.user_position = #{userPosition}
+      </if>
+    </trim>
+  </sql>
+  <sql id="sets" >
+    <trim prefix="SET" suffixOverrides="," >
+      <if test="add_time != null" >
+        t.add_time = #{addTime}
+      </if>
+      <if test="add_by != null" >
+        t.add_by = #{addBy}
+      </if>
+      <if test="update_time != null" >
+        t.update_time = #{updateTime}
+      </if>
+      <if test="update_by != null" >
+        t.update_by = #{updateBy}
+      </if>
+      <if test="user_name != null" >
+        t.user_name = #{userName}
+      </if>
+      <if test="user_pass != null" >
+        t.user_pass = #{userPass}
+      </if>
+      <if test="nick_name != null" >
+        t.nick_name = #{nickName}
+      </if>
+      <if test="user_type != null" >
+        t.user_type = #{userType}
+      </if>
+      <if test="user_email != null" >
+        t.user_email = #{userEmail}
+      </if>
+      <if test="user_depart != null" >
+        t.user_depart = #{userDepart}
+      </if>
+      <if test="user_position != null" >
+        t.user_position = #{userPosition}
+      </if>
+    </trim>
+  </sql>
+  <select id="getAll" resultMap="BaseResultMap" >
+    select * from sys_user
+  </select>
+  <delete id="deleteByIds" >
+     delete from sys_user where id in 
+    <foreach collection="list" item="item" index="index" separator="," open="(" close=")" >
+      #{item}
+    </foreach>
+  </delete>
+  <select id="get" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select 
+     <include refid="Base_Column_List" />
+    from sys_user t
+    <include refid="conditions"/>
+  </select>
+  <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long" >
+     select count(*) from sys_user t
+    <include refid="conditions"/>
+  </select>
+  <select id="getByPage" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select * from sys_user t
+    <include refid="conditions"/>
+    <if test="startNo != null" >
+      LIMIT #{startNo},#{pageSize}
+    </if>
+  </select>
+</mapper>

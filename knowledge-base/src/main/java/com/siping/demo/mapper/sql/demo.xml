@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siping.demo.mapper.DemoMapper">
+    <select id="getProductsByPage" parameterType="pageRequest" resultType="product">
+    	select m.id pkey,
+    		m.material_no materialNo,
+    		m.material_name materialName,
+    		t.type_name typeName,
+    		m.brand brand,
+    		m.specifications_model specification,
+    		m.barcode barcode,
+    		m.expiration_date expirationDate,
+    		m.create_date addTime,
+    		u.unit_name unitName
+    	from material m
+    	left join material_type t on m.material_type = t.id
+    	left join material_unit u on m.unit_id = u.id
+    	<if test="keyword != null and keyword != ''">
+    		where m.material_name like CONCAT ('%', #{keyword},'%')
+    	</if>
+    	<if test="startNo != null">
+            limit #{startNo},#{pageSize}
+        </if>
+    </select>
+    <select id="getTotalProducts" parameterType="pageRequest" resultType="int">
+    	select count(m.id) from material m 
+    	<if test="keyword != null and keyword != ''">
+    		where m.material_name like CONCAT ('%', #{keyword},'%')
+    	</if>
+    </select>
+</mapper>
