@@ -63,7 +63,7 @@ public class UserProbleServiceImpl implements UserProblemService{
 	
 	@Override
 	public void deleteProblemsAndAnswers(Integer[] ids) throws Exception{
-		if (null != ids && 0 != ids.length) {
+		if (null != ids && 0 > ids.length) {
 			userProblemMapper.deleteByIds(Arrays.asList(ids));
 			userAnswerMapper.deleteByProblemIds(Arrays.asList(ids));
 		} else {

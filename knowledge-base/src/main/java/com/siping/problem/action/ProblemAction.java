@@ -33,11 +33,26 @@ public class ProblemAction {
 	@Autowired
 	private UserProblemService userProblemService;
 	
+	/**
+	 * 跳转至问题列表页面
+	 * @return
+	 *
+	 * @date 2016年3月10日上午11:34:54
+	 * @author siping-L.J.H
+	 */
 	@RequestMapping(value="/problem/getlist/page")
 	public String pageAllProducts(){
 		return PagePath.ALL_PROBLEMS;
 	}
 	
+	/**
+	 * 获取单个问题明细
+	 * @param id
+	 * @return
+	 *
+	 * @date 2016年3月10日上午11:34:12
+	 * @author siping-L.J.H
+	 */
 	@RequestMapping(value="/problem/detail",method=RequestMethod.GET)
 	public ModelAndView problemDetail(int id){
 		ModelAndView mav = new ModelAndView();
@@ -77,7 +92,31 @@ public class ProblemAction {
 	}
 	
 	/**
-	 * 
+	 * 根据用户Id获取问题列表
+	 * @param pageRequest
+	 * @return
+	 *
+	 * @date 2016年3月10日上午11:31:19
+	 * @author siping-L.J.H
+	 */
+	@RequestMapping(value="/problem/getlist/dataByUserId", method=RequestMethod.POST)
+	@ResponseBody
+	public PageModel<ProblemInfo> getProblemsByUserId(@RequestBody PageRequest pageRequest){
+		PageModel<ProblemInfo> pageModel = null;
+		PageResponse<ProblemInfo> pageResponse = new PageResponse<ProblemInfo>();
+		UserProblem userProblem = new UserProblem();
+		userProblem.setUserId(Integer.valueOf(pageRequest.getKeyword()));
+		try {
+			pageResponse = userProblemService.getByPage(userProblem, pageRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		pageModel = new PageModel<ProblemInfo>(pageRequest.getPageNo(), pageRequest.getPageSize(), pageResponse.getTotal(), pageResponse.getRecords());
+		return pageModel;
+	}
+	
+	/**
+	 * 添加问题
 	 * @param session
 	 * @param userProblem
 	 * @return
@@ -115,8 +154,18 @@ public class ProblemAction {
 			userProblemService.updateProblem(userProblem, sysUser);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultMsg(false, 0, "添加失败！");
+			return new ResultMsg(false, 0, "更新失败！");
 		}
-		return new ResultMsg(true, 1, "添加成功！");
+		return new ResultMsg(true, 1, "更新成功！");
+	}
+	
+	public ResultMsg deleteProblems(@RequestBody Integer[] ids){
+		try {
+			userProblemService.deleteProblemsAndAnswers(ids);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, 0, "删除失败！");
+		}
+		return new ResultMsg(true, 1, "删除成功！");
 	}
 }

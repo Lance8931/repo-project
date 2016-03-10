@@ -74,7 +74,6 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 		}else {
 			throw new Exception("Id为null，删除答案失败！");
 		}
-		
 	}
 
 	@Override
@@ -93,7 +92,6 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 		}else {
 			throw new Exception("无数据");
 		}
-		
 	}
 
 }

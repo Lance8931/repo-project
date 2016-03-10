@@ -7,11 +7,11 @@ var option;
 
 function getAnswerList(pageNo, pageSize){
 	option = {
-	        gridId : "problem_list_grid",
+	        gridId : "answer_list_grid",
 	        height : "520px",
 	        ajax : {
 	            type : "post",
-	            url : "/problem/getlist/data",
+	            url : "/answer/getlist/data",
 	            async : true, 
 	            data: {pageNo:pageNo, pageSize:pageSize, keyword: $("#problem_id").val()},
 	            contentType : 'application/json'
@@ -32,14 +32,14 @@ function getAnswerList(pageNo, pageSize){
 function submitAnswer(){
 	$.ajax({
         type : "POST",
-        url : "/problem/add",
+        url : "/answer/add",
         async : false,
-        data : JSON.stringify({theme:$("#problem_theme").val(),content:$("#problem_content").val()}),
+        data : JSON.stringify({problemId:$("#problem_id").val(),content:$("#answer_content").val()}),
         contentType : 'application/json',
         dataType : "json",
         success : function(data) {
             layer.alert(data.msg);
-            getProblemList(1,10);
+            getAnswerList(1,10);
             /* var date = new Date();
             date.setTime(data.addTime);
             alert(date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate());*/

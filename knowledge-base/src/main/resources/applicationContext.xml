@@ -20,9 +20,9 @@
     <!-- 配置 dataSource -->
     <bean id="myDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="com.mysql.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:mysql://192.168.10.101:3306/knowledge_base?allowMultiQueries=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
-        <property name="user" value="dev" />
-        <property name="password" value="dev" />
+        <property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/knowledge_base?allowMultiQueries=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+        <property name="user" value="root" />
+        <property name="password" value="password" />
         <property name="maxPoolSize" value="40" />
         <property name="minPoolSize" value="2" />
         <property name="initialPoolSize" value="1" />

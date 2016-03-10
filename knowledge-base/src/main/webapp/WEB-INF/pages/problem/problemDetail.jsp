@@ -44,7 +44,7 @@
             <div class="common_text_title">回答问题</div>
             <div class="common_text_val">
                 <input id="answer_content" class="textarea_common my_radius" data-click-tip="名称关键字" placeholder="内容" >
-                <button class="btn_common my_radius btn_submit" onclick="submitProblem();">回答</button>
+                <button class="btn_common my_radius btn_submit" onclick="submitAnswer();">回答</button>
             </div>
         </div>
     </div>
