@@ -1,0 +1,32 @@
+package com.siping.problem.service;
+
+import com.siping.problem.bean.UserProblem;
+import com.siping.system.bean.SysUser;
+import com.siping.web.bean.PageRequest;
+import com.siping.web.bean.PageResponse;
+
+public interface UserProblemService {
+	
+	/**
+	 * 添加问题
+	 * @param userProblem
+	 * @param sysUser
+	 */
+	void insertProblem(UserProblem userProblem, SysUser sysUser);
+	
+	/**
+	 * 分页获取问题
+	 * @param userProblem
+	 * @param pageRequest
+	 * @return
+	 * @throws Exception
+	 */
+	PageResponse<UserProblem> getByPage(UserProblem userProblem,PageRequest pageRequest) throws Exception;
+	
+	/**
+	 * 获取单个问题
+	 * @param userProblem
+	 * @return
+	 */
+	UserProblem getProblem(UserProblem userProblem);
+}

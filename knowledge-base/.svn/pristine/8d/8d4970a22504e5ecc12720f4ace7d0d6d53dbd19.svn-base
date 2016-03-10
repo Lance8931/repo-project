@@ -1,0 +1,17 @@
+package com.siping.answer.mapper;
+
+import com.siping.answer.bean.userAnswer;
+
+public interface userAnswerMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(userAnswer record);
+
+    int insertSelective(userAnswer record);
+
+    userAnswer selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(userAnswer record);
+
+    int updateByPrimaryKey(userAnswer record);
+}

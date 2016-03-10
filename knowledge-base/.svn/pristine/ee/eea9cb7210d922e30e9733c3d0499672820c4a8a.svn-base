@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.siping.answer.mapper.UserAnswerMapper" >
+  <resultMap id="BaseResultMap" type="com.siping.answer.bean.UserAnswer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="problem_id" property="problemId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="answer_date" property="answerDate" jdbcType="TIMESTAMP" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="add_by" property="addBy" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, problem_id, user_id, content, nick_name, answer_date, add_time, add_by, update_time, 
+    update_by
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_answer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_answer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.siping.answer.bean.UserAnswer" >
+    insert into user_answer (id, problem_id, user_id, 
+      content, nick_name, answer_date, 
+      add_time, add_by, update_time, 
+      update_by)
+    values (#{id,jdbcType=INTEGER}, #{problemId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{content,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{answerDate,jdbcType=TIMESTAMP}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{addBy,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.siping.answer.bean.UserAnswer" >
+    insert into user_answer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="problemId != null" >
+        problem_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="answerDate != null" >
+        answer_date,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="addBy != null" >
+        add_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="problemId != null" >
+        #{problemId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="answerDate != null" >
+        #{answerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addBy != null" >
+        #{addBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.siping.answer.bean.UserAnswer" >
+    update user_answer
+    <set >
+      <if test="problemId != null" >
+        problem_id = #{problemId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="answerDate != null" >
+        answer_date = #{answerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addBy != null" >
+        add_by = #{addBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.siping.answer.bean.UserAnswer" >
+    update user_answer
+    set problem_id = #{problemId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      answer_date = #{answerDate,jdbcType=TIMESTAMP},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      add_by = #{addBy,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <sql id="conditions" >
+    <trim prefix="where" prefixOverrides="and|or" >
+       1 = 1
+      <if test="id != null" >
+        and t.id = #{id}
+      </if>
+      <if test="problemId != null" >
+        and t.problem_id = #{problemId}
+      </if>
+      <if test="userId != null" >
+        and t.user_id = #{userId}
+      </if>
+      <if test="content != null" >
+        and t.content = #{content}
+      </if>
+      <if test="nickName != null" >
+        and t.nick_name = #{nickName}
+      </if>
+      <if test="answerDate != null" >
+        and t.answer_date = #{answerDate}
+      </if>
+      <if test="addTime != null" >
+        and t.add_time = #{addTime}
+      </if>
+      <if test="addBy != null" >
+        and t.add_by = #{addBy}
+      </if>
+      <if test="updateTime != null" >
+        and t.update_time = #{updateTime}
+      </if>
+      <if test="updateBy != null" >
+        and t.update_by = #{updateBy}
+      </if>
+    </trim>
+  </sql>
+  <sql id="sets" >
+    <trim prefix="SET" suffixOverrides="," >
+      <if test="problem_id != null" >
+        t.problem_id = #{problemId}
+      </if>
+      <if test="user_id != null" >
+        t.user_id = #{userId}
+      </if>
+      <if test="content != null" >
+        t.content = #{content}
+      </if>
+      <if test="nick_name != null" >
+        t.nick_name = #{nickName}
+      </if>
+      <if test="answer_date != null" >
+        t.answer_date = #{answerDate}
+      </if>
+      <if test="add_time != null" >
+        t.add_time = #{addTime}
+      </if>
+      <if test="add_by != null" >
+        t.add_by = #{addBy}
+      </if>
+      <if test="update_time != null" >
+        t.update_time = #{updateTime}
+      </if>
+      <if test="update_by != null" >
+        t.update_by = #{updateBy}
+      </if>
+    </trim>
+  </sql>
+  <select id="getAll" resultMap="BaseResultMap" >
+    select * from user_answer
+  </select>
+  <delete id="deleteByIds" >
+     delete from user_answer where id in 
+    <foreach collection="list" item="item" index="index" separator="," open="(" close=")" >
+      #{item}
+    </foreach>
+  </delete>
+  <select id="get" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select *  from user_answer t
+    <include refid="conditions"/>
+  </select>
+  <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long" >
+     select count(*) from user_answer t
+    <include refid="conditions"/>
+  </select>
+  <select id="page" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select * from user_answer t
+    <include refid="conditions"/>
+    <if test="startNo != null" >
+      LIMIT #{startNo},#{pageSize}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,17 @@
+package com.siping.system.mapper;
+
+import com.siping.system.bean.sysUser;
+
+public interface sysUserMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(sysUser record);
+
+    int insertSelective(sysUser record);
+
+    sysUser selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(sysUser record);
+
+    int updateByPrimaryKey(sysUser record);
+}

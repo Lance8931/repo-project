@@ -1,0 +1,30 @@
+package com.siping.system.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import com.siping.system.bean.SysUser;
+
+public interface SysUserMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(SysUser record);
+
+    int insertSelective(SysUser record);
+
+    SysUser selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(SysUser record);
+
+    int updateByPrimaryKey(SysUser record);
+    
+    List<SysUser> getAll();
+	
+	List<SysUser> get(Map<String, Object> par);
+	
+	void deleteByIds(List<Integer> ids);
+	
+	Long getCount(Map<?, ?> map);
+	
+	List<SysUser> getByPage(Map<?, ?> map);
+}

@@ -1,0 +1,51 @@
+package com.siping.problem.service.impl;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.siping.demo.bean.Product;
+import com.siping.problem.bean.UserProblem;
+import com.siping.problem.mapper.UserProblemMapper;
+import com.siping.problem.service.UserProblemService;
+import com.siping.system.bean.SysUser;
+import com.siping.web.bean.PageRequest;
+import com.siping.web.bean.PageResponse;
+
+@Service
+public class UserProbleServiceImpl implements UserProblemService{
+
+	@Autowired
+	private UserProblemMapper userProblemMapper;
+	
+	@Override
+	public void insertProblem(UserProblem userProblem, SysUser sysUser) {
+		userProblem.setAddTime(new Date());
+		userProblem.setAddBy(sysUser.getId());
+		userProblemMapper.insert(userProblem);
+	}
+
+	@Override
+	public PageResponse<UserProblem> getByPage(UserProblem userProblem,PageRequest pageRequest) throws Exception {
+		PageResponse<UserProblem> pageResponse = new PageResponse<UserProblem>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map = PropertyUtils.describe(userProblem);
+		map.put("startNo", pageRequest.getPageNo());
+		map.put("pageSize", pageRequest.getPageSize());
+		pageResponse.setRecords(userProblemMapper.getByPage(map));
+		pageResponse.setTotal(userProblemMapper.getCount(map).intValue());
+		return pageResponse;
+	}
+
+	@Override
+	public UserProblem getProblem(UserProblem userProblem) {
+		return null;
+	}
+	
+	
+}

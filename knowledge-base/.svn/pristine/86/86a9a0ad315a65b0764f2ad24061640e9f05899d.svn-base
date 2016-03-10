@@ -1,0 +1,75 @@
+package com.siping.system.bean;
+
+import java.util.Date;
+
+public class knowledgeType {
+    private Integer id;
+
+    private String name;
+
+    private Integer knowledgeType;
+
+    private Date addTime;
+
+    private Integer addBy;
+
+    private Date updateTime;
+
+    private Integer updateBy;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public Integer getKnowledgeType() {
+        return knowledgeType;
+    }
+
+    public void setKnowledgeType(Integer knowledgeType) {
+        this.knowledgeType = knowledgeType;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    public Integer getAddBy() {
+        return addBy;
+    }
+
+    public void setAddBy(Integer addBy) {
+        this.addBy = addBy;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(Integer updateBy) {
+        this.updateBy = updateBy;
+    }
+}

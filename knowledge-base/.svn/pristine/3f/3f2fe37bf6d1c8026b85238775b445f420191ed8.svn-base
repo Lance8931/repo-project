@@ -1,0 +1,284 @@
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background-color: #FFFFFF;
+}
+
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+::-webkit-scrollbar-track {
+    background: #FFFFFF;
+}
+
+::-webkit-scrollbar-track-piece {
+    background: #FFFFFF;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CECECE;
+    border-radius: 1px;
+}
+
+::-webkit-scrollbar-corner {
+    background: #FFFFFF;
+}
+
+::-webkit-resizer {
+    background: #FFFFFF;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    background-color: #F8F8F8;
+    overflow: hidden;
+}
+
+body {
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    font-family: "微软雅黑", "Arial", "serif", "sans-serif", "cursive",
+        "fantasy", "monospace";
+    font-size: 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+img{
+    vertical-align: middle;
+    border: 0;
+}
+form{
+    margin: 0;
+    padding: 0;
+}
+input,textarea,select{
+    margin: 0 0 0 10px;
+    color: #777070;
+    vertical-align: middle;
+}
+input,span{
+    text-indent: 5px;
+}
+
+.vertical_center {
+    vertical-align: middle;
+    display: inline-block;
+    height: 100%;
+    width: 0px;
+}
+
+.font_text_indent {
+    text-indent: 6px;
+}
+
+.my_radius {
+    -moz-border-radius: 4px; /* Gecko browsers */
+    -webkit-border-radius: 4px; /* Webkit browsers */
+    border-radius: 4px;
+}
+
+.btn_common {
+    border: 1px solid #34A7FF;
+    width: 65px;
+    height: 30px;
+    cursor: pointer;
+    background-color: #F8F8F8;
+    font-size: 12px;
+    margin: 0 15px 0 15px;
+    outline: none;
+    line-height: 0;
+}
+
+.btn_submit {
+    background-color: #34A7FF;
+    color: #FEFDF4;
+}
+
+.btn_search{
+    background-color: #34A7FF;
+    color: #FEFDF4;
+    width: 55px;
+    height: 25px;
+}
+
+.input_text_common {
+    border: 1px solid #E3E1DE;
+    outline: none;
+    text-indent: 5px;
+    padding: 0;
+    height: 24px;
+    line-height: 24px;
+    width: 180px;
+}
+
+.readonly_text_common{
+    margin: 0 0 0 10px;
+    border: 0;
+    outline: none;
+    padding: 0;
+}
+
+.text_val{
+    margin: 0 0 0 10px;
+}
+
+.common_text_div{
+    height: 40px;
+    line-height: 40px;
+}
+
+.common_text_title{
+    width: 30%;
+    float: left;
+    text-align: right;
+    height: 100%;
+}
+.common_text_val{
+    width: 70%;
+    float: left;
+    height: 100%;
+    color: #777070;
+}
+
+.textarea_common{
+    border: 1px solid #E3E1DE;
+    outline: none;
+    text-indent: 5px;
+    padding: 0;
+    height: 72px;
+    width: 180px;
+}
+
+select{
+    border: 1px solid #E3E1DE;
+    outline: none;
+    padding: 0;
+    height: 26px;
+    width: 182px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.data_grid{
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 420px;
+    width: 100%;
+}
+.data_grid table{
+    width: 99%;
+    margin: auto;
+}
+
+table thead {
+    background-color: #F1F0EE;
+    font-weight: bold;
+}
+
+table td, table th {
+    text-align: left;
+    height: 24px;
+    border: 1px solid #E3E1DE;
+    padding: 0;
+    margin: 0;
+}
+
+.table_title {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 12px;
+    border-bottom: 2px solid #34A7FF;
+}
+table tbody tr:HOVER {
+    background-color: #EBF4FF;
+}
+table td a{
+    color: #34A7FF;
+    text-decoration: underline;
+    margin: 0 10px 0 0;
+}
+.lf_table_cell_padding{
+    padding: 6px;
+    position: relative;
+}
+.td_inner_a{
+    float: right;
+    margin: 0 40px 0 0;
+}
+.td_head_a{
+    margin: 0 0 0 10px;
+}
+table td a img{
+    width: 12px;
+    height: 12px;
+}
+.search_btn{
+    float: right;
+    height: 100%;
+    text-align: center;
+    width: 10%;
+}
+.page_nav{
+    width: 100%;
+    height: 25px;
+    line-height: 25px;
+    background-color: #E9E9E9;
+}
+.page_sizes{
+    width: 25%;
+    float: left;
+    text-align: left;
+    height: 100%;
+}
+.page_ctrol{
+    width: 50%;
+    float: left;
+    text-align: center;
+    height: 100%;
+}
+.page_to{
+    width: 25%;
+    float: left;
+    text-align: right;
+    height: 100%;
+}
+.page_to button{
+    width: 30px;
+    height: 18px;
+}
+.page_nav span{
+    margin: 0 10px 0 10px;
+    font-size: 12px;
+    width: 10px;
+    height: 10px;
+}
+.page_nav span img{
+    width: 10px;
+    height: 10px;
+}
+.page_sizes select{
+    height: 20px;
+    width: 50px;
+    outline: 0;
+    border: 1px solid #E3E1DE;
+}
+.page_to input{
+    width: 50px;
+    outline: 0;
+    border: 1px solid #E3E1DE;
+    height: 16px;
+}

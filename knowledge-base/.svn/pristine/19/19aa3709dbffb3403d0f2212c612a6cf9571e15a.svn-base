@@ -1,0 +1,17 @@
+package com.siping.problem.mapper;
+
+import com.siping.problem.bean.UserProblem;
+
+public interface UserProblemMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(UserProblem record);
+
+    int insertSelective(UserProblem record);
+
+    UserProblem selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(UserProblem record);
+
+    int updateByPrimaryKey(UserProblem record);
+}

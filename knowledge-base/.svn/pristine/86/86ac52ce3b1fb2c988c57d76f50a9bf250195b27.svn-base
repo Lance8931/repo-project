@@ -1,0 +1,17 @@
+package com.siping.system.mapper;
+
+import com.siping.system.bean.knowledgeType;
+
+public interface knowledgeTypeMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(knowledgeType record);
+
+    int insertSelective(knowledgeType record);
+
+    knowledgeType selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(knowledgeType record);
+
+    int updateByPrimaryKey(knowledgeType record);
+}
