@@ -1,71 +1,92 @@
-/*    */ package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
-/*    */ 
-/*    */ import java.util.Iterator;
-/*    */ import java.util.List;
-/*    */ import org.mybatis.generator.api.CommentGenerator;
-/*    */ import org.mybatis.generator.api.IntrospectedColumn;
-/*    */ import org.mybatis.generator.api.IntrospectedTable;
-/*    */ import org.mybatis.generator.api.Plugin;
-/*    */ import org.mybatis.generator.api.dom.OutputUtilities;
-/*    */ import org.mybatis.generator.api.dom.xml.Attribute;
-/*    */ import org.mybatis.generator.api.dom.xml.TextElement;
-/*    */ import org.mybatis.generator.api.dom.xml.XmlElement;
-/*    */ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
-/*    */ import org.mybatis.generator.config.Context;
-/*    */ 
-/*    */ public class UpdateByExampleWithoutBLOBsElementGenerator extends AbstractXmlElementGenerator
-/*    */ {
-/*    */   public void addElements(XmlElement parentElement)
-/*    */   {
-/* 41 */     XmlElement answer = new XmlElement("update");
-/*    */ 
-/* 43 */     answer.addAttribute(new Attribute("id", this.introspectedTable.getUpdateByExampleStatementId()));
-/*    */ 
-/* 46 */     answer.addAttribute(new Attribute("parameterType", "map"));
-/*    */ 
-/* 48 */     this.context.getCommentGenerator().addComment(answer);
-/*    */ 
-/* 50 */     StringBuilder sb = new StringBuilder();
-/* 51 */     sb.append("update ");
-/* 52 */     sb.append(this.introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-/*    */ 
-/* 54 */     answer.addElement(new TextElement(sb.toString()));
-/*    */ 
-/* 57 */     sb.setLength(0);
-/* 58 */     sb.append("set ");
-/*    */ 
-/* 60 */     Iterator iter = this.introspectedTable.getNonBLOBColumns().iterator();
-/*    */ 
-/* 62 */     while (iter.hasNext()) {
-/* 63 */       IntrospectedColumn introspectedColumn = (IntrospectedColumn)iter.next();
-/*    */ 
-/* 65 */       sb.append(MyBatis3FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
-/*    */ 
-/* 67 */       sb.append(" = ");
-/* 68 */       sb.append(MyBatis3FormattingUtilities.getParameterClause(introspectedColumn, "record."));
-/*    */ 
-/* 71 */       if (iter.hasNext()) {
-/* 72 */         sb.append(',');
-/*    */       }
-/*    */ 
-/* 75 */       answer.addElement(new TextElement(sb.toString()));
-/*    */ 
-/* 78 */       if (iter.hasNext()) {
-/* 79 */         sb.setLength(0);
-/* 80 */         OutputUtilities.xmlIndent(sb, 1);
-/*    */       }
-/*    */     }
-/*    */ 
-/* 84 */     answer.addElement(getUpdateByExampleIncludeElement());
-/*    */ 
-/* 86 */     if (this.context.getPlugins().sqlMapUpdateByExampleWithoutBLOBsElementGenerated(answer, this.introspectedTable))
-/*    */     {
-/* 89 */       parentElement.addElement(answer);
-/*    */     }
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByExampleWithoutBLOBsElementGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2009 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
+
+import java.util.Iterator;
+
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.dom.OutputUtilities;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.TextElement;
+import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class UpdateByExampleWithoutBLOBsElementGenerator extends
+        AbstractXmlElementGenerator {
+
+    public UpdateByExampleWithoutBLOBsElementGenerator() {
+        super();
+    }
+
+    @Override
+    public void addElements(XmlElement parentElement) {
+        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+
+        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+                introspectedTable.getUpdateByExampleStatementId()));
+
+        answer.addAttribute(new Attribute("parameterType", "map")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        context.getCommentGenerator().addComment(answer);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("update "); //$NON-NLS-1$
+        sb.append(introspectedTable
+                .getAliasedFullyQualifiedTableNameAtRuntime());
+        answer.addElement(new TextElement(sb.toString()));
+
+        // set up for first column
+        sb.setLength(0);
+        sb.append("set "); //$NON-NLS-1$
+
+        Iterator<IntrospectedColumn> iter = introspectedTable
+                .getNonBLOBColumns().iterator();
+        while (iter.hasNext()) {
+            IntrospectedColumn introspectedColumn = iter.next();
+
+            sb.append(MyBatis3FormattingUtilities
+                    .getAliasedEscapedColumnName(introspectedColumn));
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(MyBatis3FormattingUtilities.getParameterClause(
+                    introspectedColumn, "record.")); //$NON-NLS-1$
+
+            if (iter.hasNext()) {
+                sb.append(',');
+            }
+
+            answer.addElement(new TextElement(sb.toString()));
+
+            // set up for the next column
+            if (iter.hasNext()) {
+                sb.setLength(0);
+                OutputUtilities.xmlIndent(sb, 1);
+            }
+        }
+
+        answer.addElement(getUpdateByExampleIncludeElement());
+
+        if (context.getPlugins()
+                .sqlMapUpdateByExampleWithoutBLOBsElementGenerated(answer,
+                        introspectedTable)) {
+            parentElement.addElement(answer);
+        }
+    }
+}

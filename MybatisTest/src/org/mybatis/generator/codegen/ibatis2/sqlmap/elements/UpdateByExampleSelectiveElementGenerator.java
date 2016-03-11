@@ -1,70 +1,91 @@
-/*    */ package org.mybatis.generator.codegen.ibatis2.sqlmap.elements;
-/*    */ 
-/*    */ import org.mybatis.generator.api.CommentGenerator;
-/*    */ import org.mybatis.generator.api.IntrospectedColumn;
-/*    */ import org.mybatis.generator.api.IntrospectedTable;
-/*    */ import org.mybatis.generator.api.Plugin;
-/*    */ import org.mybatis.generator.api.dom.xml.Attribute;
-/*    */ import org.mybatis.generator.api.dom.xml.TextElement;
-/*    */ import org.mybatis.generator.api.dom.xml.XmlElement;
-/*    */ import org.mybatis.generator.codegen.ibatis2.Ibatis2FormattingUtilities;
-/*    */ import org.mybatis.generator.config.Context;
-/*    */ 
-/*    */ public class UpdateByExampleSelectiveElementGenerator extends AbstractXmlElementGenerator
-/*    */ {
-/*    */   public void addElements(XmlElement parentElement)
-/*    */   {
-/* 38 */     XmlElement answer = new XmlElement("update");
-/*    */ 
-/* 40 */     answer.addAttribute(new Attribute("id", this.introspectedTable.getUpdateByExampleSelectiveStatementId()));
-/*    */ 
-/* 44 */     this.context.getCommentGenerator().addComment(answer);
-/*    */ 
-/* 46 */     StringBuilder sb = new StringBuilder();
-/*    */ 
-/* 48 */     sb.append("update ");
-/* 49 */     sb.append(this.introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-/*    */ 
-/* 51 */     answer.addElement(new TextElement(sb.toString()));
-/*    */ 
-/* 53 */     XmlElement dynamicElement = new XmlElement("dynamic");
-/* 54 */     dynamicElement.addAttribute(new Attribute("prepend", "set"));
-/* 55 */     answer.addElement(dynamicElement);
-/*    */ 
-/* 57 */     for (IntrospectedColumn introspectedColumn : this.introspectedTable.getAllColumns())
-/*    */     {
-/* 59 */       XmlElement isNotNullElement = new XmlElement("isNotNull");
-/* 60 */       isNotNullElement.addAttribute(new Attribute("prepend", ","));
-/* 61 */       isNotNullElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty("record.")));
-/*    */ 
-/* 63 */       dynamicElement.addElement(isNotNullElement);
-/*    */ 
-/* 65 */       sb.setLength(0);
-/* 66 */       sb.append(Ibatis2FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
-/*    */ 
-/* 68 */       sb.append(" = ");
-/* 69 */       sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn, "record."));
-/*    */ 
-/* 72 */       isNotNullElement.addElement(new TextElement(sb.toString()));
-/*    */     }
-/*    */ 
-/* 75 */     XmlElement isParameterPresentElement = new XmlElement("isParameterPresent");
-/*    */ 
-/* 77 */     answer.addElement(isParameterPresentElement);
-/*    */ 
-/* 79 */     XmlElement includeElement = new XmlElement("include");
-/* 80 */     includeElement.addAttribute(new Attribute("refid", this.introspectedTable.getIbatis2SqlMapNamespace() + "." + this.introspectedTable.getExampleWhereClauseId()));
-/*    */ 
-/* 83 */     isParameterPresentElement.addElement(includeElement);
-/*    */ 
-/* 85 */     if (this.context.getPlugins().sqlMapUpdateByExampleSelectiveElementGenerated(answer, this.introspectedTable))
-/*    */     {
-/* 88 */       parentElement.addElement(answer);
-/*    */     }
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.ibatis2.sqlmap.elements.UpdateByExampleSelectiveElementGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2008 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.ibatis2.sqlmap.elements;
+
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.TextElement;
+import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.codegen.ibatis2.Ibatis2FormattingUtilities;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class UpdateByExampleSelectiveElementGenerator extends
+        AbstractXmlElementGenerator {
+
+    public UpdateByExampleSelectiveElementGenerator() {
+        super();
+    }
+
+    @Override
+    public void addElements(XmlElement parentElement) {
+        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+
+        answer
+                .addAttribute(new Attribute(
+                        "id", introspectedTable.getUpdateByExampleSelectiveStatementId())); //$NON-NLS-1$
+
+        context.getCommentGenerator().addComment(answer);
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("update "); //$NON-NLS-1$
+        sb.append(introspectedTable
+                .getAliasedFullyQualifiedTableNameAtRuntime());
+        answer.addElement(new TextElement(sb.toString()));
+
+        XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$
+        dynamicElement.addAttribute(new Attribute("prepend", "set")); //$NON-NLS-1$ //$NON-NLS-2$
+        answer.addElement(dynamicElement);
+
+        for (IntrospectedColumn introspectedColumn : introspectedTable
+                .getAllColumns()) {
+            XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
+            isNotNullElement.addAttribute(new Attribute("prepend", ",")); //$NON-NLS-1$ //$NON-NLS-2$
+            isNotNullElement.addAttribute(new Attribute(
+                    "property", introspectedColumn.getJavaProperty("record."))); //$NON-NLS-1$ //$NON-NLS-2$
+            dynamicElement.addElement(isNotNullElement);
+
+            sb.setLength(0);
+            sb.append(Ibatis2FormattingUtilities
+                    .getAliasedEscapedColumnName(introspectedColumn));
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(Ibatis2FormattingUtilities.getParameterClause(
+                    introspectedColumn, "record.")); //$NON-NLS-1$
+
+            isNotNullElement.addElement(new TextElement(sb.toString()));
+        }
+
+        XmlElement isParameterPresentElement = new XmlElement(
+                "isParameterPresent"); //$NON-NLS-1$
+        answer.addElement(isParameterPresentElement);
+
+        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
+                introspectedTable.getIbatis2SqlMapNamespace()
+                        + "." + introspectedTable.getExampleWhereClauseId())); //$NON-NLS-1$
+        isParameterPresentElement.addElement(includeElement);
+
+        if (context.getPlugins()
+                .sqlMapUpdateByExampleSelectiveElementGenerated(answer,
+                        introspectedTable)) {
+            parentElement.addElement(answer);
+        }
+    }
+}

@@ -1,213 +1,261 @@
-/*     */ package org.mybatis.generator.internal;
-/*     */ 
-/*     */ import org.mybatis.generator.api.DAOMethodNameCalculator;
-/*     */ import org.mybatis.generator.api.FullyQualifiedTable;
-/*     */ import org.mybatis.generator.api.IntrospectedTable;
-/*     */ import org.mybatis.generator.internal.rules.Rules;
-/*     */ 
-/*     */ public class ExtendedDAOMethodNameCalculator
-/*     */   implements DAOMethodNameCalculator
-/*     */ {
-/*     */   public String getInsertMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/*  37 */     StringBuilder sb = new StringBuilder();
-/*  38 */     sb.append("insert");
-/*  39 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/*  42 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getUpdateByPrimaryKeyWithoutBLOBsMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/*  54 */     StringBuilder sb = new StringBuilder();
-/*     */ 
-/*  56 */     sb.append("update");
-/*  57 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/*  60 */     Rules rules = introspectedTable.getRules();
-/*     */ 
-/*  62 */     if (!rules.generateUpdateByPrimaryKeyWithBLOBs())
-/*  63 */       sb.append("ByPrimaryKey");
-/*  64 */     else if (rules.generateRecordWithBLOBsClass())
-/*  65 */       sb.append("ByPrimaryKey");
-/*     */     else {
-/*  67 */       sb.append("ByPrimaryKeyWithoutBLOBs");
-/*     */     }
-/*     */ 
-/*  70 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getUpdateByPrimaryKeyWithBLOBsMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/*  82 */     StringBuilder sb = new StringBuilder();
-/*  83 */     sb.append("update");
-/*  84 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/*  87 */     Rules rules = introspectedTable.getRules();
-/*     */ 
-/*  89 */     if (!rules.generateUpdateByPrimaryKeyWithoutBLOBs())
-/*  90 */       sb.append("ByPrimaryKey");
-/*  91 */     else if (rules.generateRecordWithBLOBsClass())
-/*  92 */       sb.append("ByPrimaryKey");
-/*     */     else {
-/*  94 */       sb.append("ByPrimaryKeyWithBLOBs");
-/*     */     }
-/*     */ 
-/*  97 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getDeleteByExampleMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 102 */     StringBuilder sb = new StringBuilder();
-/* 103 */     sb.append("delete");
-/* 104 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 106 */     sb.append("ByExample");
-/*     */ 
-/* 108 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getDeleteByPrimaryKeyMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 113 */     StringBuilder sb = new StringBuilder();
-/* 114 */     sb.append("delete");
-/* 115 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 117 */     sb.append("ByPrimaryKey");
-/*     */ 
-/* 119 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getSelectByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 129 */     StringBuilder sb = new StringBuilder();
-/* 130 */     sb.append("select");
-/* 131 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 133 */     sb.append("ByExample");
-/*     */ 
-/* 135 */     Rules rules = introspectedTable.getRules();
-/*     */ 
-/* 137 */     if (rules.generateSelectByExampleWithBLOBs()) {
-/* 138 */       sb.append("WithoutBLOBs");
-/*     */     }
-/*     */ 
-/* 141 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getSelectByExampleWithBLOBsMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 151 */     StringBuilder sb = new StringBuilder();
-/* 152 */     sb.append("select");
-/* 153 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 155 */     sb.append("ByExample");
-/*     */ 
-/* 157 */     Rules rules = introspectedTable.getRules();
-/*     */ 
-/* 159 */     if (rules.generateSelectByExampleWithoutBLOBs()) {
-/* 160 */       sb.append("WithBLOBs");
-/*     */     }
-/*     */ 
-/* 163 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getSelectByPrimaryKeyMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 168 */     StringBuilder sb = new StringBuilder();
-/* 169 */     sb.append("select");
-/* 170 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 172 */     sb.append("ByPrimaryKey");
-/*     */ 
-/* 174 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getUpdateByPrimaryKeySelectiveMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 179 */     StringBuilder sb = new StringBuilder();
-/* 180 */     sb.append("update");
-/* 181 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 183 */     sb.append("ByPrimaryKeySelective");
-/*     */ 
-/* 185 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getCountByExampleMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 190 */     StringBuilder sb = new StringBuilder();
-/* 191 */     sb.append("count");
-/* 192 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 194 */     sb.append("ByExample");
-/*     */ 
-/* 196 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getUpdateByExampleSelectiveMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 201 */     StringBuilder sb = new StringBuilder();
-/* 202 */     sb.append("update");
-/* 203 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 205 */     sb.append("ByExampleSelective");
-/*     */ 
-/* 207 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getUpdateByExampleWithBLOBsMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 212 */     StringBuilder sb = new StringBuilder();
-/* 213 */     sb.append("update");
-/* 214 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 217 */     Rules rules = introspectedTable.getRules();
-/*     */ 
-/* 219 */     if (!rules.generateUpdateByExampleWithoutBLOBs())
-/* 220 */       sb.append("ByExample");
-/* 221 */     else if (rules.generateRecordWithBLOBsClass())
-/* 222 */       sb.append("ByExample");
-/*     */     else {
-/* 224 */       sb.append("ByExampleWithBLOBs");
-/*     */     }
-/*     */ 
-/* 227 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getUpdateByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 232 */     StringBuilder sb = new StringBuilder();
-/*     */ 
-/* 234 */     sb.append("update");
-/* 235 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 238 */     Rules rules = introspectedTable.getRules();
-/*     */ 
-/* 240 */     if (!rules.generateUpdateByExampleWithBLOBs())
-/* 241 */       sb.append("ByExample");
-/* 242 */     else if (rules.generateRecordWithBLOBsClass())
-/* 243 */       sb.append("ByExample");
-/*     */     else {
-/* 245 */       sb.append("ByExampleWithoutBLOBs");
-/*     */     }
-/*     */ 
-/* 248 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public String getInsertSelectiveMethodName(IntrospectedTable introspectedTable)
-/*     */   {
-/* 253 */     StringBuilder sb = new StringBuilder();
-/* 254 */     sb.append("insert");
-/* 255 */     sb.append(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
-/*     */ 
-/* 257 */     sb.append("Selective");
-/*     */ 
-/* 259 */     return sb.toString();
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.internal.ExtendedDAOMethodNameCalculator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2006 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+
+package org.mybatis.generator.internal;
+
+import org.mybatis.generator.api.DAOMethodNameCalculator;
+import org.mybatis.generator.api.IntrospectedTable;
+import org.mybatis.generator.internal.rules.Rules;
+
+/**
+ * @author Jeff Butler
+ * 
+ */
+public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator {
+
+    /**
+     * 
+     */
+    public ExtendedDAOMethodNameCalculator() {
+        super();
+    }
+
+    public String getInsertMethodName(IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("insert"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+
+        return sb.toString();
+    }
+
+    /**
+     * 1. if this will be the only updateByPrimaryKey, then the result should be
+     * updateByPrimaryKey. 2. If the other method is enabled, but there are
+     * seperate base and blob classes, then the method name should be
+     * updateByPrimaryKey 3. Else the method name should be
+     * updateByPrimaryKeyWithoutBLOBs
+     */
+    public String getUpdateByPrimaryKeyWithoutBLOBsMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+
+        Rules rules = introspectedTable.getRules();
+
+        if (!rules.generateUpdateByPrimaryKeyWithBLOBs()) {
+            sb.append("ByPrimaryKey"); //$NON-NLS-1$
+        } else if (rules.generateRecordWithBLOBsClass()) {
+            sb.append("ByPrimaryKey"); //$NON-NLS-1$
+        } else {
+            sb.append("ByPrimaryKeyWithoutBLOBs"); //$NON-NLS-1$
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * 1. if this will be the only updateByPrimaryKey, then the result should be
+     * updateByPrimaryKey. 2. If the other method is enabled, but there are
+     * seperate base and blob classes, then the method name should be
+     * updateByPrimaryKey 3. Else the method name should be
+     * updateByPrimaryKeyWithBLOBs
+     */
+    public String getUpdateByPrimaryKeyWithBLOBsMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+
+        Rules rules = introspectedTable.getRules();
+
+        if (!rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
+            sb.append("ByPrimaryKey"); //$NON-NLS-1$
+        } else if (rules.generateRecordWithBLOBsClass()) {
+            sb.append("ByPrimaryKey"); //$NON-NLS-1$
+        } else {
+            sb.append("ByPrimaryKeyWithBLOBs"); //$NON-NLS-1$
+        }
+
+        return sb.toString();
+    }
+
+    public String getDeleteByExampleMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("delete"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+        sb.append("ByExample"); //$NON-NLS-1$
+
+        return sb.toString();
+    }
+
+    public String getDeleteByPrimaryKeyMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("delete"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+        sb.append("ByPrimaryKey"); //$NON-NLS-1$
+
+        return sb.toString();
+    }
+
+    /**
+     * 1. if this will be the only selectByExample, then the result should be
+     * selectByExample. 2. Else the method name should be
+     * selectByExampleWithoutBLOBs
+     */
+    public String getSelectByExampleWithoutBLOBsMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+        sb.append("ByExample"); //$NON-NLS-1$
+
+        Rules rules = introspectedTable.getRules();
+
+        if (rules.generateSelectByExampleWithBLOBs()) {
+            sb.append("WithoutBLOBs"); //$NON-NLS-1$
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * 1. if this will be the only selectByExample, then the result should be
+     * selectByExample. 2. Else the method name should be
+     * selectByExampleWithBLOBs
+     */
+    public String getSelectByExampleWithBLOBsMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+        sb.append("ByExample"); //$NON-NLS-1$
+
+        Rules rules = introspectedTable.getRules();
+
+        if (rules.generateSelectByExampleWithoutBLOBs()) {
+            sb.append("WithBLOBs"); //$NON-NLS-1$
+        }
+
+        return sb.toString();
+    }
+
+    public String getSelectByPrimaryKeyMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+        sb.append("ByPrimaryKey"); //$NON-NLS-1$
+
+        return sb.toString();
+    }
+
+    public String getUpdateByPrimaryKeySelectiveMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+        sb.append("ByPrimaryKeySelective"); //$NON-NLS-1$
+
+        return sb.toString();
+    }
+
+    public String getCountByExampleMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("count"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+        sb.append("ByExample"); //$NON-NLS-1$
+
+        return sb.toString();
+    }
+
+    public String getUpdateByExampleSelectiveMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+        sb.append("ByExampleSelective"); //$NON-NLS-1$
+
+        return sb.toString();
+    }
+
+    public String getUpdateByExampleWithBLOBsMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+
+        Rules rules = introspectedTable.getRules();
+
+        if (!rules.generateUpdateByExampleWithoutBLOBs()) {
+            sb.append("ByExample"); //$NON-NLS-1$
+        } else if (rules.generateRecordWithBLOBsClass()) {
+            sb.append("ByExample"); //$NON-NLS-1$
+        } else {
+            sb.append("ByExampleWithBLOBs"); //$NON-NLS-1$
+        }
+
+        return sb.toString();
+    }
+
+    public String getUpdateByExampleWithoutBLOBsMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+
+        Rules rules = introspectedTable.getRules();
+
+        if (!rules.generateUpdateByExampleWithBLOBs()) {
+            sb.append("ByExample"); //$NON-NLS-1$
+        } else if (rules.generateRecordWithBLOBsClass()) {
+            sb.append("ByExample"); //$NON-NLS-1$
+        } else {
+            sb.append("ByExampleWithoutBLOBs"); //$NON-NLS-1$
+        }
+
+        return sb.toString();
+    }
+
+    public String getInsertSelectiveMethodName(
+            IntrospectedTable introspectedTable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("insert"); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable()
+                .getDomainObjectName());
+        sb.append("Selective"); //$NON-NLS-1$
+
+        return sb.toString();
+    }
+}

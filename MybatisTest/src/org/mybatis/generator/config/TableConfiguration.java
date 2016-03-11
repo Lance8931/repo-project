@@ -1,479 +1,544 @@
-/*     */ package org.mybatis.generator.config;
-/*     */ 
-/*     */ import java.util.ArrayList;
-/*     */ import java.util.HashMap;
-/*     */ import java.util.List;
-/*     */ import java.util.Map;
-/*     */ import java.util.Map.Entry;
-/*     */ import org.mybatis.generator.api.dom.xml.Attribute;
-/*     */ import org.mybatis.generator.api.dom.xml.XmlElement;
-/*     */ import org.mybatis.generator.internal.util.EqualsUtil;
-/*     */ import org.mybatis.generator.internal.util.HashCodeUtil;
-/*     */ import org.mybatis.generator.internal.util.StringUtility;
-/*     */ import org.mybatis.generator.internal.util.messages.Messages;
-/*     */ 
-/*     */ public class TableConfiguration extends PropertyHolder
-/*     */ {
-/*     */   private boolean insertStatementEnabled;
-/*     */   private boolean selectByPrimaryKeyStatementEnabled;
-/*     */   private boolean selectByExampleStatementEnabled;
-/*     */   private boolean updateByPrimaryKeyStatementEnabled;
-/*     */   private boolean deleteByPrimaryKeyStatementEnabled;
-/*     */   private boolean deleteByExampleStatementEnabled;
-/*     */   private boolean countByExampleStatementEnabled;
-/*     */   private boolean updateByExampleStatementEnabled;
-/*     */   private List<ColumnOverride> columnOverrides;
-/*     */   private Map<IgnoredColumn, Boolean> ignoredColumns;
-/*     */   private GeneratedKey generatedKey;
-/*     */   private String selectByPrimaryKeyQueryId;
-/*     */   private String selectByExampleQueryId;
-/*     */   private String catalog;
-/*     */   private String schema;
-/*     */   private String tableName;
-/*     */   private String domainObjectName;
-/*     */   private String alias;
-/*     */   private ModelType modelType;
-/*     */   private boolean wildcardEscapingEnabled;
-/*     */   private String configuredModelType;
-/*     */   private boolean delimitIdentifiers;
-/*     */   private ColumnRenamingRule columnRenamingRule;
-/*     */   private boolean isAllColumnDelimitingEnabled;
-/*     */ 
-/*     */   public TableConfiguration(Context context)
-/*     */   {
-/*  77 */     this.modelType = context.getDefaultModelType();
-/*     */ 
-/*  79 */     this.columnOverrides = new ArrayList();
-/*  80 */     this.ignoredColumns = new HashMap();
-/*     */ 
-/*  82 */     this.insertStatementEnabled = true;
-/*  83 */     this.selectByPrimaryKeyStatementEnabled = true;
-/*  84 */     this.selectByExampleStatementEnabled = true;
-/*  85 */     this.updateByPrimaryKeyStatementEnabled = true;
-/*  86 */     this.deleteByPrimaryKeyStatementEnabled = true;
-/*  87 */     this.deleteByExampleStatementEnabled = true;
-/*  88 */     this.countByExampleStatementEnabled = true;
-/*  89 */     this.updateByExampleStatementEnabled = true;
-/*     */   }
-/*     */ 
-/*     */   public boolean isDeleteByPrimaryKeyStatementEnabled() {
-/*  93 */     return this.deleteByPrimaryKeyStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void setDeleteByPrimaryKeyStatementEnabled(boolean deleteByPrimaryKeyStatementEnabled)
-/*     */   {
-/*  98 */     this.deleteByPrimaryKeyStatementEnabled = deleteByPrimaryKeyStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public boolean isInsertStatementEnabled() {
-/* 102 */     return this.insertStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void setInsertStatementEnabled(boolean insertStatementEnabled) {
-/* 106 */     this.insertStatementEnabled = insertStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public boolean isSelectByPrimaryKeyStatementEnabled() {
-/* 110 */     return this.selectByPrimaryKeyStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void setSelectByPrimaryKeyStatementEnabled(boolean selectByPrimaryKeyStatementEnabled)
-/*     */   {
-/* 115 */     this.selectByPrimaryKeyStatementEnabled = selectByPrimaryKeyStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public boolean isUpdateByPrimaryKeyStatementEnabled() {
-/* 119 */     return this.updateByPrimaryKeyStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void setUpdateByPrimaryKeyStatementEnabled(boolean updateByPrimaryKeyStatementEnabled)
-/*     */   {
-/* 124 */     this.updateByPrimaryKeyStatementEnabled = updateByPrimaryKeyStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public boolean isColumnIgnored(String columnName) {
-/* 128 */     for (Map.Entry entry : this.ignoredColumns.entrySet())
-/*     */     {
-/* 130 */       IgnoredColumn ic = (IgnoredColumn)entry.getKey();
-/* 131 */       if (ic.isColumnNameDelimited()) {
-/* 132 */         if (columnName.equals(ic.getColumnName())) {
-/* 133 */           entry.setValue(Boolean.TRUE);
-/* 134 */           return true;
-/*     */         }
-/*     */       }
-/* 137 */       else if (columnName.equalsIgnoreCase(ic.getColumnName())) {
-/* 138 */         entry.setValue(Boolean.TRUE);
-/* 139 */         return true;
-/*     */       }
-/*     */ 
-/*     */     }
-/*     */ 
-/* 144 */     return false;
-/*     */   }
-/*     */ 
-/*     */   public void addIgnoredColumn(IgnoredColumn ignoredColumn) {
-/* 148 */     this.ignoredColumns.put(ignoredColumn, Boolean.FALSE);
-/*     */   }
-/*     */ 
-/*     */   public void addColumnOverride(ColumnOverride columnOverride) {
-/* 152 */     this.columnOverrides.add(columnOverride);
-/*     */   }
-/*     */ 
-/*     */   public boolean equals(Object obj)
-/*     */   {
-/* 157 */     if (this == obj) {
-/* 158 */       return true;
-/*     */     }
-/*     */ 
-/* 161 */     if (!(obj instanceof TableConfiguration)) {
-/* 162 */       return false;
-/*     */     }
-/*     */ 
-/* 165 */     TableConfiguration other = (TableConfiguration)obj;
-/*     */ 
-/* 167 */     return (EqualsUtil.areEqual(this.catalog, other.catalog)) && (EqualsUtil.areEqual(this.schema, other.schema)) && (EqualsUtil.areEqual(this.tableName, other.tableName));
-/*     */   }
-/*     */ 
-/*     */   public int hashCode()
-/*     */   {
-/* 174 */     int result = 23;
-/* 175 */     result = HashCodeUtil.hash(result, this.catalog);
-/* 176 */     result = HashCodeUtil.hash(result, this.schema);
-/* 177 */     result = HashCodeUtil.hash(result, this.tableName);
-/*     */ 
-/* 179 */     return result;
-/*     */   }
-/*     */ 
-/*     */   public boolean isSelectByExampleStatementEnabled() {
-/* 183 */     return this.selectByExampleStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void setSelectByExampleStatementEnabled(boolean selectByExampleStatementEnabled)
-/*     */   {
-/* 188 */     this.selectByExampleStatementEnabled = selectByExampleStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public ColumnOverride getColumnOverride(String columnName)
-/*     */   {
-/* 198 */     for (ColumnOverride co : this.columnOverrides) {
-/* 199 */       if (co.isColumnNameDelimited()) {
-/* 200 */         if (columnName.equals(co.getColumnName())) {
-/* 201 */           return co;
-/*     */         }
-/*     */       }
-/* 204 */       else if (columnName.equalsIgnoreCase(co.getColumnName())) {
-/* 205 */         return co;
-/*     */       }
-/*     */ 
-/*     */     }
-/*     */ 
-/* 210 */     return null;
-/*     */   }
-/*     */ 
-/*     */   public GeneratedKey getGeneratedKey() {
-/* 214 */     return this.generatedKey;
-/*     */   }
-/*     */ 
-/*     */   public String getSelectByExampleQueryId() {
-/* 218 */     return this.selectByExampleQueryId;
-/*     */   }
-/*     */ 
-/*     */   public void setSelectByExampleQueryId(String selectByExampleQueryId) {
-/* 222 */     this.selectByExampleQueryId = selectByExampleQueryId;
-/*     */   }
-/*     */ 
-/*     */   public String getSelectByPrimaryKeyQueryId() {
-/* 226 */     return this.selectByPrimaryKeyQueryId;
-/*     */   }
-/*     */ 
-/*     */   public void setSelectByPrimaryKeyQueryId(String selectByPrimaryKeyQueryId) {
-/* 230 */     this.selectByPrimaryKeyQueryId = selectByPrimaryKeyQueryId;
-/*     */   }
-/*     */ 
-/*     */   public boolean isDeleteByExampleStatementEnabled() {
-/* 234 */     return this.deleteByExampleStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void setDeleteByExampleStatementEnabled(boolean deleteByExampleStatementEnabled)
-/*     */   {
-/* 239 */     this.deleteByExampleStatementEnabled = deleteByExampleStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public boolean areAnyStatementsEnabled() {
-/* 243 */     return (this.selectByExampleStatementEnabled) || (this.selectByPrimaryKeyStatementEnabled) || (this.insertStatementEnabled) || (this.updateByPrimaryKeyStatementEnabled) || (this.deleteByExampleStatementEnabled) || (this.deleteByPrimaryKeyStatementEnabled) || (this.countByExampleStatementEnabled) || (this.updateByExampleStatementEnabled);
-/*     */   }
-/*     */ 
-/*     */   public void setGeneratedKey(GeneratedKey generatedKey)
-/*     */   {
-/* 253 */     this.generatedKey = generatedKey;
-/*     */   }
-/*     */ 
-/*     */   public String getAlias() {
-/* 257 */     return this.alias;
-/*     */   }
-/*     */ 
-/*     */   public void setAlias(String alias) {
-/* 261 */     this.alias = alias;
-/*     */   }
-/*     */ 
-/*     */   public String getCatalog() {
-/* 265 */     return this.catalog;
-/*     */   }
-/*     */ 
-/*     */   public void setCatalog(String catalog) {
-/* 269 */     this.catalog = catalog;
-/*     */   }
-/*     */ 
-/*     */   public String getDomainObjectName() {
-/* 273 */     return this.domainObjectName;
-/*     */   }
-/*     */ 
-/*     */   public void setDomainObjectName(String domainObjectName) {
-/* 277 */     this.domainObjectName = domainObjectName;
-/*     */   }
-/*     */ 
-/*     */   public String getSchema() {
-/* 281 */     return this.schema;
-/*     */   }
-/*     */ 
-/*     */   public void setSchema(String schema) {
-/* 285 */     this.schema = schema;
-/*     */   }
-/*     */ 
-/*     */   public String getTableName() {
-/* 289 */     return this.tableName;
-/*     */   }
-/*     */ 
-/*     */   public void setTableName(String tableName) {
-/* 293 */     this.tableName = tableName;
-/*     */   }
-/*     */ 
-/*     */   public List<ColumnOverride> getColumnOverrides() {
-/* 297 */     return this.columnOverrides;
-/*     */   }
-/*     */ 
-/*     */   public List<String> getIgnoredColumnsInError()
-/*     */   {
-/* 309 */     List answer = new ArrayList();
-/*     */ 
-/* 311 */     for (Map.Entry entry : this.ignoredColumns.entrySet())
-/*     */     {
-/* 313 */       if (Boolean.FALSE.equals(entry.getValue())) {
-/* 314 */         answer.add(((IgnoredColumn)entry.getKey()).getColumnName());
-/*     */       }
-/*     */     }
-/*     */ 
-/* 318 */     return answer;
-/*     */   }
-/*     */ 
-/*     */   public ModelType getModelType() {
-/* 322 */     return this.modelType;
-/*     */   }
-/*     */ 
-/*     */   public void setConfiguredModelType(String configuredModelType) {
-/* 326 */     this.configuredModelType = configuredModelType;
-/* 327 */     this.modelType = ModelType.getModelType(configuredModelType);
-/*     */   }
-/*     */ 
-/*     */   public boolean isWildcardEscapingEnabled() {
-/* 331 */     return this.wildcardEscapingEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void setWildcardEscapingEnabled(boolean wildcardEscapingEnabled) {
-/* 335 */     this.wildcardEscapingEnabled = wildcardEscapingEnabled;
-/*     */   }
-/*     */ 
-/*     */   public XmlElement toXmlElement() {
-/* 339 */     XmlElement xmlElement = new XmlElement("table");
-/* 340 */     xmlElement.addAttribute(new Attribute("tableName", this.tableName));
-/*     */ 
-/* 342 */     if (StringUtility.stringHasValue(this.catalog)) {
-/* 343 */       xmlElement.addAttribute(new Attribute("catalog", this.catalog));
-/*     */     }
-/*     */ 
-/* 346 */     if (StringUtility.stringHasValue(this.schema)) {
-/* 347 */       xmlElement.addAttribute(new Attribute("schema", this.schema));
-/*     */     }
-/*     */ 
-/* 350 */     if (StringUtility.stringHasValue(this.alias)) {
-/* 351 */       xmlElement.addAttribute(new Attribute("alias", this.alias));
-/*     */     }
-/*     */ 
-/* 354 */     if (StringUtility.stringHasValue(this.domainObjectName)) {
-/* 355 */       xmlElement.addAttribute(new Attribute("domainObjectName", this.domainObjectName));
-/*     */     }
-/*     */ 
-/* 359 */     if (!this.insertStatementEnabled) {
-/* 360 */       xmlElement.addAttribute(new Attribute("enableInsert", "false"));
-/*     */     }
-/*     */ 
-/* 363 */     if (!this.selectByPrimaryKeyStatementEnabled) {
-/* 364 */       xmlElement.addAttribute(new Attribute("enableSelectByPrimaryKey", "false"));
-/*     */     }
-/*     */ 
-/* 368 */     if (!this.selectByExampleStatementEnabled) {
-/* 369 */       xmlElement.addAttribute(new Attribute("enableSelectByExample", "false"));
-/*     */     }
-/*     */ 
-/* 373 */     if (!this.updateByPrimaryKeyStatementEnabled) {
-/* 374 */       xmlElement.addAttribute(new Attribute("enableUpdateByPrimaryKey", "false"));
-/*     */     }
-/*     */ 
-/* 378 */     if (!this.deleteByPrimaryKeyStatementEnabled) {
-/* 379 */       xmlElement.addAttribute(new Attribute("enableDeleteByPrimaryKey", "false"));
-/*     */     }
-/*     */ 
-/* 383 */     if (!this.deleteByExampleStatementEnabled) {
-/* 384 */       xmlElement.addAttribute(new Attribute("enableDeleteByExample", "false"));
-/*     */     }
-/*     */ 
-/* 388 */     if (!this.countByExampleStatementEnabled) {
-/* 389 */       xmlElement.addAttribute(new Attribute("enableCountByExample", "false"));
-/*     */     }
-/*     */ 
-/* 393 */     if (!this.updateByExampleStatementEnabled) {
-/* 394 */       xmlElement.addAttribute(new Attribute("enableUpdateByExample", "false"));
-/*     */     }
-/*     */ 
-/* 398 */     if (StringUtility.stringHasValue(this.selectByPrimaryKeyQueryId)) {
-/* 399 */       xmlElement.addAttribute(new Attribute("selectByPrimaryKeyQueryId", this.selectByPrimaryKeyQueryId));
-/*     */     }
-/*     */ 
-/* 403 */     if (StringUtility.stringHasValue(this.selectByExampleQueryId)) {
-/* 404 */       xmlElement.addAttribute(new Attribute("selectByExampleQueryId", this.selectByExampleQueryId));
-/*     */     }
-/*     */ 
-/* 408 */     if (this.configuredModelType != null) {
-/* 409 */       xmlElement.addAttribute(new Attribute("modelType", this.configuredModelType));
-/*     */     }
-/*     */ 
-/* 413 */     if (this.wildcardEscapingEnabled) {
-/* 414 */       xmlElement.addAttribute(new Attribute("escapeWildcards", "true"));
-/*     */     }
-/*     */ 
-/* 417 */     if (this.isAllColumnDelimitingEnabled) {
-/* 418 */       xmlElement.addAttribute(new Attribute("delimitAllColumns", "true"));
-/*     */     }
-/*     */ 
-/* 421 */     if (this.delimitIdentifiers) {
-/* 422 */       xmlElement.addAttribute(new Attribute("delimitIdentifiers", "true"));
-/*     */     }
-/*     */ 
-/* 426 */     addPropertyXmlElements(xmlElement);
-/*     */ 
-/* 428 */     if (this.generatedKey != null) {
-/* 429 */       xmlElement.addElement(this.generatedKey.toXmlElement());
-/*     */     }
-/*     */ 
-/* 432 */     if (this.columnRenamingRule != null) {
-/* 433 */       xmlElement.addElement(this.columnRenamingRule.toXmlElement());
-/*     */     }
-/*     */ 
-/* 436 */     if (this.ignoredColumns.size() > 0) {
-/* 437 */       for (IgnoredColumn ignoredColumn : this.ignoredColumns.keySet()) {
-/* 438 */         xmlElement.addElement(ignoredColumn.toXmlElement());
-/*     */       }
-/*     */     }
-/*     */ 
-/* 442 */     if (this.columnOverrides.size() > 0) {
-/* 443 */       for (ColumnOverride columnOverride : this.columnOverrides) {
-/* 444 */         xmlElement.addElement(columnOverride.toXmlElement());
-/*     */       }
-/*     */     }
-/*     */ 
-/* 448 */     return xmlElement;
-/*     */   }
-/*     */ 
-/*     */   public String toString()
-/*     */   {
-/* 453 */     return StringUtility.composeFullyQualifiedTableName(this.catalog, this.schema, this.tableName, '.');
-/*     */   }
-/*     */ 
-/*     */   public boolean isDelimitIdentifiers()
-/*     */   {
-/* 458 */     return this.delimitIdentifiers;
-/*     */   }
-/*     */ 
-/*     */   public void setDelimitIdentifiers(boolean delimitIdentifiers) {
-/* 462 */     this.delimitIdentifiers = delimitIdentifiers;
-/*     */   }
-/*     */ 
-/*     */   public boolean isCountByExampleStatementEnabled() {
-/* 466 */     return this.countByExampleStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void setCountByExampleStatementEnabled(boolean countByExampleStatementEnabled)
-/*     */   {
-/* 471 */     this.countByExampleStatementEnabled = countByExampleStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public boolean isUpdateByExampleStatementEnabled() {
-/* 475 */     return this.updateByExampleStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void setUpdateByExampleStatementEnabled(boolean updateByExampleStatementEnabled)
-/*     */   {
-/* 480 */     this.updateByExampleStatementEnabled = updateByExampleStatementEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void validate(List<String> errors, int listPosition) {
-/* 484 */     if (!StringUtility.stringHasValue(this.tableName)) {
-/* 485 */       errors.add(Messages.getString("ValidationError.6", Integer.toString(listPosition)));
-/*     */     }
-/*     */ 
-/* 489 */     String fqTableName = StringUtility.composeFullyQualifiedTableName(this.catalog, this.schema, this.tableName, '.');
-/*     */ 
-/* 492 */     if (this.generatedKey != null) {
-/* 493 */       this.generatedKey.validate(errors, fqTableName);
-/*     */     }
-/*     */ 
-/* 496 */     if (StringUtility.isTrue(getProperty("useColumnIndexes")))
-/*     */     {
-/* 500 */       if ((this.selectByExampleStatementEnabled) && (this.selectByPrimaryKeyStatementEnabled))
-/*     */       {
-/* 502 */         boolean queryId1Set = StringUtility.stringHasValue(this.selectByExampleQueryId);
-/*     */ 
-/* 504 */         boolean queryId2Set = StringUtility.stringHasValue(this.selectByPrimaryKeyQueryId);
-/*     */ 
-/* 507 */         if (queryId1Set != queryId2Set) {
-/* 508 */           errors.add(Messages.getString("ValidationError.13", fqTableName));
-/*     */         }
-/*     */       }
-/*     */ 
-/*     */     }
-/*     */ 
-/* 514 */     if (this.columnRenamingRule != null) {
-/* 515 */       this.columnRenamingRule.validate(errors, fqTableName);
-/*     */     }
-/*     */ 
-/* 518 */     for (ColumnOverride columnOverride : this.columnOverrides) {
-/* 519 */       columnOverride.validate(errors, fqTableName);
-/*     */     }
-/*     */ 
-/* 522 */     for (IgnoredColumn ignoredColumn : this.ignoredColumns.keySet())
-/* 523 */       ignoredColumn.validate(errors, fqTableName);
-/*     */   }
-/*     */ 
-/*     */   public ColumnRenamingRule getColumnRenamingRule()
-/*     */   {
-/* 528 */     return this.columnRenamingRule;
-/*     */   }
-/*     */ 
-/*     */   public void setColumnRenamingRule(ColumnRenamingRule columnRenamingRule) {
-/* 532 */     this.columnRenamingRule = columnRenamingRule;
-/*     */   }
-/*     */ 
-/*     */   public boolean isAllColumnDelimitingEnabled() {
-/* 536 */     return this.isAllColumnDelimitingEnabled;
-/*     */   }
-/*     */ 
-/*     */   public void setAllColumnDelimitingEnabled(boolean isAllColumnDelimitingEnabled)
-/*     */   {
-/* 541 */     this.isAllColumnDelimitingEnabled = isAllColumnDelimitingEnabled;
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.config.TableConfiguration
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2005 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.config;
+
+import static org.mybatis.generator.internal.util.EqualsUtil.areEqual;
+import static org.mybatis.generator.internal.util.HashCodeUtil.hash;
+import static org.mybatis.generator.internal.util.HashCodeUtil.SEED;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
+import static org.mybatis.generator.internal.util.StringUtility.composeFullyQualifiedTableName;
+import static org.mybatis.generator.internal.util.StringUtility.isTrue;
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.XmlElement;
+
+/**
+ * 
+ * @author Jeff Butler
+ */
+public class TableConfiguration extends PropertyHolder {
+    private boolean insertStatementEnabled;
+
+    private boolean selectByPrimaryKeyStatementEnabled;
+
+    private boolean selectByExampleStatementEnabled;
+
+    private boolean updateByPrimaryKeyStatementEnabled;
+
+    private boolean deleteByPrimaryKeyStatementEnabled;
+
+    private boolean deleteByExampleStatementEnabled;
+
+    private boolean countByExampleStatementEnabled;
+
+    private boolean updateByExampleStatementEnabled;
+
+    private List<ColumnOverride> columnOverrides;
+
+    private Map<IgnoredColumn, Boolean> ignoredColumns;
+
+    private GeneratedKey generatedKey;
+
+    private String selectByPrimaryKeyQueryId;
+
+    private String selectByExampleQueryId;
+
+    private String catalog;
+    private String schema;
+    private String tableName;
+    private String domainObjectName;
+    private String alias;
+    private ModelType modelType;
+    private boolean wildcardEscapingEnabled;
+    private String configuredModelType;
+    private boolean delimitIdentifiers;
+
+    private ColumnRenamingRule columnRenamingRule;
+    private boolean isAllColumnDelimitingEnabled;
+
+    public TableConfiguration(Context context) {
+        super();
+
+        this.modelType = context.getDefaultModelType();
+
+        columnOverrides = new ArrayList<ColumnOverride>();
+        ignoredColumns = new HashMap<IgnoredColumn, Boolean>();
+
+        insertStatementEnabled = true;
+        selectByPrimaryKeyStatementEnabled = true;
+        selectByExampleStatementEnabled = true;
+        updateByPrimaryKeyStatementEnabled = true;
+        deleteByPrimaryKeyStatementEnabled = true;
+        deleteByExampleStatementEnabled = true;
+        countByExampleStatementEnabled = true;
+        updateByExampleStatementEnabled = true;
+    }
+
+    public boolean isDeleteByPrimaryKeyStatementEnabled() {
+        return deleteByPrimaryKeyStatementEnabled;
+    }
+
+    public void setDeleteByPrimaryKeyStatementEnabled(
+            boolean deleteByPrimaryKeyStatementEnabled) {
+        this.deleteByPrimaryKeyStatementEnabled = deleteByPrimaryKeyStatementEnabled;
+    }
+
+    public boolean isInsertStatementEnabled() {
+        return insertStatementEnabled;
+    }
+
+    public void setInsertStatementEnabled(boolean insertStatementEnabled) {
+        this.insertStatementEnabled = insertStatementEnabled;
+    }
+
+    public boolean isSelectByPrimaryKeyStatementEnabled() {
+        return selectByPrimaryKeyStatementEnabled;
+    }
+
+    public void setSelectByPrimaryKeyStatementEnabled(
+            boolean selectByPrimaryKeyStatementEnabled) {
+        this.selectByPrimaryKeyStatementEnabled = selectByPrimaryKeyStatementEnabled;
+    }
+
+    public boolean isUpdateByPrimaryKeyStatementEnabled() {
+        return updateByPrimaryKeyStatementEnabled;
+    }
+
+    public void setUpdateByPrimaryKeyStatementEnabled(
+            boolean updateByPrimaryKeyStatementEnabled) {
+        this.updateByPrimaryKeyStatementEnabled = updateByPrimaryKeyStatementEnabled;
+    }
+
+    public boolean isColumnIgnored(String columnName) {
+        for (Map.Entry<IgnoredColumn, Boolean> entry : ignoredColumns
+                .entrySet()) {
+            IgnoredColumn ic = entry.getKey();
+            if (ic.isColumnNameDelimited()) {
+                if (columnName.equals(ic.getColumnName())) {
+                    entry.setValue(Boolean.TRUE);
+                    return true;
+                }
+            } else {
+                if (columnName.equalsIgnoreCase(ic.getColumnName())) {
+                    entry.setValue(Boolean.TRUE);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void addIgnoredColumn(IgnoredColumn ignoredColumn) {
+        ignoredColumns.put(ignoredColumn, Boolean.FALSE);
+    }
+
+    public void addColumnOverride(ColumnOverride columnOverride) {
+        columnOverrides.add(columnOverride);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof TableConfiguration)) {
+            return false;
+        }
+
+        TableConfiguration other = (TableConfiguration) obj;
+
+        return areEqual(this.catalog, other.catalog)
+                && areEqual(this.schema, other.schema)
+                && areEqual(this.tableName, other.tableName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = SEED;
+        result = hash(result, catalog);
+        result = hash(result, schema);
+        result = hash(result, tableName);
+
+        return result;
+    }
+
+    public boolean isSelectByExampleStatementEnabled() {
+        return selectByExampleStatementEnabled;
+    }
+
+    public void setSelectByExampleStatementEnabled(
+            boolean selectByExampleStatementEnabled) {
+        this.selectByExampleStatementEnabled = selectByExampleStatementEnabled;
+    }
+
+    /**
+     * May return null if the column has not been overridden
+     * 
+     * @param columnName
+     * @return the column override (if any) related to this column
+     */
+    public ColumnOverride getColumnOverride(String columnName) {
+        for (ColumnOverride co : columnOverrides) {
+            if (co.isColumnNameDelimited()) {
+                if (columnName.equals(co.getColumnName())) {
+                    return co;
+                }
+            } else {
+                if (columnName.equalsIgnoreCase(co.getColumnName())) {
+                    return co;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public GeneratedKey getGeneratedKey() {
+        return generatedKey;
+    }
+
+    public String getSelectByExampleQueryId() {
+        return selectByExampleQueryId;
+    }
+
+    public void setSelectByExampleQueryId(String selectByExampleQueryId) {
+        this.selectByExampleQueryId = selectByExampleQueryId;
+    }
+
+    public String getSelectByPrimaryKeyQueryId() {
+        return selectByPrimaryKeyQueryId;
+    }
+
+    public void setSelectByPrimaryKeyQueryId(String selectByPrimaryKeyQueryId) {
+        this.selectByPrimaryKeyQueryId = selectByPrimaryKeyQueryId;
+    }
+
+    public boolean isDeleteByExampleStatementEnabled() {
+        return deleteByExampleStatementEnabled;
+    }
+
+    public void setDeleteByExampleStatementEnabled(
+            boolean deleteByExampleStatementEnabled) {
+        this.deleteByExampleStatementEnabled = deleteByExampleStatementEnabled;
+    }
+
+    public boolean areAnyStatementsEnabled() {
+        return selectByExampleStatementEnabled
+                || selectByPrimaryKeyStatementEnabled || insertStatementEnabled
+                || updateByPrimaryKeyStatementEnabled
+                || deleteByExampleStatementEnabled
+                || deleteByPrimaryKeyStatementEnabled
+                || countByExampleStatementEnabled
+                || updateByExampleStatementEnabled;
+    }
+
+    public void setGeneratedKey(GeneratedKey generatedKey) {
+        this.generatedKey = generatedKey;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
+    }
+
+    public String getDomainObjectName() {
+        return domainObjectName;
+    }
+
+    public void setDomainObjectName(String domainObjectName) {
+        this.domainObjectName = domainObjectName;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public List<ColumnOverride> getColumnOverrides() {
+        return columnOverrides;
+    }
+
+    /**
+     * This method returns an iterator of Strings. The values are the columns
+     * that were specified to be ignored in the table, but do not exist in the
+     * table.
+     * 
+     * @return an List of Strings - the columns that were improperly configured
+     *         as ignored columns
+     */
+    public List<String> getIgnoredColumnsInError() {
+        List<String> answer = new ArrayList<String>();
+
+        for (Map.Entry<IgnoredColumn, Boolean> entry : ignoredColumns
+                .entrySet()) {
+            if (Boolean.FALSE.equals(entry.getValue())) {
+                answer.add(entry.getKey().getColumnName());
+            }
+        }
+
+        return answer;
+    }
+
+    public ModelType getModelType() {
+        return modelType;
+    }
+
+    public void setConfiguredModelType(String configuredModelType) {
+        this.configuredModelType = configuredModelType;
+        this.modelType = ModelType.getModelType(configuredModelType);
+    }
+
+    public boolean isWildcardEscapingEnabled() {
+        return wildcardEscapingEnabled;
+    }
+
+    public void setWildcardEscapingEnabled(boolean wildcardEscapingEnabled) {
+        this.wildcardEscapingEnabled = wildcardEscapingEnabled;
+    }
+
+    public XmlElement toXmlElement() {
+        XmlElement xmlElement = new XmlElement("table"); //$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("tableName", tableName)); //$NON-NLS-1$
+
+        if (stringHasValue(catalog)) {
+            xmlElement.addAttribute(new Attribute("catalog", catalog)); //$NON-NLS-1$
+        }
+
+        if (stringHasValue(schema)) {
+            xmlElement.addAttribute(new Attribute("schema", schema)); //$NON-NLS-1$
+        }
+
+        if (stringHasValue(alias)) {
+            xmlElement.addAttribute(new Attribute("alias", alias)); //$NON-NLS-1$
+        }
+
+        if (stringHasValue(domainObjectName)) {
+            xmlElement.addAttribute(new Attribute(
+                    "domainObjectName", domainObjectName)); //$NON-NLS-1$
+        }
+
+        if (!insertStatementEnabled) {
+            xmlElement.addAttribute(new Attribute("enableInsert", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (!selectByPrimaryKeyStatementEnabled) {
+            xmlElement.addAttribute(new Attribute(
+                    "enableSelectByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (!selectByExampleStatementEnabled) {
+            xmlElement.addAttribute(new Attribute(
+                    "enableSelectByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (!updateByPrimaryKeyStatementEnabled) {
+            xmlElement.addAttribute(new Attribute(
+                    "enableUpdateByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (!deleteByPrimaryKeyStatementEnabled) {
+            xmlElement.addAttribute(new Attribute(
+                    "enableDeleteByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (!deleteByExampleStatementEnabled) {
+            xmlElement.addAttribute(new Attribute(
+                    "enableDeleteByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (!countByExampleStatementEnabled) {
+            xmlElement.addAttribute(new Attribute(
+                    "enableCountByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (!updateByExampleStatementEnabled) {
+            xmlElement.addAttribute(new Attribute(
+                    "enableUpdateByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (stringHasValue(selectByPrimaryKeyQueryId)) {
+            xmlElement.addAttribute(new Attribute(
+                    "selectByPrimaryKeyQueryId", selectByPrimaryKeyQueryId)); //$NON-NLS-1$
+        }
+
+        if (stringHasValue(selectByExampleQueryId)) {
+            xmlElement.addAttribute(new Attribute(
+                    "selectByExampleQueryId", selectByExampleQueryId)); //$NON-NLS-1$
+        }
+
+        if (configuredModelType != null) {
+            xmlElement.addAttribute(new Attribute(
+                    "modelType", configuredModelType)); //$NON-NLS-1$
+        }
+
+        if (wildcardEscapingEnabled) {
+            xmlElement.addAttribute(new Attribute("escapeWildcards", "true")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (isAllColumnDelimitingEnabled) {
+            xmlElement.addAttribute(new Attribute("delimitAllColumns", "true")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (delimitIdentifiers) {
+            xmlElement
+                    .addAttribute(new Attribute("delimitIdentifiers", "true")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        addPropertyXmlElements(xmlElement);
+
+        if (generatedKey != null) {
+            xmlElement.addElement(generatedKey.toXmlElement());
+        }
+
+        if (columnRenamingRule != null) {
+            xmlElement.addElement(columnRenamingRule.toXmlElement());
+        }
+
+        if (ignoredColumns.size() > 0) {
+            for (IgnoredColumn ignoredColumn : ignoredColumns.keySet()) {
+                xmlElement.addElement(ignoredColumn.toXmlElement());
+            }
+        }
+
+        if (columnOverrides.size() > 0) {
+            for (ColumnOverride columnOverride : columnOverrides) {
+                xmlElement.addElement(columnOverride.toXmlElement());
+            }
+        }
+
+        return xmlElement;
+    }
+
+    @Override
+    public String toString() {
+        return composeFullyQualifiedTableName(catalog, schema,
+                tableName, '.');
+    }
+
+    public boolean isDelimitIdentifiers() {
+        return delimitIdentifiers;
+    }
+
+    public void setDelimitIdentifiers(boolean delimitIdentifiers) {
+        this.delimitIdentifiers = delimitIdentifiers;
+    }
+
+    public boolean isCountByExampleStatementEnabled() {
+        return countByExampleStatementEnabled;
+    }
+
+    public void setCountByExampleStatementEnabled(
+            boolean countByExampleStatementEnabled) {
+        this.countByExampleStatementEnabled = countByExampleStatementEnabled;
+    }
+
+    public boolean isUpdateByExampleStatementEnabled() {
+        return updateByExampleStatementEnabled;
+    }
+
+    public void setUpdateByExampleStatementEnabled(
+            boolean updateByExampleStatementEnabled) {
+        this.updateByExampleStatementEnabled = updateByExampleStatementEnabled;
+    }
+
+    public void validate(List<String> errors, int listPosition) {
+        if (!stringHasValue(tableName)) {
+            errors.add(getString(
+                    "ValidationError.6", Integer.toString(listPosition))); //$NON-NLS-1$
+        }
+
+        String fqTableName = composeFullyQualifiedTableName(
+                catalog, schema, tableName, '.');
+
+        if (generatedKey != null) {
+            generatedKey.validate(errors, fqTableName);
+        }
+
+        if (isTrue(getProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES))) {
+            // when using column indexes, either both or neither query ids
+            // should be set
+            if (selectByExampleStatementEnabled
+                    && selectByPrimaryKeyStatementEnabled) {
+                boolean queryId1Set = stringHasValue(selectByExampleQueryId);
+                boolean queryId2Set = stringHasValue(selectByPrimaryKeyQueryId);
+
+                if (queryId1Set != queryId2Set) {
+                    errors.add(getString("ValidationError.13", //$NON-NLS-1$
+                            fqTableName));
+                }
+            }
+        }
+
+        if (columnRenamingRule != null) {
+            columnRenamingRule.validate(errors, fqTableName);
+        }
+
+        for (ColumnOverride columnOverride : columnOverrides) {
+            columnOverride.validate(errors, fqTableName);
+        }
+
+        for (IgnoredColumn ignoredColumn : ignoredColumns.keySet()) {
+            ignoredColumn.validate(errors, fqTableName);
+        }
+    }
+
+    public ColumnRenamingRule getColumnRenamingRule() {
+        return columnRenamingRule;
+    }
+
+    public void setColumnRenamingRule(ColumnRenamingRule columnRenamingRule) {
+        this.columnRenamingRule = columnRenamingRule;
+    }
+
+    public boolean isAllColumnDelimitingEnabled() {
+        return isAllColumnDelimitingEnabled;
+    }
+
+    public void setAllColumnDelimitingEnabled(
+            boolean isAllColumnDelimitingEnabled) {
+        this.isAllColumnDelimitingEnabled = isAllColumnDelimitingEnabled;
+    }
+}

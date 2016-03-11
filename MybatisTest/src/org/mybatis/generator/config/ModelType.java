@@ -1,37 +1,56 @@
-/*    */ package org.mybatis.generator.config;
-/*    */ 
-/*    */ import org.mybatis.generator.internal.util.messages.Messages;
-/*    */ 
-/*    */ public enum ModelType
-/*    */ {
-/* 27 */   HIERARCHICAL("hierarchical"), 
-/* 28 */   FLAT("flat"), 
-/* 29 */   CONDITIONAL("conditional");
-/*    */ 
-/*    */   private final String modelType;
-/*    */ 
-/*    */   private ModelType(String modelType)
-/*    */   {
-/* 37 */     this.modelType = modelType;
-/*    */   }
-/*    */ 
-/*    */   public String getModelType() {
-/* 41 */     return this.modelType;
-/*    */   }
-/*    */ 
-/*    */   public static ModelType getModelType(String type) {
-/* 45 */     if (HIERARCHICAL.getModelType().equalsIgnoreCase(type))
-/* 46 */       return HIERARCHICAL;
-/* 47 */     if (FLAT.getModelType().equalsIgnoreCase(type))
-/* 48 */       return FLAT;
-/* 49 */     if (CONDITIONAL.getModelType().equalsIgnoreCase(type)) {
-/* 50 */       return CONDITIONAL;
-/*    */     }
-/* 52 */     throw new RuntimeException(Messages.getString("RuntimeError.13", type));
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.config.ModelType
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2006 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+
+package org.mybatis.generator.config;
+
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
+
+/**
+ * Typesafe enum of different model types
+ * 
+ * @author Jeff Butler
+ */
+public enum ModelType {
+    HIERARCHICAL("hierarchical"), //$NON-NLS-1$
+    FLAT("flat"), //$NON-NLS-1$
+    CONDITIONAL("conditional"); //$NON-NLS-1$
+
+    private final String modelType;
+
+    /**
+     * 
+     */
+    private ModelType(String modelType) {
+        this.modelType = modelType;
+    }
+
+    public String getModelType() {
+        return modelType;
+    }
+
+    public static ModelType getModelType(String type) {
+        if (HIERARCHICAL.getModelType().equalsIgnoreCase(type)) {
+            return HIERARCHICAL;
+        } else if (FLAT.getModelType().equalsIgnoreCase(type)) {
+            return FLAT;
+        } else if (CONDITIONAL.getModelType().equalsIgnoreCase(type)) {
+            return CONDITIONAL;
+        } else {
+            throw new RuntimeException(getString(
+                    "RuntimeError.13", type)); //$NON-NLS-1$
+        }
+    }
+}

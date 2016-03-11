@@ -1,71 +1,114 @@
-/*     */ package org.mybatis.generator.internal.util;
-/*     */ 
-/*     */ import java.lang.reflect.Array;
-/*     */ 
-/*     */ public final class HashCodeUtil
-/*     */ {
-/*     */   public static final int SEED = 23;
-/*     */   private static final int fODD_PRIME_NUMBER = 37;
-/*     */ 
-/*     */   public static int hash(int aSeed, boolean aBoolean)
-/*     */   {
-/*  38 */     return firstTerm(aSeed) + (aBoolean ? 1 : 0);
-/*     */   }
-/*     */ 
-/*     */   public static int hash(int aSeed, char aChar)
-/*     */   {
-/*  45 */     return firstTerm(aSeed) + aChar;
-/*     */   }
-/*     */ 
-/*     */   public static int hash(int aSeed, int aInt)
-/*     */   {
-/*  56 */     return firstTerm(aSeed) + aInt;
-/*     */   }
-/*     */ 
-/*     */   public static int hash(int aSeed, long aLong)
-/*     */   {
-/*  63 */     return firstTerm(aSeed) + (int)(aLong ^ aLong >>> 32);
-/*     */   }
-/*     */ 
-/*     */   public static int hash(int aSeed, float aFloat)
-/*     */   {
-/*  70 */     return hash(aSeed, Float.floatToIntBits(aFloat));
-/*     */   }
-/*     */ 
-/*     */   public static int hash(int aSeed, double aDouble)
-/*     */   {
-/*  77 */     return hash(aSeed, Double.doubleToLongBits(aDouble));
-/*     */   }
-/*     */ 
-/*     */   public static int hash(int aSeed, Object aObject)
-/*     */   {
-/*  88 */     int result = aSeed;
-/*  89 */     if (aObject == null) {
-/*  90 */       result = hash(result, 0);
-/*  91 */     } else if (!isArray(aObject)) {
-/*  92 */       result = hash(result, aObject.hashCode());
-/*     */     } else {
-/*  94 */       int length = Array.getLength(aObject);
-/*  95 */       for (int idx = 0; idx < length; idx++) {
-/*  96 */         Object item = Array.get(aObject, idx);
-/*     */ 
-/*  98 */         result = hash(result, item);
-/*     */       }
-/*     */     }
-/* 101 */     return result;
-/*     */   }
-/*     */ 
-/*     */   private static int firstTerm(int aSeed)
-/*     */   {
-/* 108 */     return 37 * aSeed;
-/*     */   }
-/*     */ 
-/*     */   private static boolean isArray(Object aObject) {
-/* 112 */     return aObject.getClass().isArray();
-/*     */   }
-/*     */ }
+package org.mybatis.generator.internal.util;
 
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.internal.util.HashCodeUtil
- * JD-Core Version:    0.6.0
+import java.lang.reflect.Array;
+
+/**
+ * This class is from javapractices.com:
+ * 
+ * http://www.javapractices.com/Topic28.cjp
+ * 
+ * Collected methods which allow easy implementation of <code>hashCode</code>.
+ * 
+ * Example use case:
+ * 
+ * <pre>
+ * public int hashCode() {
+ *     int result = HashCodeUtil.SEED;
+ *     //collect the contributions of various fields
+ *     result = HashCodeUtil.hash(result, fPrimitive);
+ *     result = HashCodeUtil.hash(result, fObject);
+ *     result = HashCodeUtil.hash(result, fArray);
+ *     return result;
+ * }
+ * </pre>
  */
+public final class HashCodeUtil {
+
+    /**
+     * An initial value for a <code>hashCode</code>, to which is added
+     * contributions from fields. Using a non-zero value decreases collisons of
+     * <code>hashCode</code> values.
+     */
+    public static final int SEED = 23;
+
+    /**
+     * booleans.
+     */
+    public static int hash(int aSeed, boolean aBoolean) {
+        return firstTerm(aSeed) + (aBoolean ? 1 : 0);
+    }
+
+    /**
+     * chars.
+     */
+    public static int hash(int aSeed, char aChar) {
+        return firstTerm(aSeed) + aChar;
+    }
+
+    /**
+     * ints.
+     */
+    public static int hash(int aSeed, int aInt) {
+        /*
+         * Implementation Note Note that byte and short are handled by this
+         * method, through implicit conversion.
+         */
+        return firstTerm(aSeed) + aInt;
+    }
+
+    /**
+     * longs.
+     */
+    public static int hash(int aSeed, long aLong) {
+        return firstTerm(aSeed) + (int) (aLong ^ (aLong >>> 32));
+    }
+
+    /**
+     * floats.
+     */
+    public static int hash(int aSeed, float aFloat) {
+        return hash(aSeed, Float.floatToIntBits(aFloat));
+    }
+
+    /**
+     * doubles.
+     */
+    public static int hash(int aSeed, double aDouble) {
+        return hash(aSeed, Double.doubleToLongBits(aDouble));
+    }
+
+    /**
+     * <code>aObject</code> is a possibly-null object field, and possibly an
+     * array.
+     * 
+     * If <code>aObject</code> is an array, then each element may be a primitive
+     * or a possibly-null object.
+     */
+    public static int hash(int aSeed, Object aObject) {
+        int result = aSeed;
+        if (aObject == null) {
+            result = hash(result, 0);
+        } else if (!isArray(aObject)) {
+            result = hash(result, aObject.hashCode());
+        } else {
+            int length = Array.getLength(aObject);
+            for (int idx = 0; idx < length; ++idx) {
+                Object item = Array.get(aObject, idx);
+                // recursive call!
+                result = hash(result, item);
+            }
+        }
+        return result;
+    }
+
+    // / PRIVATE ///
+    private static final int fODD_PRIME_NUMBER = 37;
+
+    private static int firstTerm(int aSeed) {
+        return fODD_PRIME_NUMBER * aSeed;
+    }
+
+    private static boolean isArray(Object aObject) {
+        return aObject.getClass().isArray();
+    }
+}

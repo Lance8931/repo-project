@@ -1,216 +1,282 @@
-/*     */ package org.mybatis.generator.api.dom.java;
-/*     */ 
-/*     */ import java.util.ArrayList;
-/*     */ import java.util.HashSet;
-/*     */ import java.util.Iterator;
-/*     */ import java.util.List;
-/*     */ import java.util.Set;
-/*     */ import org.mybatis.generator.api.dom.OutputUtilities;
-/*     */ 
-/*     */ public class InnerClass extends JavaElement
-/*     */ {
-/*     */   private List<Field> fields;
-/*     */   private List<InnerClass> innerClasses;
-/*     */   private List<InnerEnum> innerEnums;
-/*     */   private FullyQualifiedJavaType superClass;
-/*     */   private FullyQualifiedJavaType type;
-/*     */   private Set<FullyQualifiedJavaType> superInterfaceTypes;
-/*     */   private List<Method> methods;
-/*     */   private boolean isAbstract;
-/*     */ 
-/*     */   public InnerClass(FullyQualifiedJavaType type)
-/*     */   {
-/*  54 */     this.type = type;
-/*  55 */     this.fields = new ArrayList();
-/*  56 */     this.innerClasses = new ArrayList();
-/*  57 */     this.innerEnums = new ArrayList();
-/*  58 */     this.superInterfaceTypes = new HashSet();
-/*  59 */     this.methods = new ArrayList();
-/*     */   }
-/*     */ 
-/*     */   public InnerClass(String typeName) {
-/*  63 */     this(new FullyQualifiedJavaType(typeName));
-/*     */   }
-/*     */ 
-/*     */   public List<Field> getFields()
-/*     */   {
-/*  70 */     return this.fields;
-/*     */   }
-/*     */ 
-/*     */   public void addField(Field field) {
-/*  74 */     this.fields.add(field);
-/*     */   }
-/*     */ 
-/*     */   public FullyQualifiedJavaType getSuperClass()
-/*     */   {
-/*  81 */     return this.superClass;
-/*     */   }
-/*     */ 
-/*     */   public void setSuperClass(FullyQualifiedJavaType superClass)
-/*     */   {
-/*  89 */     this.superClass = superClass;
-/*     */   }
-/*     */ 
-/*     */   public void setSuperClass(String superClassType) {
-/*  93 */     this.superClass = new FullyQualifiedJavaType(superClassType);
-/*     */   }
-/*     */ 
-/*     */   public List<InnerClass> getInnerClasses()
-/*     */   {
-/* 100 */     return this.innerClasses;
-/*     */   }
-/*     */ 
-/*     */   public void addInnerClass(InnerClass innerClass) {
-/* 104 */     this.innerClasses.add(innerClass);
-/*     */   }
-/*     */ 
-/*     */   public List<InnerEnum> getInnerEnums() {
-/* 108 */     return this.innerEnums;
-/*     */   }
-/*     */ 
-/*     */   public void addInnerEnum(InnerEnum innerEnum) {
-/* 112 */     this.innerEnums.add(innerEnum);
-/*     */   }
-/*     */ 
-/*     */   public String getFormattedContent(int indentLevel) {
-/* 116 */     StringBuilder sb = new StringBuilder();
-/*     */ 
-/* 118 */     addFormattedJavadoc(sb, indentLevel);
-/* 119 */     addFormattedAnnotations(sb, indentLevel);
-/*     */ 
-/* 121 */     OutputUtilities.javaIndent(sb, indentLevel);
-/* 122 */     sb.append(getVisibility().getValue());
-/*     */ 
-/* 124 */     if (isAbstract()) {
-/* 125 */       sb.append("abstract ");
-/*     */     }
-/*     */ 
-/* 128 */     if (isStatic()) {
-/* 129 */       sb.append("static ");
-/*     */     }
-/*     */ 
-/* 132 */     if (isFinal()) {
-/* 133 */       sb.append("final ");
-/*     */     }
-/*     */ 
-/* 136 */     sb.append("class ");
-/* 137 */     sb.append(getType().getShortName());
-/*     */ 
-/* 139 */     if (this.superClass != null) {
-/* 140 */       sb.append(" extends ");
-/* 141 */       sb.append(this.superClass.getShortName());
-/*     */     }
-/*     */     boolean comma;
-/* 144 */     if (this.superInterfaceTypes.size() > 0) {
-/* 145 */       sb.append(" implements ");
-/*     */ 
-/* 147 */       comma = false;
-/* 148 */       for (FullyQualifiedJavaType fqjt : this.superInterfaceTypes) {
-/* 149 */         if (comma)
-/* 150 */           sb.append(", ");
-/*     */         else {
-/* 152 */           comma = true;
-/*     */         }
-/*     */ 
-/* 155 */         sb.append(fqjt.getShortName());
-/*     */       }
-/*     */     }
-/*     */ 
-/* 159 */     sb.append(" {");
-/* 160 */     indentLevel++;
-/*     */ 
-/* 162 */     Iterator fldIter = this.fields.iterator();
-/* 163 */     while (fldIter.hasNext()) {
-/* 164 */       OutputUtilities.newLine(sb);
-/* 165 */       Field field = (Field)fldIter.next();
-/* 166 */       sb.append(field.getFormattedContent(indentLevel));
-/* 167 */       if (fldIter.hasNext()) {
-/* 168 */         OutputUtilities.newLine(sb);
-/*     */       }
-/*     */     }
-/*     */ 
-/* 172 */     if (this.methods.size() > 0) {
-/* 173 */       OutputUtilities.newLine(sb);
-/*     */     }
-/*     */ 
-/* 176 */     Iterator mtdIter = this.methods.iterator();
-/* 177 */     while (mtdIter.hasNext()) {
-/* 178 */       OutputUtilities.newLine(sb);
-/* 179 */       Method method = (Method)mtdIter.next();
-/* 180 */       sb.append(method.getFormattedContent(indentLevel, false));
-/* 181 */       if (mtdIter.hasNext()) {
-/* 182 */         OutputUtilities.newLine(sb);
-/*     */       }
-/*     */     }
-/*     */ 
-/* 186 */     if (this.innerClasses.size() > 0) {
-/* 187 */       OutputUtilities.newLine(sb);
-/*     */     }
-/* 189 */     Iterator icIter = this.innerClasses.iterator();
-/* 190 */     while (icIter.hasNext()) {
-/* 191 */       OutputUtilities.newLine(sb);
-/* 192 */       InnerClass innerClass = (InnerClass)icIter.next();
-/* 193 */       sb.append(innerClass.getFormattedContent(indentLevel));
-/* 194 */       if (icIter.hasNext()) {
-/* 195 */         OutputUtilities.newLine(sb);
-/*     */       }
-/*     */     }
-/*     */ 
-/* 199 */     if (this.innerEnums.size() > 0) {
-/* 200 */       OutputUtilities.newLine(sb);
-/*     */     }
-/*     */ 
-/* 203 */     Iterator ieIter = this.innerEnums.iterator();
-/* 204 */     while (ieIter.hasNext()) {
-/* 205 */       OutputUtilities.newLine(sb);
-/* 206 */       InnerEnum innerEnum = (InnerEnum)ieIter.next();
-/* 207 */       sb.append(innerEnum.getFormattedContent(indentLevel));
-/* 208 */       if (ieIter.hasNext()) {
-/* 209 */         OutputUtilities.newLine(sb);
-/*     */       }
-/*     */     }
-/*     */ 
-/* 213 */     indentLevel--;
-/* 214 */     OutputUtilities.newLine(sb);
-/* 215 */     OutputUtilities.javaIndent(sb, indentLevel);
-/* 216 */     sb.append('}');
-/*     */ 
-/* 218 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public Set<FullyQualifiedJavaType> getSuperInterfaceTypes()
-/*     */   {
-/* 225 */     return this.superInterfaceTypes;
-/*     */   }
-/*     */ 
-/*     */   public void addSuperInterface(FullyQualifiedJavaType superInterface) {
-/* 229 */     this.superInterfaceTypes.add(superInterface);
-/*     */   }
-/*     */ 
-/*     */   public List<Method> getMethods()
-/*     */   {
-/* 236 */     return this.methods;
-/*     */   }
-/*     */ 
-/*     */   public void addMethod(Method method) {
-/* 240 */     this.methods.add(method);
-/*     */   }
-/*     */ 
-/*     */   public FullyQualifiedJavaType getType()
-/*     */   {
-/* 247 */     return this.type;
-/*     */   }
-/*     */ 
-/*     */   public boolean isAbstract() {
-/* 251 */     return this.isAbstract;
-/*     */   }
-/*     */ 
-/*     */   public void setAbstract(boolean isAbtract) {
-/* 255 */     this.isAbstract = isAbtract;
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.api.dom.java.InnerClass
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2006 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.api.dom.java;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.mybatis.generator.api.dom.OutputUtilities;
+
+/**
+ * This class encapsulates the idea of an inner class - it has methods that make
+ * it easy to generate inner classes.
+ * 
+ * @author Jeff Butler
+ */
+public class InnerClass extends JavaElement {
+    private List<Field> fields;
+
+    private List<InnerClass> innerClasses;
+
+    private List<InnerEnum> innerEnums;
+
+    private FullyQualifiedJavaType superClass;
+
+    private FullyQualifiedJavaType type;
+
+    private Set<FullyQualifiedJavaType> superInterfaceTypes;
+
+    private List<Method> methods;
+
+    private boolean isAbstract;
+    
+    private List<InitializationBlock> initializationBlocks;
+
+    /**
+     *  
+     */
+    public InnerClass(FullyQualifiedJavaType type) {
+        super();
+        this.type = type;
+        fields = new ArrayList<Field>();
+        innerClasses = new ArrayList<InnerClass>();
+        innerEnums = new ArrayList<InnerEnum>();
+        superInterfaceTypes = new HashSet<FullyQualifiedJavaType>();
+        methods = new ArrayList<Method>();
+        initializationBlocks = new ArrayList<InitializationBlock>();
+    }
+
+    public InnerClass(String typeName) {
+        this(new FullyQualifiedJavaType(typeName));
+    }
+
+    /**
+     * @return Returns the fields.
+     */
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    public void addField(Field field) {
+        fields.add(field);
+    }
+
+    /**
+     * @return Returns the superClass.
+     */
+    public FullyQualifiedJavaType getSuperClass() {
+        return superClass;
+    }
+
+    /**
+     * @param superClass
+     *            The superClass to set.
+     */
+    public void setSuperClass(FullyQualifiedJavaType superClass) {
+        this.superClass = superClass;
+    }
+
+    public void setSuperClass(String superClassType) {
+        this.superClass = new FullyQualifiedJavaType(superClassType);
+    }
+
+    /**
+     * @return Returns the innerClasses.
+     */
+    public List<InnerClass> getInnerClasses() {
+        return innerClasses;
+    }
+
+    public void addInnerClass(InnerClass innerClass) {
+        innerClasses.add(innerClass);
+    }
+
+    public List<InnerEnum> getInnerEnums() {
+        return innerEnums;
+    }
+
+    public void addInnerEnum(InnerEnum innerEnum) {
+        innerEnums.add(innerEnum);
+    }
+
+    public List<InitializationBlock> getInitializationBlocks() {
+        return initializationBlocks;
+    }
+
+    public void addInitializationBlock(InitializationBlock initializationBlock) {
+        initializationBlocks.add(initializationBlock);
+    }
+
+    public String getFormattedContent(int indentLevel) {
+        StringBuilder sb = new StringBuilder();
+
+        addFormattedJavadoc(sb, indentLevel);
+        addFormattedAnnotations(sb, indentLevel);
+
+        OutputUtilities.javaIndent(sb, indentLevel);
+        sb.append(getVisibility().getValue());
+
+        if (isAbstract()) {
+            sb.append("abstract "); //$NON-NLS-1$
+        }
+
+        if (isStatic()) {
+            sb.append("static "); //$NON-NLS-1$
+        }
+
+        if (isFinal()) {
+            sb.append("final "); //$NON-NLS-1$
+        }
+
+        sb.append("class "); //$NON-NLS-1$
+        sb.append(getType().getShortName());
+
+        if (superClass != null) {
+            sb.append(" extends "); //$NON-NLS-1$
+            sb.append(superClass.getShortName());
+        }
+
+        if (superInterfaceTypes.size() > 0) {
+            sb.append(" implements "); //$NON-NLS-1$
+
+            boolean comma = false;
+            for (FullyQualifiedJavaType fqjt : superInterfaceTypes) {
+                if (comma) {
+                    sb.append(", "); //$NON-NLS-1$
+                } else {
+                    comma = true;
+                }
+
+                sb.append(fqjt.getShortName());
+            }
+        }
+
+        sb.append(" {"); //$NON-NLS-1$
+        indentLevel++;
+        
+        Iterator<Field> fldIter = fields.iterator();
+        while (fldIter.hasNext()) {
+            OutputUtilities.newLine(sb);
+            Field field = fldIter.next();
+            sb.append(field.getFormattedContent(indentLevel));
+            if (fldIter.hasNext()) {
+                OutputUtilities.newLine(sb);
+            }
+        }
+
+        if (initializationBlocks.size() > 0) {
+            OutputUtilities.newLine(sb);
+        }
+
+        Iterator<InitializationBlock> blkIter = initializationBlocks.iterator();
+        while (blkIter.hasNext()) {
+            OutputUtilities.newLine(sb);
+            InitializationBlock initializationBlock = blkIter.next();
+            sb.append(initializationBlock.getFormattedContent(indentLevel));
+            if (blkIter.hasNext()) {
+                OutputUtilities.newLine(sb);
+            }
+        }
+
+        if (methods.size() > 0) {
+            OutputUtilities.newLine(sb);
+        }
+
+        Iterator<Method> mtdIter = methods.iterator();
+        while (mtdIter.hasNext()) {
+            OutputUtilities.newLine(sb);
+            Method method = mtdIter.next();
+            sb.append(method.getFormattedContent(indentLevel, false));
+            if (mtdIter.hasNext()) {
+                OutputUtilities.newLine(sb);
+            }
+        }
+
+        if (innerClasses.size() > 0) {
+            OutputUtilities.newLine(sb);
+        }
+        Iterator<InnerClass> icIter = innerClasses.iterator();
+        while (icIter.hasNext()) {
+            OutputUtilities.newLine(sb);
+            InnerClass innerClass = icIter.next();
+            sb.append(innerClass.getFormattedContent(indentLevel));
+            if (icIter.hasNext()) {
+                OutputUtilities.newLine(sb);
+            }
+        }
+
+        if (innerEnums.size() > 0) {
+            OutputUtilities.newLine(sb);
+        }
+
+        Iterator<InnerEnum> ieIter = innerEnums.iterator();
+        while (ieIter.hasNext()) {
+            OutputUtilities.newLine(sb);
+            InnerEnum innerEnum = ieIter.next();
+            sb.append(innerEnum.getFormattedContent(indentLevel));
+            if (ieIter.hasNext()) {
+                OutputUtilities.newLine(sb);
+            }
+        }
+
+        indentLevel--;
+        OutputUtilities.newLine(sb);
+        OutputUtilities.javaIndent(sb, indentLevel);
+        sb.append('}');
+
+        return sb.toString();
+    }
+
+    /**
+     * @return Returns the superInterfaces.
+     */
+    public Set<FullyQualifiedJavaType> getSuperInterfaceTypes() {
+        return superInterfaceTypes;
+    }
+
+    public void addSuperInterface(FullyQualifiedJavaType superInterface) {
+        superInterfaceTypes.add(superInterface);
+    }
+
+    /**
+     * @return Returns the methods.
+     */
+    public List<Method> getMethods() {
+        return methods;
+    }
+
+    public void addMethod(Method method) {
+        methods.add(method);
+    }
+
+    /**
+     * @return Returns the type.
+     */
+    public FullyQualifiedJavaType getType() {
+        return type;
+    }
+
+    public boolean isAbstract() {
+        return isAbstract;
+    }
+
+    public void setAbstract(boolean isAbtract) {
+        this.isAbstract = isAbtract;
+    }
+}

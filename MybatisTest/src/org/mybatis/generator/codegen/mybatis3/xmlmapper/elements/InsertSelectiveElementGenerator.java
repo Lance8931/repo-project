@@ -1,132 +1,150 @@
-/*     */ package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
-/*     */ 
-/*     */ import org.mybatis.generator.api.CommentGenerator;
-/*     */ import org.mybatis.generator.api.IntrospectedColumn;
-/*     */ import org.mybatis.generator.api.IntrospectedTable;
-/*     */ import org.mybatis.generator.api.Plugin;
-/*     */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*     */ import org.mybatis.generator.api.dom.xml.Attribute;
-/*     */ import org.mybatis.generator.api.dom.xml.TextElement;
-/*     */ import org.mybatis.generator.api.dom.xml.XmlElement;
-/*     */ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
-/*     */ import org.mybatis.generator.config.Context;
-/*     */ import org.mybatis.generator.config.GeneratedKey;
-/*     */ import org.mybatis.generator.internal.rules.Rules;
-/*     */ 
-/*     */ public class InsertSelectiveElementGenerator extends AbstractXmlElementGenerator
-/*     */ {
-/*     */   public void addElements(XmlElement parentElement)
-/*     */   {
-/*  40 */     XmlElement answer = new XmlElement("insert");
-/*     */ 
-/*  42 */     answer.addAttribute(new Attribute("id", this.introspectedTable.getInsertSelectiveStatementId()));
-/*     */ 
-/*  45 */     FullyQualifiedJavaType parameterType = this.introspectedTable.getRules().calculateAllFieldsClass();
-/*     */ 
-/*  48 */     answer.addAttribute(new Attribute("parameterType", parameterType.getFullyQualifiedName()));
-/*     */ 
-/*  51 */     this.context.getCommentGenerator().addComment(answer);
-/*     */ 
-/*  53 */     GeneratedKey gk = this.introspectedTable.getGeneratedKey();
-/*     */ 
-/*  55 */     String sequenceColumn = null;
-/*  56 */     if ((gk != null) && (gk.isBeforeInsert())) {
-/*  57 */       IntrospectedColumn introspectedColumn = this.introspectedTable.getColumn(gk.getColumn());
-/*     */ 
-/*  61 */       if (introspectedColumn != null)
-/*     */       {
-/*  63 */         answer.addElement(getSelectKey(introspectedColumn, gk));
-/*  64 */         sequenceColumn = gk.getColumn();
-/*     */       }
-/*     */     }
-/*     */ 
-/*  68 */     StringBuilder sb = new StringBuilder();
-/*     */ 
-/*  70 */     sb.append("insert into ");
-/*  71 */     sb.append(this.introspectedTable.getFullyQualifiedTableNameAtRuntime());
-/*  72 */     answer.addElement(new TextElement(sb.toString()));
-/*     */ 
-/*  74 */     XmlElement insertTrimElement = new XmlElement("trim");
-/*  75 */     insertTrimElement.addAttribute(new Attribute("prefix", "("));
-/*  76 */     insertTrimElement.addAttribute(new Attribute("suffix", ")"));
-/*  77 */     insertTrimElement.addAttribute(new Attribute("suffixOverrides", ","));
-/*  78 */     answer.addElement(insertTrimElement);
-/*     */ 
-/*  80 */     XmlElement valuesTrimElement = new XmlElement("trim");
-/*  81 */     valuesTrimElement.addAttribute(new Attribute("prefix", "values ("));
-/*  82 */     valuesTrimElement.addAttribute(new Attribute("suffix", ")"));
-/*  83 */     valuesTrimElement.addAttribute(new Attribute("suffixOverrides", ","));
-/*  84 */     answer.addElement(valuesTrimElement);
-/*     */ 
-/*  86 */     for (IntrospectedColumn introspectedColumn : this.introspectedTable.getAllColumns())
-/*     */     {
-/*  88 */       if (introspectedColumn.isIdentity())
-/*     */       {
-/*     */         continue;
-/*     */       }
-/*     */ 
-/*  93 */       boolean isSequenceColumn = sequenceColumn == null ? false : sequenceColumn.equals(introspectedColumn.getActualColumnName());
-/*     */ 
-/*  96 */       if (isSequenceColumn) {
-/*  97 */         sb.setLength(0);
-/*  98 */         sb.append(MyBatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
-/*     */ 
-/* 100 */         sb.append(',');
-/* 101 */         insertTrimElement.addElement(new TextElement(sb.toString()));
-/*     */ 
-/* 103 */         sb.setLength(0);
-/* 104 */         sb.append(MyBatis3FormattingUtilities.getParameterClause(introspectedColumn));
-/*     */ 
-/* 106 */         sb.append(',');
-/* 107 */         valuesTrimElement.addElement(new TextElement(sb.toString()));
-/*     */ 
-/* 109 */         continue;
-/*     */       }
-/*     */ 
-/* 112 */       XmlElement insertNotNullElement = new XmlElement("if");
-/* 113 */       sb.setLength(0);
-/* 114 */       sb.append(introspectedColumn.getJavaProperty());
-/* 115 */       sb.append(" != null");
-/* 116 */       insertNotNullElement.addAttribute(new Attribute("test", sb.toString()));
-/*     */ 
-/* 119 */       sb.setLength(0);
-/* 120 */       sb.append(MyBatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
-/*     */ 
-/* 122 */       sb.append(',');
-/* 123 */       insertNotNullElement.addElement(new TextElement(sb.toString()));
-/* 124 */       insertTrimElement.addElement(insertNotNullElement);
-/*     */ 
-/* 126 */       XmlElement valuesNotNullElement = new XmlElement("if");
-/* 127 */       sb.setLength(0);
-/* 128 */       sb.append(introspectedColumn.getJavaProperty());
-/* 129 */       sb.append(" != null");
-/* 130 */       valuesNotNullElement.addAttribute(new Attribute("test", sb.toString()));
-/*     */ 
-/* 133 */       sb.setLength(0);
-/* 134 */       sb.append(MyBatis3FormattingUtilities.getParameterClause(introspectedColumn));
-/*     */ 
-/* 136 */       sb.append(',');
-/* 137 */       valuesNotNullElement.addElement(new TextElement(sb.toString()));
-/* 138 */       valuesTrimElement.addElement(valuesNotNullElement);
-/*     */     }
-/*     */ 
-/* 141 */     if ((gk != null) && (!gk.isBeforeInsert())) {
-/* 142 */       IntrospectedColumn introspectedColumn = this.introspectedTable.getColumn(gk.getColumn());
-/*     */ 
-/* 146 */       if (introspectedColumn != null)
-/*     */       {
-/* 148 */         answer.addElement(getSelectKey(introspectedColumn, gk));
-/*     */       }
-/*     */     }
-/*     */ 
-/* 152 */     if (this.context.getPlugins().sqlMapInsertSelectiveElementGenerated(answer, this.introspectedTable))
-/*     */     {
-/* 154 */       parentElement.addElement(answer);
-/*     */     }
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.InsertSelectiveElementGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2009 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
+
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.TextElement;
+import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
+import org.mybatis.generator.config.GeneratedKey;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class InsertSelectiveElementGenerator extends
+        AbstractXmlElementGenerator {
+
+    public InsertSelectiveElementGenerator() {
+        super();
+    }
+
+    @Override
+    public void addElements(XmlElement parentElement) {
+        XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
+
+        answer.addAttribute(new Attribute(
+                "id", introspectedTable.getInsertSelectiveStatementId())); //$NON-NLS-1$
+
+        FullyQualifiedJavaType parameterType = introspectedTable.getRules()
+                .calculateAllFieldsClass();
+
+        answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
+                parameterType.getFullyQualifiedName()));
+
+        context.getCommentGenerator().addComment(answer);
+
+        GeneratedKey gk = introspectedTable.getGeneratedKey();
+        if (gk != null) {
+            IntrospectedColumn introspectedColumn = introspectedTable
+                .getColumn(gk.getColumn());
+            // if the column is null, then it's a configuration error. The
+            // warning has already been reported
+            if (introspectedColumn != null) {
+                if (gk.isJdbcStandard()) {
+                    answer.addAttribute(new Attribute("useGeneratedKeys", "true")); //$NON-NLS-1$ //$NON-NLS-2$
+                    answer.addAttribute(new Attribute("keyProperty", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
+                } else {
+                    answer.addElement(getSelectKey(introspectedColumn, gk));
+                }
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("insert into "); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
+        answer.addElement(new TextElement(sb.toString()));
+
+        XmlElement insertTrimElement = new XmlElement("trim"); //$NON-NLS-1$
+        insertTrimElement.addAttribute(new Attribute("prefix", "(")); //$NON-NLS-1$ //$NON-NLS-2$
+        insertTrimElement.addAttribute(new Attribute("suffix", ")")); //$NON-NLS-1$ //$NON-NLS-2$
+        insertTrimElement.addAttribute(new Attribute("suffixOverrides", ",")); //$NON-NLS-1$ //$NON-NLS-2$
+        answer.addElement(insertTrimElement);
+
+        XmlElement valuesTrimElement = new XmlElement("trim"); //$NON-NLS-1$
+        valuesTrimElement.addAttribute(new Attribute("prefix", "values (")); //$NON-NLS-1$ //$NON-NLS-2$
+        valuesTrimElement.addAttribute(new Attribute("suffix", ")")); //$NON-NLS-1$ //$NON-NLS-2$
+        valuesTrimElement.addAttribute(new Attribute("suffixOverrides", ",")); //$NON-NLS-1$ //$NON-NLS-2$
+        answer.addElement(valuesTrimElement);
+
+        for (IntrospectedColumn introspectedColumn : introspectedTable
+                .getAllColumns()) {
+            if (introspectedColumn.isIdentity()) {
+                // cannot set values on identity fields
+                continue;
+            }
+
+            if (introspectedColumn.isSequenceColumn()
+                    || introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
+                // if it is a sequence column, it is not optional
+                // This is required for MyBatis3 because MyBatis3 parses
+                // and calculates the SQL before executing the selectKey
+                
+                // if it is primitive, we cannot do a null check
+                sb.setLength(0);
+                sb.append(MyBatis3FormattingUtilities
+                    .getEscapedColumnName(introspectedColumn));
+                sb.append(',');
+                insertTrimElement.addElement(new TextElement(sb.toString()));
+
+                sb.setLength(0);
+                sb.append(MyBatis3FormattingUtilities
+                    .getParameterClause(introspectedColumn));
+                sb.append(',');
+                valuesTrimElement.addElement(new TextElement(sb.toString()));
+
+                continue;
+            }            
+            
+            XmlElement insertNotNullElement = new XmlElement("if"); //$NON-NLS-1$
+            sb.setLength(0);
+            sb.append(introspectedColumn.getJavaProperty());
+            sb.append(" != null"); //$NON-NLS-1$
+            insertNotNullElement.addAttribute(new Attribute(
+                    "test", sb.toString())); //$NON-NLS-1$
+
+            sb.setLength(0);
+            sb.append(MyBatis3FormattingUtilities
+                    .getEscapedColumnName(introspectedColumn));
+            sb.append(',');
+            insertNotNullElement.addElement(new TextElement(sb.toString()));
+            insertTrimElement.addElement(insertNotNullElement);
+
+            XmlElement valuesNotNullElement = new XmlElement("if"); //$NON-NLS-1$
+            sb.setLength(0);
+            sb.append(introspectedColumn.getJavaProperty());
+            sb.append(" != null"); //$NON-NLS-1$
+            valuesNotNullElement.addAttribute(new Attribute(
+                    "test", sb.toString())); //$NON-NLS-1$
+
+            sb.setLength(0);
+            sb.append(MyBatis3FormattingUtilities
+                    .getParameterClause(introspectedColumn));
+            sb.append(',');
+            valuesNotNullElement.addElement(new TextElement(sb.toString()));
+            valuesTrimElement.addElement(valuesNotNullElement);
+        }
+
+        if (context.getPlugins().sqlMapInsertSelectiveElementGenerated(
+                answer, introspectedTable)) {
+            parentElement.addElement(answer);
+        }
+    }
+}

@@ -1,66 +1,84 @@
-/*    */ package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
-/*    */ 
-/*    */ import org.mybatis.generator.api.CommentGenerator;
-/*    */ import org.mybatis.generator.api.IntrospectedTable;
-/*    */ import org.mybatis.generator.api.Plugin;
-/*    */ import org.mybatis.generator.api.dom.xml.Attribute;
-/*    */ import org.mybatis.generator.api.dom.xml.TextElement;
-/*    */ import org.mybatis.generator.api.dom.xml.XmlElement;
-/*    */ import org.mybatis.generator.config.Context;
-/*    */ import org.mybatis.generator.internal.util.StringUtility;
-/*    */ 
-/*    */ public class SelectByExampleWithoutBLOBsElementGenerator extends AbstractXmlElementGenerator
-/*    */ {
-/*    */   public void addElements(XmlElement parentElement)
-/*    */   {
-/* 37 */     String fqjt = this.introspectedTable.getExampleType();
-/*    */ 
-/* 39 */     XmlElement answer = new XmlElement("select");
-/*    */ 
-/* 41 */     answer.addAttribute(new Attribute("id", this.introspectedTable.getSelectByExampleStatementId()));
-/*    */ 
-/* 43 */     answer.addAttribute(new Attribute("resultMap", this.introspectedTable.getBaseResultMapId()));
-/*    */ 
-/* 45 */     answer.addAttribute(new Attribute("parameterType", fqjt));
-/*    */ 
-/* 47 */     this.context.getCommentGenerator().addComment(answer);
-/*    */ 
-/* 49 */     answer.addElement(new TextElement("select"));
-/* 50 */     XmlElement ifElement = new XmlElement("if");
-/* 51 */     ifElement.addAttribute(new Attribute("test", "distinct"));
-/* 52 */     ifElement.addElement(new TextElement("distinct"));
-/* 53 */     answer.addElement(ifElement);
-/*    */ 
-/* 55 */     StringBuilder sb = new StringBuilder();
-/* 56 */     if (StringUtility.stringHasValue(this.introspectedTable.getSelectByExampleQueryId()))
-/*    */     {
-/* 58 */       sb.append('\'');
-/* 59 */       sb.append(this.introspectedTable.getSelectByExampleQueryId());
-/* 60 */       sb.append("' as QUERYID,");
-/* 61 */       answer.addElement(new TextElement(sb.toString()));
-/*    */     }
-/* 63 */     answer.addElement(getBaseColumnListElement());
-/*    */ 
-/* 65 */     sb.setLength(0);
-/* 66 */     sb.append("from ");
-/* 67 */     sb.append(this.introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-/*    */ 
-/* 69 */     answer.addElement(new TextElement(sb.toString()));
-/* 70 */     answer.addElement(getExampleIncludeElement());
-/*    */ 
-/* 72 */     ifElement = new XmlElement("if");
-/* 73 */     ifElement.addAttribute(new Attribute("test", "orderByClause != null"));
-/* 74 */     ifElement.addElement(new TextElement("order by ${orderByClause}"));
-/* 75 */     answer.addElement(ifElement);
-/*    */ 
-/* 77 */     if (this.context.getPlugins().sqlMapSelectByExampleWithoutBLOBsElementGenerated(answer, this.introspectedTable))
-/*    */     {
-/* 80 */       parentElement.addElement(answer);
-/*    */     }
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByExampleWithoutBLOBsElementGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2009 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
+
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.TextElement;
+import org.mybatis.generator.api.dom.xml.XmlElement;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class SelectByExampleWithoutBLOBsElementGenerator extends
+        AbstractXmlElementGenerator {
+
+    public SelectByExampleWithoutBLOBsElementGenerator() {
+        super();
+    }
+
+    @Override
+    public void addElements(XmlElement parentElement) {
+        String fqjt = introspectedTable.getExampleType();
+
+        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+
+        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+                introspectedTable.getSelectByExampleStatementId()));
+        answer.addAttribute(new Attribute(
+                "resultMap", introspectedTable.getBaseResultMapId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("parameterType", fqjt)); //$NON-NLS-1$
+
+        context.getCommentGenerator().addComment(answer);
+
+        answer.addElement(new TextElement("select")); //$NON-NLS-1$
+        XmlElement ifElement = new XmlElement("if"); //$NON-NLS-1$
+        ifElement.addAttribute(new Attribute("test", "distinct")); //$NON-NLS-1$ //$NON-NLS-2$
+        ifElement.addElement(new TextElement("distinct")); //$NON-NLS-1$
+        answer.addElement(ifElement);
+
+        StringBuilder sb = new StringBuilder();
+        if (stringHasValue(introspectedTable
+                .getSelectByExampleQueryId())) {
+            sb.append('\'');
+            sb.append(introspectedTable.getSelectByExampleQueryId());
+            sb.append("' as QUERYID,"); //$NON-NLS-1$
+            answer.addElement(new TextElement(sb.toString()));
+        }
+        answer.addElement(getBaseColumnListElement());
+
+        sb.setLength(0);
+        sb.append("from "); //$NON-NLS-1$
+        sb.append(introspectedTable
+                .getAliasedFullyQualifiedTableNameAtRuntime());
+        answer.addElement((new TextElement(sb.toString())));
+        answer.addElement(getExampleIncludeElement());
+
+        ifElement = new XmlElement("if"); //$NON-NLS-1$
+        ifElement.addAttribute(new Attribute("test", "orderByClause != null")); //$NON-NLS-1$ //$NON-NLS-2$
+        ifElement.addElement(new TextElement("order by ${orderByClause}")); //$NON-NLS-1$
+        answer.addElement(ifElement);
+
+        if (context.getPlugins()
+                .sqlMapSelectByExampleWithoutBLOBsElementGenerated(answer,
+                        introspectedTable)) {
+            parentElement.addElement(answer);
+        }
+    }
+}

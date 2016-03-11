@@ -1,126 +1,147 @@
-/*     */ package org.mybatis.generator.codegen.ibatis2.dao.elements;
-/*     */ 
-/*     */ import java.util.Set;
-/*     */ import java.util.TreeSet;
-/*     */ import org.mybatis.generator.api.CommentGenerator;
-/*     */ import org.mybatis.generator.api.DAOMethodNameCalculator;
-/*     */ import org.mybatis.generator.api.IntrospectedColumn;
-/*     */ import org.mybatis.generator.api.IntrospectedTable;
-/*     */ import org.mybatis.generator.api.Plugin;
-/*     */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*     */ import org.mybatis.generator.api.dom.java.Interface;
-/*     */ import org.mybatis.generator.api.dom.java.JavaVisibility;
-/*     */ import org.mybatis.generator.api.dom.java.Method;
-/*     */ import org.mybatis.generator.api.dom.java.Parameter;
-/*     */ import org.mybatis.generator.api.dom.java.PrimitiveTypeWrapper;
-/*     */ import org.mybatis.generator.api.dom.java.TopLevelClass;
-/*     */ import org.mybatis.generator.codegen.ibatis2.dao.templates.AbstractDAOTemplate;
-/*     */ import org.mybatis.generator.config.Context;
-/*     */ import org.mybatis.generator.config.GeneratedKey;
-/*     */ import org.mybatis.generator.internal.rules.Rules;
-/*     */ 
-/*     */ public class InsertMethodGenerator extends AbstractDAOElementGenerator
-/*     */ {
-/*     */   public void addImplementationElements(TopLevelClass topLevelClass)
-/*     */   {
-/*  44 */     Set importedTypes = new TreeSet();
-/*  45 */     Method method = getMethodShell(importedTypes);
-/*     */ 
-/*  47 */     FullyQualifiedJavaType returnType = method.getReturnType();
-/*     */ 
-/*  49 */     StringBuilder sb = new StringBuilder();
-/*     */ 
-/*  51 */     if (returnType != null) {
-/*  52 */       sb.append("Object newKey = ");
-/*     */     }
-/*     */ 
-/*  55 */     sb.append(this.daoTemplate.getInsertMethod(this.introspectedTable.getIbatis2SqlMapNamespace(), this.introspectedTable.getInsertStatementId(), "record"));
-/*     */ 
-/*  58 */     method.addBodyLine(sb.toString());
-/*     */ 
-/*  60 */     if (returnType != null) {
-/*  61 */       if ("Object".equals(returnType.getShortName()))
-/*     */       {
-/*  63 */         method.addBodyLine("return newKey;");
-/*     */       } else {
-/*  65 */         sb.setLength(0);
-/*     */ 
-/*  67 */         if (returnType.isPrimitive()) {
-/*  68 */           PrimitiveTypeWrapper ptw = returnType.getPrimitiveTypeWrapper();
-/*     */ 
-/*  70 */           sb.append("return ((");
-/*  71 */           sb.append(ptw.getShortName());
-/*  72 */           sb.append(") newKey");
-/*  73 */           sb.append(").");
-/*  74 */           sb.append(ptw.getToPrimitiveMethod());
-/*  75 */           sb.append(';');
-/*     */         } else {
-/*  77 */           sb.append("return (");
-/*  78 */           sb.append(returnType.getShortName());
-/*  79 */           sb.append(") newKey;");
-/*     */         }
-/*     */ 
-/*  82 */         method.addBodyLine(sb.toString());
-/*     */       }
-/*     */     }
-/*     */ 
-/*  86 */     if (this.context.getPlugins().clientInsertMethodGenerated(method, topLevelClass, this.introspectedTable))
-/*     */     {
-/*  88 */       topLevelClass.addImportedTypes(importedTypes);
-/*  89 */       topLevelClass.addMethod(method);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   public void addInterfaceElements(Interface interfaze)
-/*     */   {
-/*  95 */     Set importedTypes = new TreeSet();
-/*  96 */     Method method = getMethodShell(importedTypes);
-/*     */ 
-/*  98 */     if (this.context.getPlugins().clientInsertMethodGenerated(method, interfaze, this.introspectedTable))
-/*     */     {
-/* 100 */       interfaze.addImportedTypes(importedTypes);
-/* 101 */       interfaze.addMethod(method);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-/* 106 */     Method method = new Method();
-/*     */     FullyQualifiedJavaType returnType;
-/* 109 */     if (this.introspectedTable.getGeneratedKey() != null) {
-/* 110 */       IntrospectedColumn introspectedColumn = this.introspectedTable.getColumn(this.introspectedTable.getGeneratedKey().getColumn());
-/* 112 */       if (introspectedColumn == null)
-/*     */       {
-/* 116 */         returnType = null;
-/*     */       } else {
-/* 118 */         returnType = introspectedColumn.getFullyQualifiedJavaType();
-/* 119 */         importedTypes.add(returnType);
-/*     */       }
-/*     */     } else {
-/* 122 */       returnType = null;
-/*     */     }
-/*     */ 
-/* 125 */     method.setReturnType(returnType);
-/* 126 */     method.setVisibility(JavaVisibility.PUBLIC);
-/* 127 */     DAOMethodNameCalculator methodNameCalculator = getDAOMethodNameCalculator();
-/* 128 */     method.setName(methodNameCalculator.getInsertMethodName(this.introspectedTable));
-/*     */ 
-/* 131 */     FullyQualifiedJavaType parameterType = this.introspectedTable.getRules().calculateAllFieldsClass();
-/*     */ 
-/* 134 */     importedTypes.add(parameterType);
-/* 135 */     method.addParameter(new Parameter(parameterType, "record"));
-/*     */ 
-/* 137 */     for (FullyQualifiedJavaType fqjt : this.daoTemplate.getCheckedExceptions()) {
-/* 138 */       method.addException(fqjt);
-/* 139 */       importedTypes.add(fqjt);
-/*     */     }
-/*     */ 
-/* 142 */     this.context.getCommentGenerator().addGeneralMethodComment(method, this.introspectedTable);
-/*     */ 
-/* 145 */     return method;
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.ibatis2.dao.elements.InsertMethodGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2008 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.ibatis2.dao.elements;
+
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.mybatis.generator.api.DAOMethodNameCalculator;
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.java.Interface;
+import org.mybatis.generator.api.dom.java.JavaVisibility;
+import org.mybatis.generator.api.dom.java.Method;
+import org.mybatis.generator.api.dom.java.Parameter;
+import org.mybatis.generator.api.dom.java.PrimitiveTypeWrapper;
+import org.mybatis.generator.api.dom.java.TopLevelClass;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class InsertMethodGenerator extends AbstractDAOElementGenerator {
+
+    public InsertMethodGenerator() {
+        super();
+    }
+
+    @Override
+    public void addImplementationElements(TopLevelClass topLevelClass) {
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Method method = getMethodShell(importedTypes);
+
+        FullyQualifiedJavaType returnType = method.getReturnType();
+
+        StringBuilder sb = new StringBuilder();
+
+        if (returnType != null) {
+            sb.append("Object newKey = "); //$NON-NLS-1$
+        }
+
+        sb.append(daoTemplate.getInsertMethod(introspectedTable
+                .getIbatis2SqlMapNamespace(), introspectedTable
+                .getInsertStatementId(), "record")); //$NON-NLS-1$
+        method.addBodyLine(sb.toString());
+
+        if (returnType != null) {
+            if ("Object".equals(returnType.getShortName())) { //$NON-NLS-1$
+                // no need to cast if the return type is Object
+                method.addBodyLine("return newKey;"); //$NON-NLS-1$
+            } else {
+                sb.setLength(0);
+
+                if (returnType.isPrimitive()) {
+                    PrimitiveTypeWrapper ptw = returnType
+                            .getPrimitiveTypeWrapper();
+                    sb.append("return (("); //$NON-NLS-1$
+                    sb.append(ptw.getShortName());
+                    sb.append(") newKey"); //$NON-NLS-1$
+                    sb.append(")."); //$NON-NLS-1$
+                    sb.append(ptw.getToPrimitiveMethod());
+                    sb.append(';');
+                } else {
+                    sb.append("return ("); //$NON-NLS-1$
+                    sb.append(returnType.getShortName());
+                    sb.append(") newKey;"); //$NON-NLS-1$
+                }
+
+                method.addBodyLine(sb.toString());
+            }
+        }
+
+        if (context.getPlugins().clientInsertMethodGenerated(method,
+                topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
+    }
+
+    @Override
+    public void addInterfaceElements(Interface interfaze) {
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Method method = getMethodShell(importedTypes);
+
+        if (context.getPlugins().clientInsertMethodGenerated(method,
+                interfaze, introspectedTable)) {
+            interfaze.addImportedTypes(importedTypes);
+            interfaze.addMethod(method);
+        }
+    }
+
+    private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
+        Method method = new Method();
+
+        FullyQualifiedJavaType returnType;
+        if (introspectedTable.getGeneratedKey() != null) {
+            IntrospectedColumn introspectedColumn = introspectedTable
+                    .getColumn(introspectedTable.getGeneratedKey().getColumn());
+            if (introspectedColumn == null) {
+                // the specified column doesn't exist, so don't do the generated
+                // key
+                // (the warning has already been reported)
+                returnType = null;
+            } else {
+                returnType = introspectedColumn.getFullyQualifiedJavaType();
+                importedTypes.add(returnType);
+            }
+        } else {
+            returnType = null;
+        }
+
+        method.setReturnType(returnType);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        DAOMethodNameCalculator methodNameCalculator = getDAOMethodNameCalculator();
+        method.setName(methodNameCalculator
+                .getInsertMethodName(introspectedTable));
+
+        FullyQualifiedJavaType parameterType = introspectedTable.getRules()
+                .calculateAllFieldsClass();
+
+        importedTypes.add(parameterType);
+        method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
+
+        for (FullyQualifiedJavaType fqjt : daoTemplate.getCheckedExceptions()) {
+            method.addException(fqjt);
+            importedTypes.add(fqjt);
+        }
+
+        context.getCommentGenerator().addGeneralMethodComment(method,
+                introspectedTable);
+
+        return method;
+    }
+}

@@ -1,240 +1,301 @@
-/*     */ package org.mybatis.generator.api;
-/*     */ 
-/*     */ import java.util.Properties;
-/*     */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*     */ import org.mybatis.generator.config.Context;
-/*     */ import org.mybatis.generator.internal.util.StringUtility;
-/*     */ 
-/*     */ public class IntrospectedColumn
-/*     */ {
-/*     */   protected String actualColumnName;
-/*     */   protected int jdbcType;
-/*     */   protected String jdbcTypeName;
-/*     */   protected boolean nullable;
-/*     */   protected int length;
-/*     */   protected int scale;
-/*     */   protected boolean identity;
-/*     */   protected String javaProperty;
-/*     */   protected FullyQualifiedJavaType fullyQualifiedJavaType;
-/*     */   protected String tableAlias;
-/*     */   protected String typeHandler;
-/*     */   protected Context context;
-/*     */   protected boolean isColumnNameDelimited;
-/*     */   protected IntrospectedTable introspectedTable;
-/*     */   protected Properties properties;
-/*     */   protected String remarks;
-/*     */   protected String defaultValue;
-/*     */ 
-/*     */   public IntrospectedColumn()
-/*     */   {
-/*  73 */     this.properties = new Properties();
-/*     */   }
-/*     */ 
-/*     */   public int getJdbcType() {
-/*  77 */     return this.jdbcType;
-/*     */   }
-/*     */ 
-/*     */   public void setJdbcType(int jdbcType) {
-/*  81 */     this.jdbcType = jdbcType;
-/*     */   }
-/*     */ 
-/*     */   public int getLength() {
-/*  85 */     return this.length;
-/*     */   }
-/*     */ 
-/*     */   public void setLength(int length) {
-/*  89 */     this.length = length;
-/*     */   }
-/*     */ 
-/*     */   public boolean isNullable() {
-/*  93 */     return this.nullable;
-/*     */   }
-/*     */ 
-/*     */   public void setNullable(boolean nullable) {
-/*  97 */     this.nullable = nullable;
-/*     */   }
-/*     */ 
-/*     */   public int getScale() {
-/* 101 */     return this.scale;
-/*     */   }
-/*     */ 
-/*     */   public void setScale(int scale) {
-/* 105 */     this.scale = scale;
-/*     */   }
-/*     */ 
-/*     */   public String toString()
-/*     */   {
-/* 114 */     StringBuilder sb = new StringBuilder();
-/*     */ 
-/* 116 */     sb.append("Actual Column Name: ");
-/* 117 */     sb.append(this.actualColumnName);
-/* 118 */     sb.append(", JDBC Type: ");
-/* 119 */     sb.append(this.jdbcType);
-/* 120 */     sb.append(", Nullable: ");
-/* 121 */     sb.append(this.nullable);
-/* 122 */     sb.append(", Length: ");
-/* 123 */     sb.append(this.length);
-/* 124 */     sb.append(", Scale: ");
-/* 125 */     sb.append(this.scale);
-/* 126 */     sb.append(", Identity: ");
-/* 127 */     sb.append(this.identity);
-/*     */ 
-/* 129 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public void setActualColumnName(String actualColumnName) {
-/* 133 */     this.actualColumnName = actualColumnName;
-/* 134 */     this.isColumnNameDelimited = StringUtility.stringContainsSpace(actualColumnName);
-/*     */   }
-/*     */ 
-/*     */   public boolean isIdentity()
-/*     */   {
-/* 142 */     return this.identity;
-/*     */   }
-/*     */ 
-/*     */   public void setIdentity(boolean identity)
-/*     */   {
-/* 150 */     this.identity = identity;
-/*     */   }
-/*     */ 
-/*     */   public boolean isBLOBColumn() {
-/* 154 */     String typeName = getJdbcTypeName();
-/*     */ 
-/* 156 */     return ("BINARY".equals(typeName)) || ("BLOB".equals(typeName)) || ("CLOB".equals(typeName)) || ("LONGVARBINARY".equals(typeName)) || ("LONGVARCHAR".equals(typeName)) || ("VARBINARY".equals(typeName));
-/*     */   }
-/*     */ 
-/*     */   public boolean isStringColumn()
-/*     */   {
-/* 162 */     return this.fullyQualifiedJavaType.equals(FullyQualifiedJavaType.getStringInstance());
-/*     */   }
-/*     */ 
-/*     */   public boolean isJdbcCharacterColumn()
-/*     */   {
-/* 167 */     return (this.jdbcType == 1) || (this.jdbcType == 2005) || (this.jdbcType == -1) || (this.jdbcType == 12);
-/*     */   }
-/*     */ 
-/*     */   public String getJavaProperty()
-/*     */   {
-/* 172 */     return getJavaProperty(null);
-/*     */   }
-/*     */ 
-/*     */   public String getJavaProperty(String prefix) {
-/* 176 */     if (prefix == null) {
-/* 177 */       return this.javaProperty;
-/*     */     }
-/*     */ 
-/* 180 */     StringBuilder sb = new StringBuilder();
-/* 181 */     sb.append(prefix);
-/* 182 */     sb.append(this.javaProperty);
-/*     */ 
-/* 184 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public void setJavaProperty(String javaProperty) {
-/* 188 */     this.javaProperty = javaProperty;
-/*     */   }
-/*     */ 
-/*     */   public boolean isJDBCDateColumn() {
-/* 192 */     return (this.fullyQualifiedJavaType.equals(FullyQualifiedJavaType.getDateInstance())) && ("DATE".equalsIgnoreCase(this.jdbcTypeName));
-/*     */   }
-/*     */ 
-/*     */   public boolean isJDBCTimeColumn()
-/*     */   {
-/* 198 */     return (this.fullyQualifiedJavaType.equals(FullyQualifiedJavaType.getDateInstance())) && ("TIME".equalsIgnoreCase(this.jdbcTypeName));
-/*     */   }
-/*     */ 
-/*     */   public String getTypeHandler()
-/*     */   {
-/* 204 */     return this.typeHandler;
-/*     */   }
-/*     */ 
-/*     */   public void setTypeHandler(String typeHandler) {
-/* 208 */     this.typeHandler = typeHandler;
-/*     */   }
-/*     */ 
-/*     */   public String getActualColumnName() {
-/* 212 */     return this.actualColumnName;
-/*     */   }
-/*     */ 
-/*     */   public void setColumnNameDelimited(boolean isColumnNameDelimited) {
-/* 216 */     this.isColumnNameDelimited = isColumnNameDelimited;
-/*     */   }
-/*     */ 
-/*     */   public boolean isColumnNameDelimited() {
-/* 220 */     return this.isColumnNameDelimited;
-/*     */   }
-/*     */ 
-/*     */   public String getJdbcTypeName() {
-/* 224 */     if (this.jdbcTypeName == null) {
-/* 225 */       return "OTHER";
-/*     */     }
-/*     */ 
-/* 228 */     return this.jdbcTypeName;
-/*     */   }
-/*     */ 
-/*     */   public void setJdbcTypeName(String jdbcTypeName) {
-/* 232 */     this.jdbcTypeName = jdbcTypeName;
-/*     */   }
-/*     */ 
-/*     */   public FullyQualifiedJavaType getFullyQualifiedJavaType() {
-/* 236 */     return this.fullyQualifiedJavaType;
-/*     */   }
-/*     */ 
-/*     */   public void setFullyQualifiedJavaType(FullyQualifiedJavaType fullyQualifiedJavaType)
-/*     */   {
-/* 241 */     this.fullyQualifiedJavaType = fullyQualifiedJavaType;
-/*     */   }
-/*     */ 
-/*     */   public String getTableAlias() {
-/* 245 */     return this.tableAlias;
-/*     */   }
-/*     */ 
-/*     */   public void setTableAlias(String tableAlias) {
-/* 249 */     this.tableAlias = tableAlias;
-/*     */   }
-/*     */ 
-/*     */   public Context getContext() {
-/* 253 */     return this.context;
-/*     */   }
-/*     */ 
-/*     */   public void setContext(Context context) {
-/* 257 */     this.context = context;
-/*     */   }
-/*     */ 
-/*     */   public IntrospectedTable getIntrospectedTable() {
-/* 261 */     return this.introspectedTable;
-/*     */   }
-/*     */ 
-/*     */   public void setIntrospectedTable(IntrospectedTable introspectedTable) {
-/* 265 */     this.introspectedTable = introspectedTable;
-/*     */   }
-/*     */ 
-/*     */   public Properties getProperties() {
-/* 269 */     return this.properties;
-/*     */   }
-/*     */ 
-/*     */   public void setProperties(Properties properties) {
-/* 273 */     this.properties.putAll(properties);
-/*     */   }
-/*     */ 
-/*     */   public String getRemarks() {
-/* 277 */     return this.remarks;
-/*     */   }
-/*     */ 
-/*     */   public void setRemarks(String remarks) {
-/* 281 */     this.remarks = remarks;
-/*     */   }
-/*     */ 
-/*     */   public String getDefaultValue() {
-/* 285 */     return this.defaultValue;
-/*     */   }
-/*     */ 
-/*     */   public void setDefaultValue(String defaultValue) {
-/* 289 */     this.defaultValue = defaultValue;
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.api.IntrospectedColumn
- * JD-Core Version:    0.6.0
+/*
+ * Copyright 2005 The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
+package org.mybatis.generator.api;
+
+import java.sql.Types;
+import java.util.Properties;
+
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.config.Context;
+import org.mybatis.generator.internal.util.StringUtility;
+
+/**
+ * This class holds information about an introspected column. The class has
+ * utility methods useful for generating iBATIS objects.
+ * 
+ * @author Jeff Butler
+ */
+public class IntrospectedColumn {
+    protected String actualColumnName;
+
+    protected int jdbcType;
+
+    protected String jdbcTypeName;
+
+    protected boolean nullable;
+
+    protected int length;
+
+    protected int scale;
+
+    protected boolean identity;
+    
+    protected boolean isSequenceColumn;
+
+    protected String javaProperty;
+
+    protected FullyQualifiedJavaType fullyQualifiedJavaType;
+
+    protected String tableAlias;
+
+    protected String typeHandler;
+
+    protected Context context;
+
+    protected boolean isColumnNameDelimited;
+
+    protected IntrospectedTable introspectedTable;
+
+    protected Properties properties;
+
+    // any database comment associated with this column. May be null
+    protected String remarks;
+
+    protected String defaultValue;
+
+    /**
+     * Constructs a Column definition. This object holds all the information
+     * about a column that is required to generate Java objects and SQL maps;
+     */
+    public IntrospectedColumn() {
+        super();
+        properties = new Properties();
+    }
+
+    public int getJdbcType() {
+        return jdbcType;
+    }
+
+    public void setJdbcType(int jdbcType) {
+        this.jdbcType = jdbcType;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
+    }
+
+    public int getScale() {
+        return scale;
+    }
+
+    public void setScale(int scale) {
+        this.scale = scale;
+    }
+
+    /*
+     * This method is primarily used for debugging, so we don't externalize the
+     * strings
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Actual Column Name: "); //$NON-NLS-1$
+        sb.append(actualColumnName);
+        sb.append(", JDBC Type: "); //$NON-NLS-1$
+        sb.append(jdbcType);
+        sb.append(", Nullable: "); //$NON-NLS-1$
+        sb.append(nullable);
+        sb.append(", Length: "); //$NON-NLS-1$
+        sb.append(length);
+        sb.append(", Scale: "); //$NON-NLS-1$
+        sb.append(scale);
+        sb.append(", Identity: "); //$NON-NLS-1$
+        sb.append(identity);
+
+        return sb.toString();
+    }
+
+    public void setActualColumnName(String actualColumnName) {
+        this.actualColumnName = actualColumnName;
+        isColumnNameDelimited = StringUtility
+                .stringContainsSpace(actualColumnName);
+    }
+
+    /**
+     * @return Returns the identity.
+     */
+    public boolean isIdentity() {
+        return identity;
+    }
+
+    /**
+     * @param identity
+     *            The identity to set.
+     */
+    public void setIdentity(boolean identity) {
+        this.identity = identity;
+    }
+
+    public boolean isBLOBColumn() {
+        String typeName = getJdbcTypeName();
+
+        return "BINARY".equals(typeName) || "BLOB".equals(typeName) //$NON-NLS-1$ //$NON-NLS-2$
+                || "CLOB".equals(typeName) || "LONGVARBINARY".equals(typeName) //$NON-NLS-1$ //$NON-NLS-2$
+                || "LONGVARCHAR".equals(typeName) || "VARBINARY".equals(typeName); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public boolean isStringColumn() {
+        return fullyQualifiedJavaType.equals(FullyQualifiedJavaType
+                .getStringInstance());
+    }
+
+    public boolean isJdbcCharacterColumn() {
+        return jdbcType == Types.CHAR || jdbcType == Types.CLOB
+                || jdbcType == Types.LONGVARCHAR || jdbcType == Types.VARCHAR;
+    }
+
+    public String getJavaProperty() {
+        return getJavaProperty(null);
+    }
+
+    public String getJavaProperty(String prefix) {
+        if (prefix == null) {
+            return javaProperty;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefix);
+        sb.append(javaProperty);
+
+        return sb.toString();
+    }
+
+    public void setJavaProperty(String javaProperty) {
+        this.javaProperty = javaProperty;
+    }
+
+    public boolean isJDBCDateColumn() {
+        return fullyQualifiedJavaType.equals(FullyQualifiedJavaType
+                .getDateInstance())
+                && "DATE".equalsIgnoreCase(jdbcTypeName); //$NON-NLS-1$
+    }
+
+    public boolean isJDBCTimeColumn() {
+        return fullyQualifiedJavaType.equals(FullyQualifiedJavaType
+                .getDateInstance())
+                && "TIME".equalsIgnoreCase(jdbcTypeName); //$NON-NLS-1$
+    }
+
+    public String getTypeHandler() {
+        return typeHandler;
+    }
+
+    public void setTypeHandler(String typeHandler) {
+        this.typeHandler = typeHandler;
+    }
+
+    public String getActualColumnName() {
+        return actualColumnName;
+    }
+
+    public void setColumnNameDelimited(boolean isColumnNameDelimited) {
+        this.isColumnNameDelimited = isColumnNameDelimited;
+    }
+
+    public boolean isColumnNameDelimited() {
+        return isColumnNameDelimited;
+    }
+
+    public String getJdbcTypeName() {
+        if (jdbcTypeName == null) {
+            return "OTHER"; //$NON-NLS-1$
+        }
+
+        return jdbcTypeName;
+    }
+
+    public void setJdbcTypeName(String jdbcTypeName) {
+        this.jdbcTypeName = jdbcTypeName;
+    }
+
+    public FullyQualifiedJavaType getFullyQualifiedJavaType() {
+        return fullyQualifiedJavaType;
+    }
+
+    public void setFullyQualifiedJavaType(
+            FullyQualifiedJavaType fullyQualifiedJavaType) {
+        this.fullyQualifiedJavaType = fullyQualifiedJavaType;
+    }
+
+    public String getTableAlias() {
+        return tableAlias;
+    }
+
+    public void setTableAlias(String tableAlias) {
+        this.tableAlias = tableAlias;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public IntrospectedTable getIntrospectedTable() {
+        return introspectedTable;
+    }
+
+    public void setIntrospectedTable(IntrospectedTable introspectedTable) {
+        this.introspectedTable = introspectedTable;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties.putAll(properties);
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public boolean isSequenceColumn() {
+        return isSequenceColumn;
+    }
+
+    public void setSequenceColumn(boolean isSequenceColumn) {
+        this.isSequenceColumn = isSequenceColumn;
+    }
+}

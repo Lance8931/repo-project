@@ -1,61 +1,83 @@
-/*    */ package org.mybatis.generator.codegen.ibatis2.dao.templates;
-/*    */ 
-/*    */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*    */ import org.mybatis.generator.api.dom.java.JavaVisibility;
-/*    */ import org.mybatis.generator.api.dom.java.Method;
-/*    */ import org.mybatis.generator.api.dom.java.Parameter;
-/*    */ 
-/*    */ public class IbatisDAOTemplate extends AbstractDAOTemplate
-/*    */ {
-/* 28 */   private FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType("com.ibatis.dao.client.DaoManager");
-/*    */ 
-/*    */   protected void configureConstructorTemplate()
-/*    */   {
-/* 40 */     Method method = new Method();
-/* 41 */     method.setConstructor(true);
-/* 42 */     method.setVisibility(JavaVisibility.PUBLIC);
-/* 43 */     method.addParameter(new Parameter(this.fqjt, "daoManager"));
-/* 44 */     method.addBodyLine("super(daoManager);");
-/* 45 */     setConstructorTemplate(method);
-/*    */   }
-/*    */ 
-/*    */   protected void configureDeleteMethodTemplate()
-/*    */   {
-/* 50 */     setDeleteMethodTemplate("delete(\"{0}.{1}\", {2});");
-/*    */   }
-/*    */ 
-/*    */   protected void configureImplementationImports()
-/*    */   {
-/* 55 */     addImplementationImport(this.fqjt);
-/*    */   }
-/*    */ 
-/*    */   protected void configureInsertMethodTemplate()
-/*    */   {
-/* 60 */     setInsertMethodTemplate("insert(\"{0}.{1}\", {2});");
-/*    */   }
-/*    */ 
-/*    */   protected void configureQueryForListMethodTemplate()
-/*    */   {
-/* 65 */     setQueryForListMethodTemplate("queryForList(\"{0}.{1}\", {2});");
-/*    */   }
-/*    */ 
-/*    */   protected void configureQueryForObjectMethodTemplate()
-/*    */   {
-/* 70 */     setQueryForObjectMethodTemplate("queryForObject(\"{0}.{1}\", {2});");
-/*    */   }
-/*    */ 
-/*    */   protected void configureSuperClass()
-/*    */   {
-/* 75 */     setSuperClass(new FullyQualifiedJavaType("com.ibatis.dao.client.template.SqlMapDaoTemplate"));
-/*    */   }
-/*    */ 
-/*    */   protected void configureUpdateMethodTemplate()
-/*    */   {
-/* 81 */     setUpdateMethodTemplate("update(\"{0}.{1}\", {2});");
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.ibatis2.dao.templates.IbatisDAOTemplate
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2006 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.ibatis2.dao.templates;
+
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.java.JavaVisibility;
+import org.mybatis.generator.api.dom.java.Method;
+import org.mybatis.generator.api.dom.java.Parameter;
+
+/**
+ * @author Jeff Butler
+ */
+public class IbatisDAOTemplate extends AbstractDAOTemplate {
+
+    private FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(
+            "com.ibatis.dao.client.DaoManager"); //$NON-NLS-1$
+
+    /**
+     *  
+     */
+    public IbatisDAOTemplate() {
+        super();
+    }
+
+    @Override
+    protected void configureConstructorTemplate() {
+        Method method = new Method();
+        method.setConstructor(true);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.addParameter(new Parameter(fqjt, "daoManager")); //$NON-NLS-1$
+        method.addBodyLine("super(daoManager);"); //$NON-NLS-1$
+        setConstructorTemplate(method);
+    }
+
+    @Override
+    protected void configureDeleteMethodTemplate() {
+        setDeleteMethodTemplate("delete(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+    }
+
+    @Override
+    protected void configureImplementationImports() {
+        addImplementationImport(fqjt);
+    }
+
+    @Override
+    protected void configureInsertMethodTemplate() {
+        setInsertMethodTemplate("insert(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+    }
+
+    @Override
+    protected void configureQueryForListMethodTemplate() {
+        setQueryForListMethodTemplate("queryForList(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+    }
+
+    @Override
+    protected void configureQueryForObjectMethodTemplate() {
+        setQueryForObjectMethodTemplate("queryForObject(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+    }
+
+    @Override
+    protected void configureSuperClass() {
+        setSuperClass(new FullyQualifiedJavaType(
+                "com.ibatis.dao.client.template.SqlMapDaoTemplate")); //$NON-NLS-1$
+    }
+
+    @Override
+    protected void configureUpdateMethodTemplate() {
+        setUpdateMethodTemplate("update(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+    }
+}

@@ -1,99 +1,118 @@
-/*     */ package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
-/*     */ 
-/*     */ import java.util.List;
-/*     */ import org.mybatis.generator.api.CommentGenerator;
-/*     */ import org.mybatis.generator.api.IntrospectedColumn;
-/*     */ import org.mybatis.generator.api.IntrospectedTable;
-/*     */ import org.mybatis.generator.api.Plugin;
-/*     */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*     */ import org.mybatis.generator.api.dom.xml.Attribute;
-/*     */ import org.mybatis.generator.api.dom.xml.TextElement;
-/*     */ import org.mybatis.generator.api.dom.xml.XmlElement;
-/*     */ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
-/*     */ import org.mybatis.generator.config.Context;
-/*     */ import org.mybatis.generator.internal.rules.Rules;
-/*     */ import org.mybatis.generator.internal.util.StringUtility;
-/*     */ 
-/*     */ public class SelectByPrimaryKeyElementGenerator extends AbstractXmlElementGenerator
-/*     */ {
-/*     */   public void addElements(XmlElement parentElement)
-/*     */   {
-/*  39 */     XmlElement answer = new XmlElement("select");
-/*     */ 
-/*  41 */     answer.addAttribute(new Attribute("id", this.introspectedTable.getSelectByPrimaryKeyStatementId()));
-/*     */ 
-/*  43 */     if (this.introspectedTable.getRules().generateResultMapWithBLOBs()) {
-/*  44 */       answer.addAttribute(new Attribute("resultMap", this.introspectedTable.getResultMapWithBLOBsId()));
-/*     */     }
-/*     */     else
-/*  47 */       answer.addAttribute(new Attribute("resultMap", this.introspectedTable.getBaseResultMapId()));
-/*     */     String parameterType;
-/*  52 */     if (this.introspectedTable.getRules().generatePrimaryKeyClass()) {
-/*  53 */       parameterType = this.introspectedTable.getPrimaryKeyType();
-/*     */     }
-/*     */     else
-/*     */     {
-/*  57 */       if (this.introspectedTable.getPrimaryKeyColumns().size() > 1)
-/*  58 */         parameterType = "map";
-/*     */       else {
-/*  60 */         parameterType = ((IntrospectedColumn)this.introspectedTable.getPrimaryKeyColumns().get(0)).getFullyQualifiedJavaType().toString();
-/*     */       }
-/*     */ 
-/*     */     }
-/*     */ 
-/*  65 */     answer.addAttribute(new Attribute("parameterType", parameterType));
-/*     */ 
-/*  68 */     this.context.getCommentGenerator().addComment(answer);
-/*     */ 
-/*  70 */     StringBuilder sb = new StringBuilder();
-/*  71 */     sb.append("select ");
-/*     */ 
-/*  73 */     if (StringUtility.stringHasValue(this.introspectedTable.getSelectByPrimaryKeyQueryId()))
-/*     */     {
-/*  75 */       sb.append('\'');
-/*  76 */       sb.append(this.introspectedTable.getSelectByPrimaryKeyQueryId());
-/*  77 */       sb.append("' as QUERYID,");
-/*     */     }
-/*  79 */     answer.addElement(new TextElement(sb.toString()));
-/*  80 */     answer.addElement(getBaseColumnListElement());
-/*  81 */     if (this.introspectedTable.hasBLOBColumns()) {
-/*  82 */       answer.addElement(new TextElement(","));
-/*  83 */       answer.addElement(getBlobColumnListElement());
-/*     */     }
-/*     */ 
-/*  86 */     sb.setLength(0);
-/*  87 */     sb.append("from ");
-/*  88 */     sb.append(this.introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-/*     */ 
-/*  90 */     answer.addElement(new TextElement(sb.toString()));
-/*     */ 
-/*  92 */     boolean and = false;
-/*  93 */     for (IntrospectedColumn introspectedColumn : this.introspectedTable.getPrimaryKeyColumns())
-/*     */     {
-/*  95 */       sb.setLength(0);
-/*  96 */       if (and) {
-/*  97 */         sb.append("  and ");
-/*     */       } else {
-/*  99 */         sb.append("where ");
-/* 100 */         and = true;
-/*     */       }
-/*     */ 
-/* 103 */       sb.append(MyBatis3FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
-/*     */ 
-/* 105 */       sb.append(" = ");
-/* 106 */       sb.append(MyBatis3FormattingUtilities.getParameterClause(introspectedColumn));
-/*     */ 
-/* 108 */       answer.addElement(new TextElement(sb.toString()));
-/*     */     }
-/*     */ 
-/* 111 */     if (this.context.getPlugins().sqlMapSelectByPrimaryKeyElementGenerated(answer, this.introspectedTable))
-/*     */     {
-/* 114 */       parentElement.addElement(answer);
-/*     */     }
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByPrimaryKeyElementGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2009 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
+
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.TextElement;
+import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class SelectByPrimaryKeyElementGenerator extends
+        AbstractXmlElementGenerator {
+
+    public SelectByPrimaryKeyElementGenerator() {
+        super();
+    }
+
+    @Override
+    public void addElements(XmlElement parentElement) {
+        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+
+        answer.addAttribute(new Attribute(
+                "id", introspectedTable.getSelectByPrimaryKeyStatementId())); //$NON-NLS-1$
+        if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
+            answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
+                    introspectedTable.getResultMapWithBLOBsId()));
+        } else {
+            answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
+                    introspectedTable.getBaseResultMapId()));
+        }
+
+        String parameterType;
+        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+            parameterType = introspectedTable.getPrimaryKeyType();
+        } else {
+            // PK fields are in the base class. If more than on PK
+            // field, then they are coming in a map.
+            if (introspectedTable.getPrimaryKeyColumns().size() > 1) {
+                parameterType = "map"; //$NON-NLS-1$
+            } else {
+                parameterType = introspectedTable.getPrimaryKeyColumns().get(0)
+                        .getFullyQualifiedJavaType().toString();
+            }
+        }
+
+        answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
+                parameterType));
+
+        context.getCommentGenerator().addComment(answer);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select "); //$NON-NLS-1$
+
+        if (stringHasValue(introspectedTable
+                .getSelectByPrimaryKeyQueryId())) {
+            sb.append('\'');
+            sb.append(introspectedTable.getSelectByPrimaryKeyQueryId());
+            sb.append("' as QUERYID,"); //$NON-NLS-1$
+        }
+        answer.addElement(new TextElement(sb.toString()));
+        answer.addElement(getBaseColumnListElement());
+        if (introspectedTable.hasBLOBColumns()) {
+            answer.addElement(new TextElement(",")); //$NON-NLS-1$
+            answer.addElement(getBlobColumnListElement());
+        }
+
+        sb.setLength(0);
+        sb.append("from "); //$NON-NLS-1$
+        sb.append(introspectedTable
+                .getAliasedFullyQualifiedTableNameAtRuntime());
+        answer.addElement(new TextElement(sb.toString()));
+
+        boolean and = false;
+        for (IntrospectedColumn introspectedColumn : introspectedTable
+                .getPrimaryKeyColumns()) {
+            sb.setLength(0);
+            if (and) {
+                sb.append("  and "); //$NON-NLS-1$
+            } else {
+                sb.append("where "); //$NON-NLS-1$
+                and = true;
+            }
+
+            sb.append(MyBatis3FormattingUtilities
+                    .getAliasedEscapedColumnName(introspectedColumn));
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(MyBatis3FormattingUtilities
+                    .getParameterClause(introspectedColumn));
+            answer.addElement(new TextElement(sb.toString()));
+        }
+
+        if (context.getPlugins()
+                .sqlMapSelectByPrimaryKeyElementGenerated(answer,
+                        introspectedTable)) {
+            parentElement.addElement(answer);
+        }
+    }
+}

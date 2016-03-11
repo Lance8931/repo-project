@@ -1,128 +1,148 @@
-/*     */ package org.mybatis.generator.codegen.ibatis2.dao.elements;
-/*     */ 
-/*     */ import java.util.Set;
-/*     */ import java.util.TreeSet;
-/*     */ import org.mybatis.generator.api.CommentGenerator;
-/*     */ import org.mybatis.generator.api.DAOMethodNameCalculator;
-/*     */ import org.mybatis.generator.api.IntrospectedColumn;
-/*     */ import org.mybatis.generator.api.IntrospectedTable;
-/*     */ import org.mybatis.generator.api.Plugin;
-/*     */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*     */ import org.mybatis.generator.api.dom.java.Interface;
-/*     */ import org.mybatis.generator.api.dom.java.JavaVisibility;
-/*     */ import org.mybatis.generator.api.dom.java.Method;
-/*     */ import org.mybatis.generator.api.dom.java.Parameter;
-/*     */ import org.mybatis.generator.api.dom.java.TopLevelClass;
-/*     */ import org.mybatis.generator.codegen.ibatis2.dao.templates.AbstractDAOTemplate;
-/*     */ import org.mybatis.generator.config.Context;
-/*     */ import org.mybatis.generator.internal.rules.Rules;
-/*     */ import org.mybatis.generator.internal.util.JavaBeansUtil;
-/*     */ 
-/*     */ public class SelectByPrimaryKeyMethodGenerator extends AbstractDAOElementGenerator
-/*     */ {
-/*     */   public void addImplementationElements(TopLevelClass topLevelClass)
-/*     */   {
-/*  44 */     Set importedTypes = new TreeSet();
-/*  45 */     Method method = getMethodShell(importedTypes);
-/*     */ 
-/*  48 */     StringBuilder sb = new StringBuilder();
-/*     */ 
-/*  50 */     if (!this.introspectedTable.getRules().generatePrimaryKeyClass())
-/*     */     {
-/*  53 */       FullyQualifiedJavaType keyType = new FullyQualifiedJavaType(this.introspectedTable.getBaseRecordType());
-/*     */ 
-/*  55 */       topLevelClass.addImportedType(keyType);
-/*     */ 
-/*  57 */       sb.setLength(0);
-/*  58 */       sb.append(keyType.getShortName());
-/*  59 */       sb.append(" _key = new ");
-/*  60 */       sb.append(keyType.getShortName());
-/*  61 */       sb.append("();");
-/*  62 */       method.addBodyLine(sb.toString());
-/*     */ 
-/*  64 */       for (IntrospectedColumn introspectedColumn : this.introspectedTable.getPrimaryKeyColumns())
-/*     */       {
-/*  66 */         sb.setLength(0);
-/*  67 */         sb.append("_key.");
-/*  68 */         sb.append(JavaBeansUtil.getSetterMethodName(introspectedColumn.getJavaProperty()));
-/*     */ 
-/*  70 */         sb.append('(');
-/*  71 */         sb.append(introspectedColumn.getJavaProperty());
-/*  72 */         sb.append(");");
-/*  73 */         method.addBodyLine(sb.toString());
-/*     */       }
-/*     */     }
-/*     */ 
-/*  77 */     FullyQualifiedJavaType returnType = method.getReturnType();
-/*     */ 
-/*  79 */     sb.setLength(0);
-/*  80 */     sb.append(returnType.getShortName());
-/*  81 */     sb.append(" record = (");
-/*  82 */     sb.append(returnType.getShortName());
-/*  83 */     sb.append(") ");
-/*  84 */     sb.append(this.daoTemplate.getQueryForObjectMethod(this.introspectedTable.getIbatis2SqlMapNamespace(), this.introspectedTable.getSelectByPrimaryKeyStatementId(), "_key"));
-/*     */ 
-/*  87 */     method.addBodyLine(sb.toString());
-/*  88 */     method.addBodyLine("return record;");
-/*     */ 
-/*  90 */     if (this.context.getPlugins().clientSelectByPrimaryKeyMethodGenerated(method, topLevelClass, this.introspectedTable))
-/*     */     {
-/*  92 */       topLevelClass.addImportedTypes(importedTypes);
-/*  93 */       topLevelClass.addMethod(method);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   public void addInterfaceElements(Interface interfaze)
-/*     */   {
-/*  99 */     Set importedTypes = new TreeSet();
-/* 100 */     Method method = getMethodShell(importedTypes);
-/*     */ 
-/* 102 */     if (this.context.getPlugins().clientSelectByPrimaryKeyMethodGenerated(method, interfaze, this.introspectedTable))
-/*     */     {
-/* 104 */       interfaze.addImportedTypes(importedTypes);
-/* 105 */       interfaze.addMethod(method);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-/* 110 */     Method method = new Method();
-/* 111 */     method.setVisibility(JavaVisibility.PUBLIC);
-/*     */ 
-/* 113 */     FullyQualifiedJavaType returnType = this.introspectedTable.getRules().calculateAllFieldsClass();
-/*     */ 
-/* 115 */     method.setReturnType(returnType);
-/* 116 */     importedTypes.add(returnType);
-/*     */ 
-/* 118 */     method.setName(getDAOMethodNameCalculator().getSelectByPrimaryKeyMethodName(this.introspectedTable));
-/*     */ 
-/* 121 */     if (this.introspectedTable.getRules().generatePrimaryKeyClass()) {
-/* 122 */       FullyQualifiedJavaType type = new FullyQualifiedJavaType(this.introspectedTable.getPrimaryKeyType());
-/*     */ 
-/* 124 */       importedTypes.add(type);
-/* 125 */       method.addParameter(new Parameter(type, "_key"));
-/*     */     } else {
-/* 127 */       for (IntrospectedColumn introspectedColumn : this.introspectedTable.getPrimaryKeyColumns())
-/*     */       {
-/* 129 */         FullyQualifiedJavaType type = introspectedColumn.getFullyQualifiedJavaType();
-/*     */ 
-/* 131 */         importedTypes.add(type);
-/* 132 */         method.addParameter(new Parameter(type, introspectedColumn.getJavaProperty()));
-/*     */       }
-/*     */ 
-/*     */     }
-/*     */ 
-/* 137 */     for (FullyQualifiedJavaType fqjt : this.daoTemplate.getCheckedExceptions()) {
-/* 138 */       method.addException(fqjt);
-/* 139 */       importedTypes.add(fqjt);
-/*     */     }
-/*     */ 
-/* 142 */     this.context.getCommentGenerator().addGeneralMethodComment(method, this.introspectedTable);
-/*     */ 
-/* 145 */     return method;
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.ibatis2.dao.elements.SelectByPrimaryKeyMethodGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2008 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.ibatis2.dao.elements;
+
+import static org.mybatis.generator.internal.util.JavaBeansUtil.getSetterMethodName;
+
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.java.Interface;
+import org.mybatis.generator.api.dom.java.JavaVisibility;
+import org.mybatis.generator.api.dom.java.Method;
+import org.mybatis.generator.api.dom.java.Parameter;
+import org.mybatis.generator.api.dom.java.TopLevelClass;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class SelectByPrimaryKeyMethodGenerator extends
+        AbstractDAOElementGenerator {
+
+    public SelectByPrimaryKeyMethodGenerator() {
+        super();
+    }
+
+    @Override
+    public void addImplementationElements(TopLevelClass topLevelClass) {
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Method method = getMethodShell(importedTypes);
+
+        // generate the implementation method
+        StringBuilder sb = new StringBuilder();
+
+        if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
+            // no primary key class, but primary key is enabled. Primary
+            // key columns must be in the base class.
+            FullyQualifiedJavaType keyType = new FullyQualifiedJavaType(
+                    introspectedTable.getBaseRecordType());
+            topLevelClass.addImportedType(keyType);
+
+            sb.setLength(0);
+            sb.append(keyType.getShortName());
+            sb.append(" _key = new "); //$NON-NLS-1$
+            sb.append(keyType.getShortName());
+            sb.append("();"); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+
+            for (IntrospectedColumn introspectedColumn : introspectedTable
+                    .getPrimaryKeyColumns()) {
+                sb.setLength(0);
+                sb.append("_key."); //$NON-NLS-1$
+                sb.append(getSetterMethodName(introspectedColumn
+                        .getJavaProperty()));
+                sb.append('(');
+                sb.append(introspectedColumn.getJavaProperty());
+                sb.append(");"); //$NON-NLS-1$
+                method.addBodyLine(sb.toString());
+            }
+        }
+
+        FullyQualifiedJavaType returnType = method.getReturnType();
+
+        sb.setLength(0);
+        sb.append(returnType.getShortName());
+        sb.append(" record = ("); //$NON-NLS-1$
+        sb.append(returnType.getShortName());
+        sb.append(") "); //$NON-NLS-1$
+        sb.append(daoTemplate.getQueryForObjectMethod(introspectedTable
+                .getIbatis2SqlMapNamespace(), introspectedTable
+                .getSelectByPrimaryKeyStatementId(), "_key")); //$NON-NLS-1$
+        method.addBodyLine(sb.toString());
+        method.addBodyLine("return record;"); //$NON-NLS-1$
+
+        if (context.getPlugins().clientSelectByPrimaryKeyMethodGenerated(
+                method, topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
+    }
+
+    @Override
+    public void addInterfaceElements(Interface interfaze) {
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Method method = getMethodShell(importedTypes);
+
+        if (context.getPlugins().clientSelectByPrimaryKeyMethodGenerated(
+                method, interfaze, introspectedTable)) {
+            interfaze.addImportedTypes(importedTypes);
+            interfaze.addMethod(method);
+        }
+    }
+
+    private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
+        Method method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+
+        FullyQualifiedJavaType returnType = introspectedTable.getRules()
+                .calculateAllFieldsClass();
+        method.setReturnType(returnType);
+        importedTypes.add(returnType);
+
+        method.setName(getDAOMethodNameCalculator()
+                .getSelectByPrimaryKeyMethodName(introspectedTable));
+
+        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+            FullyQualifiedJavaType type = new FullyQualifiedJavaType(
+                    introspectedTable.getPrimaryKeyType());
+            importedTypes.add(type);
+            method.addParameter(new Parameter(type, "_key")); //$NON-NLS-1$
+        } else {
+            for (IntrospectedColumn introspectedColumn : introspectedTable
+                    .getPrimaryKeyColumns()) {
+                FullyQualifiedJavaType type = introspectedColumn
+                        .getFullyQualifiedJavaType();
+                importedTypes.add(type);
+                method.addParameter(new Parameter(type, introspectedColumn
+                        .getJavaProperty()));
+            }
+        }
+
+        for (FullyQualifiedJavaType fqjt : daoTemplate.getCheckedExceptions()) {
+            method.addException(fqjt);
+            importedTypes.add(fqjt);
+        }
+
+        context.getCommentGenerator().addGeneralMethodComment(method,
+                introspectedTable);
+
+        return method;
+    }
+}

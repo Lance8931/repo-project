@@ -1,170 +1,185 @@
-/*     */ package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
-/*     */ 
-/*     */ import org.mybatis.generator.api.CommentGenerator;
-/*     */ import org.mybatis.generator.api.IntrospectedColumn;
-/*     */ import org.mybatis.generator.api.IntrospectedTable;
-/*     */ import org.mybatis.generator.api.Plugin;
-/*     */ import org.mybatis.generator.api.dom.xml.Attribute;
-/*     */ import org.mybatis.generator.api.dom.xml.TextElement;
-/*     */ import org.mybatis.generator.api.dom.xml.XmlElement;
-/*     */ import org.mybatis.generator.config.Context;
-/*     */ import org.mybatis.generator.internal.util.StringUtility;
-/*     */ 
-/*     */ public class ExampleWhereClauseElementGenerator extends AbstractXmlElementGenerator
-/*     */ {
-/*     */   private boolean isForUpdateByExample;
-/*     */ 
-/*     */   public ExampleWhereClauseElementGenerator(boolean isForUpdateByExample)
-/*     */   {
-/*  36 */     this.isForUpdateByExample = isForUpdateByExample;
-/*     */   }
-/*     */ 
-/*     */   public void addElements(XmlElement parentElement)
-/*     */   {
-/*  41 */     XmlElement answer = new XmlElement("sql");
-/*     */ 
-/*  43 */     if (this.isForUpdateByExample) {
-/*  44 */       answer.addAttribute(new Attribute("id", this.introspectedTable.getMyBatis3UpdateByExampleWhereClauseId()));
-/*     */     }
-/*     */     else
-/*     */     {
-/*  48 */       answer.addAttribute(new Attribute("id", this.introspectedTable.getExampleWhereClauseId()));
-/*     */     }
-/*     */ 
-/*  52 */     this.context.getCommentGenerator().addComment(answer);
-/*     */ 
-/*  54 */     XmlElement whereElement = new XmlElement("where");
-/*  55 */     answer.addElement(whereElement);
-/*     */ 
-/*  57 */     XmlElement outerForEachElement = new XmlElement("foreach");
-/*  58 */     if (this.isForUpdateByExample) {
-/*  59 */       outerForEachElement.addAttribute(new Attribute("collection", "example.oredCriteria"));
-/*     */     }
-/*     */     else {
-/*  62 */       outerForEachElement.addAttribute(new Attribute("collection", "oredCriteria"));
-/*     */     }
-/*     */ 
-/*  65 */     outerForEachElement.addAttribute(new Attribute("item", "criteria"));
-/*  66 */     outerForEachElement.addAttribute(new Attribute("separator", "or"));
-/*  67 */     whereElement.addElement(outerForEachElement);
-/*     */ 
-/*  69 */     XmlElement ifElement = new XmlElement("if");
-/*  70 */     ifElement.addAttribute(new Attribute("test", "criteria.valid"));
-/*  71 */     outerForEachElement.addElement(ifElement);
-/*     */ 
-/*  73 */     XmlElement trimElement = new XmlElement("trim");
-/*  74 */     trimElement.addAttribute(new Attribute("prefix", "("));
-/*  75 */     trimElement.addAttribute(new Attribute("suffix", ")"));
-/*  76 */     trimElement.addAttribute(new Attribute("prefixOverrides", "and"));
-/*     */ 
-/*  78 */     ifElement.addElement(trimElement);
-/*     */ 
-/*  80 */     trimElement.addElement(getMiddleForEachElement(null));
-/*     */ 
-/*  82 */     for (IntrospectedColumn introspectedColumn : this.introspectedTable.getNonBLOBColumns())
-/*     */     {
-/*  84 */       if (StringUtility.stringHasValue(introspectedColumn.getTypeHandler()))
-/*     */       {
-/*  86 */         trimElement.addElement(getMiddleForEachElement(introspectedColumn));
-/*     */       }
-/*     */ 
-/*     */     }
-/*     */ 
-/*  91 */     if (this.context.getPlugins().sqlMapExampleWhereClauseElementGenerated(answer, this.introspectedTable))
-/*     */     {
-/*  94 */       parentElement.addElement(answer);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private XmlElement getMiddleForEachElement(IntrospectedColumn introspectedColumn)
-/*     */   {
-/* 100 */     StringBuilder sb = new StringBuilder();
-/*     */     String typeHandlerString;
-/*     */     String criteriaAttribute;
-/*     */     boolean typeHandled;
-/* 104 */     if (introspectedColumn == null) {
-/* 105 */       criteriaAttribute = "criteria.criteria";
-/* 106 */       typeHandled = false;
-/* 107 */       typeHandlerString = null;
-/*     */     } else {
-/* 109 */       sb.setLength(0);
-/* 110 */       sb.append("criteria.");
-/* 111 */       sb.append(introspectedColumn.getJavaProperty());
-/* 112 */       sb.append("Criteria");
-/* 113 */       criteriaAttribute = sb.toString();
-/*     */ 
-/* 115 */       typeHandled = true;
-/*     */ 
-/* 117 */       sb.setLength(0);
-/* 118 */       sb.append(",typeHandler=");
-/* 119 */       sb.append(introspectedColumn.getTypeHandler());
-/* 120 */       typeHandlerString = sb.toString();
-/*     */     }
-/*     */ 
-/* 123 */     XmlElement middleForEachElement = new XmlElement("foreach");
-/* 124 */     middleForEachElement.addAttribute(new Attribute("collection", criteriaAttribute));
-/*     */ 
-/* 126 */     middleForEachElement.addAttribute(new Attribute("item", "criterion"));
-/*     */ 
-/* 128 */     XmlElement chooseElement = new XmlElement("choose");
-/* 129 */     middleForEachElement.addElement(chooseElement);
-/*     */ 
-/* 131 */     XmlElement when = new XmlElement("when");
-/* 132 */     when.addAttribute(new Attribute("test", "criterion.noValue"));
-/* 133 */     when.addElement(new TextElement("and ${criterion.condition}"));
-/* 134 */     chooseElement.addElement(when);
-/*     */ 
-/* 136 */     when = new XmlElement("when");
-/* 137 */     when.addAttribute(new Attribute("test", "criterion.singleValue"));
-/* 138 */     sb.setLength(0);
-/* 139 */     sb.append("and ${criterion.condition} #{criterion.value");
-/* 140 */     if (typeHandled) {
-/* 141 */       sb.append(typeHandlerString);
-/*     */     }
-/* 143 */     sb.append('}');
-/* 144 */     when.addElement(new TextElement(sb.toString()));
-/* 145 */     chooseElement.addElement(when);
-/*     */ 
-/* 147 */     when = new XmlElement("when");
-/* 148 */     when.addAttribute(new Attribute("test", "criterion.betweenValue"));
-/* 149 */     sb.setLength(0);
-/* 150 */     sb.append("and ${criterion.condition} #{criterion.value");
-/* 151 */     if (typeHandled) {
-/* 152 */       sb.append(typeHandlerString);
-/*     */     }
-/* 154 */     sb.append("} and #{criterion.secondValue");
-/* 155 */     if (typeHandled) {
-/* 156 */       sb.append(typeHandlerString);
-/*     */     }
-/* 158 */     sb.append('}');
-/* 159 */     when.addElement(new TextElement(sb.toString()));
-/* 160 */     chooseElement.addElement(when);
-/*     */ 
-/* 162 */     when = new XmlElement("when");
-/* 163 */     when.addAttribute(new Attribute("test", "criterion.listValue"));
-/* 164 */     when.addElement(new TextElement("and ${criterion.condition}"));
-/* 165 */     XmlElement innerForEach = new XmlElement("foreach");
-/* 166 */     innerForEach.addAttribute(new Attribute("collection", "criterion.value"));
-/*     */ 
-/* 168 */     innerForEach.addAttribute(new Attribute("item", "listItem"));
-/* 169 */     innerForEach.addAttribute(new Attribute("open", "("));
-/* 170 */     innerForEach.addAttribute(new Attribute("close", ")"));
-/* 171 */     innerForEach.addAttribute(new Attribute("separator", ","));
-/* 172 */     sb.setLength(0);
-/* 173 */     sb.append("#{listItem");
-/* 174 */     if (typeHandled) {
-/* 175 */       sb.append(typeHandlerString);
-/*     */     }
-/* 177 */     sb.append('}');
-/* 178 */     innerForEach.addElement(new TextElement(sb.toString()));
-/* 179 */     when.addElement(innerForEach);
-/* 180 */     chooseElement.addElement(when);
-/*     */ 
-/* 182 */     return middleForEachElement;
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ExampleWhereClauseElementGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2009 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
+
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.TextElement;
+import org.mybatis.generator.api.dom.xml.XmlElement;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class ExampleWhereClauseElementGenerator extends
+        AbstractXmlElementGenerator {
+
+    private boolean isForUpdateByExample;
+
+    public ExampleWhereClauseElementGenerator(boolean isForUpdateByExample) {
+        super();
+        this.isForUpdateByExample = isForUpdateByExample;
+    }
+
+    @Override
+    public void addElements(XmlElement parentElement) {
+        XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
+
+        if (isForUpdateByExample) {
+            answer
+                    .addAttribute(new Attribute(
+                            "id", introspectedTable.getMyBatis3UpdateByExampleWhereClauseId())); //$NON-NLS-1$
+        } else {
+            answer.addAttribute(new Attribute(
+                    "id", introspectedTable.getExampleWhereClauseId())); //$NON-NLS-1$
+        }
+
+        context.getCommentGenerator().addComment(answer);
+
+        XmlElement whereElement = new XmlElement("where"); //$NON-NLS-1$
+        answer.addElement(whereElement);
+
+        XmlElement outerForEachElement = new XmlElement("foreach"); //$NON-NLS-1$
+        if (isForUpdateByExample) {
+            outerForEachElement.addAttribute(new Attribute(
+                    "collection", "example.oredCriteria")); //$NON-NLS-1$ //$NON-NLS-2$
+        } else {
+            outerForEachElement.addAttribute(new Attribute(
+                    "collection", "oredCriteria")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        outerForEachElement.addAttribute(new Attribute("item", "criteria")); //$NON-NLS-1$ //$NON-NLS-2$
+        outerForEachElement.addAttribute(new Attribute("separator", "or")); //$NON-NLS-1$ //$NON-NLS-2$
+        whereElement.addElement(outerForEachElement);
+
+        XmlElement ifElement = new XmlElement("if"); //$NON-NLS-1$
+        ifElement.addAttribute(new Attribute("test", "criteria.valid")); //$NON-NLS-1$ //$NON-NLS-2$
+        outerForEachElement.addElement(ifElement);
+
+        XmlElement trimElement = new XmlElement("trim"); //$NON-NLS-1$
+        trimElement.addAttribute(new Attribute("prefix", "(")); //$NON-NLS-1$ //$NON-NLS-2$
+        trimElement.addAttribute(new Attribute("suffix", ")")); //$NON-NLS-1$ //$NON-NLS-2$
+        trimElement.addAttribute(new Attribute("prefixOverrides", "and")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        ifElement.addElement(trimElement);
+
+        trimElement.addElement(getMiddleForEachElement(null));
+
+        for (IntrospectedColumn introspectedColumn : introspectedTable
+                .getNonBLOBColumns()) {
+            if (stringHasValue(introspectedColumn
+                    .getTypeHandler())) {
+                trimElement
+                        .addElement(getMiddleForEachElement(introspectedColumn));
+            }
+        }
+
+        if (context.getPlugins()
+                .sqlMapExampleWhereClauseElementGenerated(answer,
+                        introspectedTable)) {
+            parentElement.addElement(answer);
+        }
+    }
+
+    private XmlElement getMiddleForEachElement(
+            IntrospectedColumn introspectedColumn) {
+        StringBuilder sb = new StringBuilder();
+        String criteriaAttribute;
+        boolean typeHandled;
+        String typeHandlerString;
+        if (introspectedColumn == null) {
+            criteriaAttribute = "criteria.criteria"; //$NON-NLS-1$
+            typeHandled = false;
+            typeHandlerString = null;
+        } else {
+            sb.setLength(0);
+            sb.append("criteria."); //$NON-NLS-1$
+            sb.append(introspectedColumn.getJavaProperty());
+            sb.append("Criteria"); //$NON-NLS-1$
+            criteriaAttribute = sb.toString();
+
+            typeHandled = true;
+
+            sb.setLength(0);
+            sb.append(",typeHandler="); //$NON-NLS-1$
+            sb.append(introspectedColumn.getTypeHandler());
+            typeHandlerString = sb.toString();
+        }
+
+        XmlElement middleForEachElement = new XmlElement("foreach"); //$NON-NLS-1$
+        middleForEachElement.addAttribute(new Attribute(
+                "collection", criteriaAttribute)); //$NON-NLS-1$
+        middleForEachElement.addAttribute(new Attribute("item", "criterion")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        XmlElement chooseElement = new XmlElement("choose"); //$NON-NLS-1$
+        middleForEachElement.addElement(chooseElement);
+
+        XmlElement when = new XmlElement("when"); //$NON-NLS-1$
+        when.addAttribute(new Attribute("test", "criterion.noValue")); //$NON-NLS-1$ //$NON-NLS-2$
+        when.addElement(new TextElement("and ${criterion.condition}")); //$NON-NLS-1$
+        chooseElement.addElement(when);
+
+        when = new XmlElement("when"); //$NON-NLS-1$
+        when.addAttribute(new Attribute("test", "criterion.singleValue")); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.setLength(0);
+        sb.append("and ${criterion.condition} #{criterion.value"); //$NON-NLS-1$
+        if (typeHandled) {
+            sb.append(typeHandlerString);
+        }
+        sb.append('}');
+        when.addElement(new TextElement(sb.toString()));
+        chooseElement.addElement(when);
+
+        when = new XmlElement("when"); //$NON-NLS-1$
+        when.addAttribute(new Attribute("test", "criterion.betweenValue")); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.setLength(0);
+        sb.append("and ${criterion.condition} #{criterion.value"); //$NON-NLS-1$
+        if (typeHandled) {
+            sb.append(typeHandlerString);
+        }
+        sb.append("} and #{criterion.secondValue"); //$NON-NLS-1$
+        if (typeHandled) {
+            sb.append(typeHandlerString);
+        }
+        sb.append('}');
+        when.addElement(new TextElement(sb.toString()));
+        chooseElement.addElement(when);
+
+        when = new XmlElement("when"); //$NON-NLS-1$
+        when.addAttribute(new Attribute("test", "criterion.listValue")); //$NON-NLS-1$ //$NON-NLS-2$
+        when.addElement(new TextElement("and ${criterion.condition}")); //$NON-NLS-1$
+        XmlElement innerForEach = new XmlElement("foreach"); //$NON-NLS-1$
+        innerForEach
+                .addAttribute(new Attribute("collection", "criterion.value")); //$NON-NLS-1$ //$NON-NLS-2$
+        innerForEach.addAttribute(new Attribute("item", "listItem")); //$NON-NLS-1$ //$NON-NLS-2$
+        innerForEach.addAttribute(new Attribute("open", "(")); //$NON-NLS-1$ //$NON-NLS-2$
+        innerForEach.addAttribute(new Attribute("close", ")")); //$NON-NLS-1$ //$NON-NLS-2$
+        innerForEach.addAttribute(new Attribute("separator", ",")); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.setLength(0);
+        sb.append("#{listItem"); //$NON-NLS-1$
+        if (typeHandled) {
+            sb.append(typeHandlerString);
+        }
+        sb.append('}');
+        innerForEach.addElement(new TextElement(sb.toString()));
+        when.addElement(innerForEach);
+        chooseElement.addElement(when);
+
+        return middleForEachElement;
+    }
+}

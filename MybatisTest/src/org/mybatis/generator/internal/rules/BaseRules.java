@@ -1,179 +1,333 @@
-/*     */ package org.mybatis.generator.internal.rules;
-/*     */ 
-/*     */ import org.mybatis.generator.api.IntrospectedTable;
-/*     */ import org.mybatis.generator.api.IntrospectedTable.TargetRuntime;
-/*     */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*     */ import org.mybatis.generator.config.TableConfiguration;
-/*     */ 
-/*     */ public abstract class BaseRules
-/*     */   implements Rules
-/*     */ {
-/*     */   protected TableConfiguration tableConfiguration;
-/*     */   protected IntrospectedTable introspectedTable;
-/*     */ 
-/*     */   public BaseRules(IntrospectedTable introspectedTable)
-/*     */   {
-/*  40 */     this.introspectedTable = introspectedTable;
-/*  41 */     this.tableConfiguration = introspectedTable.getTableConfiguration();
-/*     */   }
-/*     */ 
-/*     */   public boolean generateInsert()
-/*     */   {
-/*  52 */     return this.tableConfiguration.isInsertStatementEnabled();
-/*     */   }
-/*     */ 
-/*     */   public boolean generateInsertSelective()
-/*     */   {
-/*  63 */     return this.tableConfiguration.isInsertStatementEnabled();
-/*     */   }
-/*     */ 
-/*     */   public FullyQualifiedJavaType calculateAllFieldsClass()
-/*     */   {
-/*     */     String answer;
-/*  78 */     if (generateRecordWithBLOBsClass()) {
-/*  79 */       answer = this.introspectedTable.getRecordWithBLOBsType();
-/*     */     }
-/*     */     else
-/*     */     {
-/*  80 */       if (generateBaseRecordClass())
-/*  81 */         answer = this.introspectedTable.getBaseRecordType();
-/*     */       else {
-/*  83 */         answer = this.introspectedTable.getPrimaryKeyType();
-/*     */       }
-/*     */     }
-/*  86 */     return new FullyQualifiedJavaType(answer);
-/*     */   }
-/*     */ 
-/*     */   public boolean generateUpdateByPrimaryKeyWithoutBLOBs()
-/*     */   {
-/*  98 */     boolean rc = (this.tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()) && (this.introspectedTable.hasPrimaryKeyColumns()) && (this.introspectedTable.hasBaseColumns());
-/*     */ 
-/* 102 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateUpdateByPrimaryKeyWithBLOBs()
-/*     */   {
-/* 114 */     boolean rc = (this.tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()) && (this.introspectedTable.hasPrimaryKeyColumns()) && (this.introspectedTable.hasBLOBColumns());
-/*     */ 
-/* 118 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateUpdateByPrimaryKeySelective()
-/*     */   {
-/* 130 */     boolean rc = (this.tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()) && (this.introspectedTable.hasPrimaryKeyColumns()) && ((this.introspectedTable.hasBLOBColumns()) || (this.introspectedTable.hasBaseColumns()));
-/*     */ 
-/* 135 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateDeleteByPrimaryKey()
-/*     */   {
-/* 147 */     boolean rc = (this.tableConfiguration.isDeleteByPrimaryKeyStatementEnabled()) && (this.introspectedTable.hasPrimaryKeyColumns());
-/*     */ 
-/* 150 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateDeleteByExample()
-/*     */   {
-/* 161 */     boolean rc = this.tableConfiguration.isDeleteByExampleStatementEnabled();
-/*     */ 
-/* 163 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateBaseResultMap()
-/*     */   {
-/* 173 */     boolean rc = (this.tableConfiguration.isSelectByExampleStatementEnabled()) || (this.tableConfiguration.isSelectByPrimaryKeyStatementEnabled());
-/*     */ 
-/* 176 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateResultMapWithBLOBs()
-/*     */   {
-/* 187 */     boolean rc = ((this.tableConfiguration.isSelectByExampleStatementEnabled()) || (this.tableConfiguration.isSelectByPrimaryKeyStatementEnabled())) && (this.introspectedTable.hasBLOBColumns());
-/*     */ 
-/* 191 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateSQLExampleWhereClause()
-/*     */   {
-/* 206 */     boolean rc = (this.tableConfiguration.isSelectByExampleStatementEnabled()) || (this.tableConfiguration.isDeleteByExampleStatementEnabled()) || (this.tableConfiguration.isCountByExampleStatementEnabled());
-/*     */ 
-/* 210 */     if (this.introspectedTable.getTargetRuntime() == IntrospectedTable.TargetRuntime.IBATIS2) {
-/* 211 */       rc |= this.tableConfiguration.isUpdateByExampleStatementEnabled();
-/*     */     }
-/*     */ 
-/* 214 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateMyBatis3UpdateByExampleWhereClause()
-/*     */   {
-/* 229 */     return (this.introspectedTable.getTargetRuntime() == IntrospectedTable.TargetRuntime.MYBATIS3) && (this.tableConfiguration.isUpdateByExampleStatementEnabled());
-/*     */   }
-/*     */ 
-/*     */   public boolean generateSelectByPrimaryKey()
-/*     */   {
-/* 242 */     boolean rc = (this.tableConfiguration.isSelectByPrimaryKeyStatementEnabled()) && (this.introspectedTable.hasPrimaryKeyColumns()) && ((this.introspectedTable.hasBaseColumns()) || (this.introspectedTable.hasBLOBColumns()));
-/*     */ 
-/* 247 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateSelectByExampleWithoutBLOBs()
-/*     */   {
-/* 258 */     return this.tableConfiguration.isSelectByExampleStatementEnabled();
-/*     */   }
-/*     */ 
-/*     */   public boolean generateSelectByExampleWithBLOBs()
-/*     */   {
-/* 270 */     boolean rc = (this.tableConfiguration.isSelectByExampleStatementEnabled()) && (this.introspectedTable.hasBLOBColumns());
-/*     */ 
-/* 273 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateExampleClass()
-/*     */   {
-/* 284 */     boolean rc = (this.tableConfiguration.isSelectByExampleStatementEnabled()) || (this.tableConfiguration.isDeleteByExampleStatementEnabled()) || (this.tableConfiguration.isCountByExampleStatementEnabled()) || (this.tableConfiguration.isUpdateByExampleStatementEnabled());
-/*     */ 
-/* 289 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateCountByExample() {
-/* 293 */     boolean rc = this.tableConfiguration.isCountByExampleStatementEnabled();
-/*     */ 
-/* 295 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateUpdateByExampleSelective() {
-/* 299 */     boolean rc = this.tableConfiguration.isUpdateByExampleStatementEnabled();
-/*     */ 
-/* 301 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateUpdateByExampleWithoutBLOBs() {
-/* 305 */     boolean rc = (this.tableConfiguration.isUpdateByExampleStatementEnabled()) && ((this.introspectedTable.hasPrimaryKeyColumns()) || (this.introspectedTable.hasBaseColumns()));
-/*     */ 
-/* 309 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateUpdateByExampleWithBLOBs() {
-/* 313 */     boolean rc = (this.tableConfiguration.isUpdateByExampleStatementEnabled()) && (this.introspectedTable.hasBLOBColumns());
-/*     */ 
-/* 316 */     return rc;
-/*     */   }
-/*     */ 
-/*     */   public IntrospectedTable getIntrospectedTable() {
-/* 320 */     return this.introspectedTable;
-/*     */   }
-/*     */ 
-/*     */   public boolean generateBaseColumnList() {
-/* 324 */     return (generateSelectByPrimaryKey()) || (generateSelectByExampleWithoutBLOBs());
-/*     */   }
-/*     */ 
-/*     */   public boolean generateBlobColumnList()
-/*     */   {
-/* 329 */     return (this.introspectedTable.hasBLOBColumns()) && ((this.tableConfiguration.isSelectByExampleStatementEnabled()) || (this.tableConfiguration.isSelectByPrimaryKeyStatementEnabled()));
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.internal.rules.BaseRules
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2006 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.internal.rules;
+
+import org.mybatis.generator.api.IntrospectedTable;
+import org.mybatis.generator.api.IntrospectedTable.TargetRuntime;
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.config.TableConfiguration;
+
+/**
+ * This class centralizes all the rules related to code generation - including
+ * the methods and objects to create, and certain attributes related to those
+ * objects.
+ * 
+ * @author Jeff Butler
+ */
+public abstract class BaseRules implements Rules {
+
+    protected TableConfiguration tableConfiguration;
+    protected IntrospectedTable introspectedTable;
+
+    /**
+     * 
+     */
+    public BaseRules(IntrospectedTable introspectedTable) {
+        super();
+        this.introspectedTable = introspectedTable;
+        this.tableConfiguration = introspectedTable.getTableConfiguration();
+    }
+
+    /**
+     * Implements the rule for generating the insert SQL Map element and DAO
+     * method. If the insert statement is allowed, then generate the element and
+     * method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateInsert() {
+        return tableConfiguration.isInsertStatementEnabled();
+    }
+
+    /**
+     * Implements the rule for generating the insert selective SQL Map element
+     * and DAO method. If the insert statement is allowed, then generate the
+     * element and method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateInsertSelective() {
+        return tableConfiguration.isInsertStatementEnabled();
+    }
+
+    /**
+     * Calculates the class that contains all fields. This class is used as the
+     * insert statement parameter, as well as the returned value from the select
+     * by primary key method. The actual class depends on how the domain model
+     * is generated.
+     * 
+     * @return the type of the class that holds all fields
+     */
+    public FullyQualifiedJavaType calculateAllFieldsClass() {
+
+        String answer;
+
+        if (generateRecordWithBLOBsClass()) {
+            answer = introspectedTable.getRecordWithBLOBsType();
+        } else if (generateBaseRecordClass()) {
+            answer = introspectedTable.getBaseRecordType();
+        } else {
+            answer = introspectedTable.getPrimaryKeyType();
+        }
+
+        return new FullyQualifiedJavaType(answer);
+    }
+
+    /**
+     * Implements the rule for generating the update by primary key without
+     * BLOBs SQL Map element and DAO method. If the table has a primary key as
+     * well as other non-BLOB fields, and the updateByPrimaryKey statement is
+     * allowed, then generate the element and method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateUpdateByPrimaryKeyWithoutBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
+                && introspectedTable.hasPrimaryKeyColumns()
+                && introspectedTable.hasBaseColumns();
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating the update by primary key with BLOBs
+     * SQL Map element and DAO method. If the table has a primary key as well as
+     * other BLOB fields, and the updateByPrimaryKey statement is allowed, then
+     * generate the element and method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateUpdateByPrimaryKeyWithBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
+                && introspectedTable.hasPrimaryKeyColumns()
+                && introspectedTable.hasBLOBColumns();
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating the update by primary key selective
+     * SQL Map element and DAO method. If the table has a primary key as well as
+     * other fields, and the updateByPrimaryKey statement is allowed, then
+     * generate the element and method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateUpdateByPrimaryKeySelective() {
+        boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
+                && introspectedTable.hasPrimaryKeyColumns()
+                && (introspectedTable.hasBLOBColumns() || introspectedTable
+                        .hasBaseColumns());
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating the delete by primary key SQL Map
+     * element and DAO method. If the table has a primary key, and the
+     * deleteByPrimaryKey statement is allowed, then generate the element and
+     * method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateDeleteByPrimaryKey() {
+        boolean rc = tableConfiguration.isDeleteByPrimaryKeyStatementEnabled()
+                && introspectedTable.hasPrimaryKeyColumns();
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating the delete by example SQL Map element
+     * and DAO method. If the deleteByExample statement is allowed, then
+     * generate the element and method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateDeleteByExample() {
+        boolean rc = tableConfiguration.isDeleteByExampleStatementEnabled();
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating the result map without BLOBs. If
+     * either select method is allowed, then generate the result map.
+     * 
+     * @return true if the result map should be generated
+     */
+    public boolean generateBaseResultMap() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+                || tableConfiguration.isSelectByPrimaryKeyStatementEnabled();
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating the result map with BLOBs. If the
+     * table has BLOB columns, and either select method is allowed, then
+     * generate the result map.
+     * 
+     * @return true if the result map should be generated
+     */
+    public boolean generateResultMapWithBLOBs() {
+        boolean rc = (tableConfiguration.isSelectByExampleStatementEnabled() || tableConfiguration
+                .isSelectByPrimaryKeyStatementEnabled())
+                && introspectedTable.hasBLOBColumns();
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating the SQL example where clause element.
+     * 
+     * In iBATIS2, generate the element if the selectByExample, deleteByExample,
+     * updateByExample, or countByExample statements are allowed.
+     * 
+     * In MyBatis3, generate the element if the selectByExample,
+     * deleteByExample, or countByExample statements are allowed.
+     * 
+     * @return true if the SQL where clause element should be generated
+     */
+    public boolean generateSQLExampleWhereClause() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+                || tableConfiguration.isDeleteByExampleStatementEnabled()
+                || tableConfiguration.isCountByExampleStatementEnabled();
+
+        if (introspectedTable.getTargetRuntime() == TargetRuntime.IBATIS2) {
+            rc |= tableConfiguration.isUpdateByExampleStatementEnabled();
+        }
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating the SQL example where clause element
+     * specifically for use in the update by example methods.
+     * 
+     * In iBATIS2, do not generate the element.
+     * 
+     * In MyBatis3, generate the element if the updateByExample statements are
+     * allowed.
+     * 
+     * @return true if the SQL where clause element should be generated
+     */
+    public boolean generateMyBatis3UpdateByExampleWhereClause() {
+        return introspectedTable.getTargetRuntime() == TargetRuntime.MYBATIS3
+                && tableConfiguration.isUpdateByExampleStatementEnabled();
+    }
+
+    /**
+     * Implements the rule for generating the select by primary key SQL Map
+     * element and DAO method. If the table has a primary key as well as other
+     * fields, and the selectByPrimaryKey statement is allowed, then generate
+     * the element and method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateSelectByPrimaryKey() {
+        boolean rc = tableConfiguration.isSelectByPrimaryKeyStatementEnabled()
+                && introspectedTable.hasPrimaryKeyColumns()
+                && (introspectedTable.hasBaseColumns() || introspectedTable
+                        .hasBLOBColumns());
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating the select by example without BLOBs
+     * SQL Map element and DAO method. If the selectByExample statement is
+     * allowed, then generate the element and method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateSelectByExampleWithoutBLOBs() {
+        return tableConfiguration.isSelectByExampleStatementEnabled();
+    }
+
+    /**
+     * Implements the rule for generating the select by example with BLOBs SQL
+     * Map element and DAO method. If the table has BLOB fields and the
+     * selectByExample statement is allowed, then generate the element and
+     * method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateSelectByExampleWithBLOBs() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+                && introspectedTable.hasBLOBColumns();
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating an example class. The class should be
+     * generated if the selectByExample or deleteByExample or countByExample
+     * methods are allowed.
+     * 
+     * @return true if the example class should be generated
+     */
+    public boolean generateExampleClass() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+                || tableConfiguration.isDeleteByExampleStatementEnabled()
+                || tableConfiguration.isCountByExampleStatementEnabled()
+                || tableConfiguration.isUpdateByExampleStatementEnabled();
+
+        return rc;
+    }
+
+    public boolean generateCountByExample() {
+        boolean rc = tableConfiguration.isCountByExampleStatementEnabled();
+
+        return rc;
+    }
+
+    public boolean generateUpdateByExampleSelective() {
+        boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled();
+
+        return rc;
+    }
+
+    public boolean generateUpdateByExampleWithoutBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled()
+                && (introspectedTable.hasPrimaryKeyColumns() || introspectedTable
+                        .hasBaseColumns());
+
+        return rc;
+    }
+
+    public boolean generateUpdateByExampleWithBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled()
+                && introspectedTable.hasBLOBColumns();
+
+        return rc;
+    }
+
+    public IntrospectedTable getIntrospectedTable() {
+        return introspectedTable;
+    }
+
+    public boolean generateBaseColumnList() {
+        return generateSelectByPrimaryKey()
+                || generateSelectByExampleWithoutBLOBs();
+    }
+
+    public boolean generateBlobColumnList() {
+        return introspectedTable.hasBLOBColumns()
+                && (tableConfiguration.isSelectByExampleStatementEnabled() || tableConfiguration
+                        .isSelectByPrimaryKeyStatementEnabled());
+    }
+}

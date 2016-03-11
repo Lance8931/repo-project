@@ -1,64 +1,85 @@
-/*    */ package org.mybatis.generator.codegen.ibatis2.dao.elements;
-/*    */ 
-/*    */ import org.mybatis.generator.api.CommentGenerator;
-/*    */ import org.mybatis.generator.api.IntrospectedTable;
-/*    */ import org.mybatis.generator.api.dom.java.Field;
-/*    */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*    */ import org.mybatis.generator.api.dom.java.InnerClass;
-/*    */ import org.mybatis.generator.api.dom.java.Interface;
-/*    */ import org.mybatis.generator.api.dom.java.JavaVisibility;
-/*    */ import org.mybatis.generator.api.dom.java.Method;
-/*    */ import org.mybatis.generator.api.dom.java.Parameter;
-/*    */ import org.mybatis.generator.api.dom.java.TopLevelClass;
-/*    */ import org.mybatis.generator.config.Context;
-/*    */ 
-/*    */ public class UpdateByExampleParmsInnerclassGenerator extends AbstractDAOElementGenerator
-/*    */ {
-/*    */   public void addImplementationElements(TopLevelClass topLevelClass)
-/*    */   {
-/* 41 */     topLevelClass.addImportedType(new FullyQualifiedJavaType(this.introspectedTable.getExampleType()));
-/*    */ 
-/* 44 */     InnerClass innerClass = new InnerClass(new FullyQualifiedJavaType("UpdateByExampleParms"));
-/*    */ 
-/* 46 */     innerClass.setVisibility(JavaVisibility.PROTECTED);
-/* 47 */     innerClass.setStatic(true);
-/* 48 */     innerClass.setSuperClass(this.introspectedTable.getExampleType());
-/* 49 */     this.context.getCommentGenerator().addClassComment(innerClass, this.introspectedTable);
-/*    */ 
-/* 52 */     Method method = new Method();
-/* 53 */     method.setConstructor(true);
-/* 54 */     method.setVisibility(JavaVisibility.PUBLIC);
-/* 55 */     method.setName(innerClass.getType().getShortName());
-/* 56 */     method.addParameter(new Parameter(FullyQualifiedJavaType.getObjectInstance(), "record"));
-/*    */ 
-/* 58 */     method.addParameter(new Parameter(new FullyQualifiedJavaType(this.introspectedTable.getExampleType()), "example"));
-/*    */ 
-/* 60 */     method.addBodyLine("super(example);");
-/* 61 */     method.addBodyLine("this.record = record;");
-/* 62 */     innerClass.addMethod(method);
-/*    */ 
-/* 64 */     Field field = new Field();
-/* 65 */     field.setVisibility(JavaVisibility.PRIVATE);
-/* 66 */     field.setType(FullyQualifiedJavaType.getObjectInstance());
-/* 67 */     field.setName("record");
-/* 68 */     innerClass.addField(field);
-/*    */ 
-/* 70 */     method = new Method();
-/* 71 */     method.setVisibility(JavaVisibility.PUBLIC);
-/* 72 */     method.setReturnType(FullyQualifiedJavaType.getObjectInstance());
-/* 73 */     method.setName("getRecord");
-/* 74 */     method.addBodyLine("return record;");
-/* 75 */     innerClass.addMethod(method);
-/*    */ 
-/* 77 */     topLevelClass.addInnerClass(innerClass);
-/*    */   }
-/*    */ 
-/*    */   public void addInterfaceElements(Interface interfaze)
-/*    */   {
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.ibatis2.dao.elements.UpdateByExampleParmsInnerclassGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2008 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.ibatis2.dao.elements;
+
+import org.mybatis.generator.api.dom.java.Field;
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.java.InnerClass;
+import org.mybatis.generator.api.dom.java.Interface;
+import org.mybatis.generator.api.dom.java.JavaVisibility;
+import org.mybatis.generator.api.dom.java.Method;
+import org.mybatis.generator.api.dom.java.Parameter;
+import org.mybatis.generator.api.dom.java.TopLevelClass;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class UpdateByExampleParmsInnerclassGenerator extends
+        AbstractDAOElementGenerator {
+
+    public UpdateByExampleParmsInnerclassGenerator() {
+        super();
+    }
+
+    @Override
+    public void addImplementationElements(TopLevelClass topLevelClass) {
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(
+                introspectedTable.getExampleType()));
+
+        InnerClass innerClass = new InnerClass(new FullyQualifiedJavaType(
+                "UpdateByExampleParms")); //$NON-NLS-1$
+        innerClass.setVisibility(JavaVisibility.PROTECTED);
+        innerClass.setStatic(true);
+        innerClass.setSuperClass(introspectedTable.getExampleType());
+        context.getCommentGenerator().addClassComment(innerClass,
+                introspectedTable);
+
+        Method method = new Method();
+        method.setConstructor(true);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName(innerClass.getType().getShortName());
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getObjectInstance(), "record")); //$NON-NLS-1$
+        method.addParameter(new Parameter(new FullyQualifiedJavaType(
+                introspectedTable.getExampleType()), "example")); //$NON-NLS-1$
+        method.addBodyLine("super(example);"); //$NON-NLS-1$
+        method.addBodyLine("this.record = record;"); //$NON-NLS-1$
+        innerClass.addMethod(method);
+
+        Field field = new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setType(FullyQualifiedJavaType.getObjectInstance());
+        field.setName("record"); //$NON-NLS-1$
+        innerClass.addField(field);
+
+        method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getObjectInstance());
+        method.setName("getRecord"); //$NON-NLS-1$
+        method.addBodyLine("return record;"); //$NON-NLS-1$
+        innerClass.addMethod(method);
+
+        topLevelClass.addInnerClass(innerClass);
+    }
+
+    @Override
+    public void addInterfaceElements(Interface interfaze) {
+        // nothing to add to the interface
+        ;
+    }
+}

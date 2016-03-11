@@ -1,17 +1,38 @@
-/*    */ package org.mybatis.generator.api;
-/*    */ 
-/*    */ import java.io.PrintStream;
-/*    */ import org.mybatis.generator.internal.NullProgressCallback;
-/*    */ 
-/*    */ public class VerboseProgressCallback extends NullProgressCallback
-/*    */ {
-/*    */   public void startTask(String taskName)
-/*    */   {
-/* 36 */     System.out.println(taskName);
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.api.VerboseProgressCallback
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2009 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+
+package org.mybatis.generator.api;
+
+import org.mybatis.generator.internal.NullProgressCallback;
+
+/**
+ * @author Jeff Butler
+ * 
+ */
+public class VerboseProgressCallback extends NullProgressCallback {
+
+    /**
+     * 
+     */
+    public VerboseProgressCallback() {
+        super();
+    }
+
+    @Override
+    public void startTask(String taskName) {
+        System.out.println(taskName);
+    }
+}

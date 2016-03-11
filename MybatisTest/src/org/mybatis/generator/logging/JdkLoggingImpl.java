@@ -1,54 +1,68 @@
-/*    */ package org.mybatis.generator.logging;
-/*    */ 
-/*    */ import java.util.logging.Level;
-/*    */ import java.util.logging.LogRecord;
-/*    */ import java.util.logging.Logger;
-/*    */ 
-/*    */ public class JdkLoggingImpl
-/*    */   implements Log
-/*    */ {
-/*    */   private Logger log;
-/*    */ 
-/*    */   public JdkLoggingImpl(Class<?> clazz)
-/*    */   {
-/* 33 */     this.log = Logger.getLogger(clazz.getName());
-/*    */   }
-/*    */ 
-/*    */   public boolean isDebugEnabled() {
-/* 37 */     return this.log.isLoggable(Level.FINE);
-/*    */   }
-/*    */ 
-/*    */   public void error(String s, Throwable e) {
-/* 41 */     LogRecord lr = new LogRecord(Level.SEVERE, s);
-/* 42 */     lr.setSourceClassName(this.log.getName());
-/* 43 */     lr.setThrown(e);
-/*    */ 
-/* 45 */     this.log.log(lr);
-/*    */   }
-/*    */ 
-/*    */   public void error(String s) {
-/* 49 */     LogRecord lr = new LogRecord(Level.SEVERE, s);
-/* 50 */     lr.setSourceClassName(this.log.getName());
-/*    */ 
-/* 52 */     this.log.log(lr);
-/*    */   }
-/*    */ 
-/*    */   public void debug(String s) {
-/* 56 */     LogRecord lr = new LogRecord(Level.FINE, s);
-/* 57 */     lr.setSourceClassName(this.log.getName());
-/*    */ 
-/* 59 */     this.log.log(lr);
-/*    */   }
-/*    */ 
-/*    */   public void warn(String s) {
-/* 63 */     LogRecord lr = new LogRecord(Level.WARNING, s);
-/* 64 */     lr.setSourceClassName(this.log.getName());
-/*    */ 
-/* 66 */     this.log.log(lr);
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.logging.JdkLoggingImpl
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2009 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.logging;
+
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
+/**
+ * 
+ * @author Clinton Begin
+ * @author Jeff Butler
+ * 
+ */
+public class JdkLoggingImpl implements Log {
+
+    private Logger log;
+
+    public JdkLoggingImpl(Class<?> clazz) {
+        log = Logger.getLogger(clazz.getName());
+    }
+
+    public boolean isDebugEnabled() {
+        return log.isLoggable(Level.FINE);
+    }
+
+    public void error(String s, Throwable e) {
+        LogRecord lr = new LogRecord(Level.SEVERE, s);
+        lr.setSourceClassName(log.getName());
+        lr.setThrown(e);
+
+        log.log(lr);
+    }
+
+    public void error(String s) {
+        LogRecord lr = new LogRecord(Level.SEVERE, s);
+        lr.setSourceClassName(log.getName());
+
+        log.log(lr);
+    }
+
+    public void debug(String s) {
+        LogRecord lr = new LogRecord(Level.FINE, s);
+        lr.setSourceClassName(log.getName());
+
+        log.log(lr);
+    }
+
+    public void warn(String s) {
+        LogRecord lr = new LogRecord(Level.WARNING, s);
+        lr.setSourceClassName(log.getName());
+
+        log.log(lr);
+    }
+}

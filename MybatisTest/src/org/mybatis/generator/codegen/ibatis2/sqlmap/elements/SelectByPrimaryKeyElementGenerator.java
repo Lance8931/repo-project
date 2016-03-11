@@ -1,92 +1,113 @@
-/*     */ package org.mybatis.generator.codegen.ibatis2.sqlmap.elements;
-/*     */ 
-/*     */ import org.mybatis.generator.api.CommentGenerator;
-/*     */ import org.mybatis.generator.api.IntrospectedColumn;
-/*     */ import org.mybatis.generator.api.IntrospectedTable;
-/*     */ import org.mybatis.generator.api.Plugin;
-/*     */ import org.mybatis.generator.api.dom.xml.Attribute;
-/*     */ import org.mybatis.generator.api.dom.xml.TextElement;
-/*     */ import org.mybatis.generator.api.dom.xml.XmlElement;
-/*     */ import org.mybatis.generator.codegen.ibatis2.Ibatis2FormattingUtilities;
-/*     */ import org.mybatis.generator.config.Context;
-/*     */ import org.mybatis.generator.internal.rules.Rules;
-/*     */ import org.mybatis.generator.internal.util.StringUtility;
-/*     */ 
-/*     */ public class SelectByPrimaryKeyElementGenerator extends AbstractXmlElementGenerator
-/*     */ {
-/*     */   public void addElements(XmlElement parentElement)
-/*     */   {
-/*  39 */     XmlElement answer = new XmlElement("select");
-/*     */ 
-/*  41 */     answer.addAttribute(new Attribute("id", this.introspectedTable.getSelectByPrimaryKeyStatementId()));
-/*     */ 
-/*  43 */     if (this.introspectedTable.getRules().generateResultMapWithBLOBs()) {
-/*  44 */       answer.addAttribute(new Attribute("resultMap", this.introspectedTable.getResultMapWithBLOBsId()));
-/*     */     }
-/*     */     else
-/*  47 */       answer.addAttribute(new Attribute("resultMap", this.introspectedTable.getBaseResultMapId()));
-/*     */     String parameterType;
-/*  52 */     if (this.introspectedTable.getRules().generatePrimaryKeyClass()) {
-/*  53 */       parameterType = this.introspectedTable.getPrimaryKeyType();
-/*     */     }
-/*     */     else
-/*     */     {
-/*  57 */       parameterType = this.introspectedTable.getBaseRecordType();
-/*     */     }
-/*     */ 
-/*  60 */     answer.addAttribute(new Attribute("parameterClass", parameterType));
-/*     */ 
-/*  63 */     this.context.getCommentGenerator().addComment(answer);
-/*     */ 
-/*  65 */     StringBuilder sb = new StringBuilder();
-/*  66 */     sb.append("select ");
-/*     */ 
-/*  68 */     if (StringUtility.stringHasValue(this.introspectedTable.getSelectByPrimaryKeyQueryId()))
-/*     */     {
-/*  70 */       sb.append('\'');
-/*  71 */       sb.append(this.introspectedTable.getSelectByPrimaryKeyQueryId());
-/*  72 */       sb.append("' as QUERYID,");
-/*     */     }
-/*  74 */     answer.addElement(new TextElement(sb.toString()));
-/*  75 */     answer.addElement(getBaseColumnListElement());
-/*  76 */     if (this.introspectedTable.hasBLOBColumns()) {
-/*  77 */       answer.addElement(new TextElement(","));
-/*  78 */       answer.addElement(getBlobColumnListElement());
-/*     */     }
-/*     */ 
-/*  81 */     sb.setLength(0);
-/*  82 */     sb.append("from ");
-/*  83 */     sb.append(this.introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime());
-/*     */ 
-/*  85 */     answer.addElement(new TextElement(sb.toString()));
-/*     */ 
-/*  87 */     boolean and = false;
-/*  88 */     for (IntrospectedColumn introspectedColumn : this.introspectedTable.getPrimaryKeyColumns())
-/*     */     {
-/*  90 */       sb.setLength(0);
-/*  91 */       if (and) {
-/*  92 */         sb.append("  and ");
-/*     */       } else {
-/*  94 */         sb.append("where ");
-/*  95 */         and = true;
-/*     */       }
-/*     */ 
-/*  98 */       sb.append(Ibatis2FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
-/*     */ 
-/* 100 */       sb.append(" = ");
-/* 101 */       sb.append(Ibatis2FormattingUtilities.getParameterClause(introspectedColumn));
-/*     */ 
-/* 103 */       answer.addElement(new TextElement(sb.toString()));
-/*     */     }
-/*     */ 
-/* 106 */     if (this.context.getPlugins().sqlMapSelectByPrimaryKeyElementGenerated(answer, this.introspectedTable))
-/*     */     {
-/* 109 */       parentElement.addElement(answer);
-/*     */     }
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.ibatis2.sqlmap.elements.SelectByPrimaryKeyElementGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2008 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.ibatis2.sqlmap.elements;
+
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.TextElement;
+import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.codegen.ibatis2.Ibatis2FormattingUtilities;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class SelectByPrimaryKeyElementGenerator extends
+        AbstractXmlElementGenerator {
+
+    public SelectByPrimaryKeyElementGenerator() {
+        super();
+    }
+
+    @Override
+    public void addElements(XmlElement parentElement) {
+        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+
+        answer.addAttribute(new Attribute(
+                "id", introspectedTable.getSelectByPrimaryKeyStatementId())); //$NON-NLS-1$
+        if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
+            answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
+                    introspectedTable.getResultMapWithBLOBsId()));
+        } else {
+            answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
+                    introspectedTable.getBaseResultMapId()));
+        }
+
+        String parameterType;
+        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+            parameterType = introspectedTable.getPrimaryKeyType();
+        } else {
+            // select by primary key, but no primary key class. Fields
+            // must be in the base record
+            parameterType = introspectedTable.getBaseRecordType();
+        }
+
+        answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
+                parameterType));
+
+        context.getCommentGenerator().addComment(answer);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select "); //$NON-NLS-1$
+
+        if (stringHasValue(introspectedTable
+                .getSelectByPrimaryKeyQueryId())) {
+            sb.append('\'');
+            sb.append(introspectedTable.getSelectByPrimaryKeyQueryId());
+            sb.append("' as QUERYID,"); //$NON-NLS-1$
+        }
+        answer.addElement(new TextElement(sb.toString()));
+        answer.addElement(getBaseColumnListElement());
+        if (introspectedTable.hasBLOBColumns()) {
+            answer.addElement(new TextElement(",")); //$NON-NLS-1$
+            answer.addElement(getBlobColumnListElement());
+        }
+
+        sb.setLength(0);
+        sb.append("from "); //$NON-NLS-1$
+        sb.append(introspectedTable
+                .getAliasedFullyQualifiedTableNameAtRuntime());
+        answer.addElement(new TextElement(sb.toString()));
+
+        boolean and = false;
+        for (IntrospectedColumn introspectedColumn : introspectedTable
+                .getPrimaryKeyColumns()) {
+            sb.setLength(0);
+            if (and) {
+                sb.append("  and "); //$NON-NLS-1$
+            } else {
+                sb.append("where "); //$NON-NLS-1$
+                and = true;
+            }
+
+            sb.append(Ibatis2FormattingUtilities
+                    .getAliasedEscapedColumnName(introspectedColumn));
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(Ibatis2FormattingUtilities
+                    .getParameterClause(introspectedColumn));
+            answer.addElement(new TextElement(sb.toString()));
+        }
+
+        if (context.getPlugins()
+                .sqlMapSelectByPrimaryKeyElementGenerated(answer,
+                        introspectedTable)) {
+            parentElement.addElement(answer);
+        }
+    }
+}

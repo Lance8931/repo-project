@@ -1,210 +1,258 @@
-/*     */ package org.mybatis.generator.api.dom.java;
-/*     */ 
-/*     */ import java.util.ArrayList;
-/*     */ import java.util.Collection;
-/*     */ import java.util.List;
-/*     */ import java.util.ListIterator;
-/*     */ import org.mybatis.generator.api.dom.OutputUtilities;
-/*     */ 
-/*     */ public class Method extends JavaElement
-/*     */ {
-/*     */   private List<String> bodyLines;
-/*     */   private boolean constructor;
-/*     */   private FullyQualifiedJavaType returnType;
-/*     */   private String name;
-/*     */   private List<Parameter> parameters;
-/*     */   private List<FullyQualifiedJavaType> exceptions;
-/*     */ 
-/*     */   public Method()
-/*     */   {
-/*  47 */     this.bodyLines = new ArrayList();
-/*  48 */     this.parameters = new ArrayList();
-/*  49 */     this.exceptions = new ArrayList();
-/*     */   }
-/*     */ 
-/*     */   public List<String> getBodyLines()
-/*     */   {
-/*  56 */     return this.bodyLines;
-/*     */   }
-/*     */ 
-/*     */   public void addBodyLine(String line) {
-/*  60 */     this.bodyLines.add(line);
-/*     */   }
-/*     */ 
-/*     */   public void addBodyLine(int index, String line) {
-/*  64 */     this.bodyLines.add(index, line);
-/*     */   }
-/*     */ 
-/*     */   public void addBodyLines(Collection<String> lines) {
-/*  68 */     this.bodyLines.addAll(lines);
-/*     */   }
-/*     */ 
-/*     */   public void addBodyLines(int index, Collection<String> lines) {
-/*  72 */     this.bodyLines.addAll(index, lines);
-/*     */   }
-/*     */ 
-/*     */   public String getFormattedContent(int indentLevel, boolean interfaceMethod) {
-/*  76 */     StringBuilder sb = new StringBuilder();
-/*     */ 
-/*  78 */     addFormattedJavadoc(sb, indentLevel);
-/*  79 */     addFormattedAnnotations(sb, indentLevel);
-/*     */ 
-/*  81 */     OutputUtilities.javaIndent(sb, indentLevel);
-/*     */ 
-/*  83 */     if (!interfaceMethod) {
-/*  84 */       sb.append(getVisibility().getValue());
-/*     */ 
-/*  86 */       if (isStatic()) {
-/*  87 */         sb.append("static ");
-/*     */       }
-/*     */ 
-/*  90 */       if (isFinal()) {
-/*  91 */         sb.append("final ");
-/*     */       }
-/*     */ 
-/*  94 */       if (this.bodyLines.size() == 0) {
-/*  95 */         sb.append("abstract ");
-/*     */       }
-/*     */     }
-/*     */ 
-/*  99 */     if (!this.constructor) {
-/* 100 */       if (getReturnType() == null)
-/* 101 */         sb.append("void");
-/*     */       else {
-/* 103 */         sb.append(getReturnType().getShortName());
-/*     */       }
-/* 105 */       sb.append(' ');
-/*     */     }
-/*     */ 
-/* 108 */     sb.append(getName());
-/* 109 */     sb.append('(');
-/*     */ 
-/* 111 */     boolean comma = false;
-/* 112 */     for (Parameter parameter : getParameters()) {
-/* 113 */       if (comma)
-/* 114 */         sb.append(", ");
-/*     */       else {
-/* 116 */         comma = true;
-/*     */       }
-/*     */ 
-/* 119 */       sb.append(parameter.getFormattedContent());
-/*     */     }
-/*     */ 
-/* 122 */     sb.append(')');
-/*     */ 
-/* 124 */     if (getExceptions().size() > 0) {
-/* 125 */       sb.append(" throws ");
-/* 126 */       comma = false;
-/* 127 */       for (FullyQualifiedJavaType fqjt : getExceptions()) {
-/* 128 */         if (comma)
-/* 129 */           sb.append(", ");
-/*     */         else {
-/* 131 */           comma = true;
-/*     */         }
-/*     */ 
-/* 134 */         sb.append(fqjt.getShortName());
-/*     */       }
-/*     */ 
-/*     */     }
-/*     */ 
-/* 139 */     if (this.bodyLines.size() == 0) {
-/* 140 */       sb.append(';');
-/*     */     } else {
-/* 142 */       sb.append(" {");
-/* 143 */       indentLevel++;
-/*     */ 
-/* 145 */       ListIterator listIter = this.bodyLines.listIterator();
-/* 146 */       while (listIter.hasNext()) {
-/* 147 */         String line = (String)listIter.next();
-/* 148 */         if (line.startsWith("}")) {
-/* 149 */           indentLevel--;
-/*     */         }
-/*     */ 
-/* 152 */         OutputUtilities.newLine(sb);
-/* 153 */         OutputUtilities.javaIndent(sb, indentLevel);
-/* 154 */         sb.append(line);
-/*     */ 
-/* 156 */         if (((line.endsWith("{")) && (!line.startsWith("switch"))) || (line.endsWith(":")))
-/*     */         {
-/* 158 */           indentLevel++;
-/*     */         }
-/*     */ 
-/* 161 */         if (line.startsWith("break"))
-/*     */         {
-/* 163 */           if (listIter.hasNext()) {
-/* 164 */             String nextLine = (String)listIter.next();
-/* 165 */             if (nextLine.startsWith("}")) {
-/* 166 */               indentLevel++;
-/*     */             }
-/*     */ 
-/* 170 */             listIter.previous();
-/*     */           }
-/* 172 */           indentLevel--;
-/*     */         }
-/*     */       }
-/*     */ 
-/* 176 */       indentLevel--;
-/* 177 */       OutputUtilities.newLine(sb);
-/* 178 */       OutputUtilities.javaIndent(sb, indentLevel);
-/* 179 */       sb.append('}');
-/*     */     }
-/*     */ 
-/* 182 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public boolean isConstructor()
-/*     */   {
-/* 189 */     return this.constructor;
-/*     */   }
-/*     */ 
-/*     */   public void setConstructor(boolean constructor)
-/*     */   {
-/* 197 */     this.constructor = constructor;
-/*     */   }
-/*     */ 
-/*     */   public String getName()
-/*     */   {
-/* 204 */     return this.name;
-/*     */   }
-/*     */ 
-/*     */   public void setName(String name)
-/*     */   {
-/* 212 */     this.name = name;
-/*     */   }
-/*     */ 
-/*     */   public List<Parameter> getParameters() {
-/* 216 */     return this.parameters;
-/*     */   }
-/*     */ 
-/*     */   public void addParameter(Parameter parameter) {
-/* 220 */     this.parameters.add(parameter);
-/*     */   }
-/*     */ 
-/*     */   public void addParameter(int index, Parameter parameter) {
-/* 224 */     this.parameters.add(index, parameter);
-/*     */   }
-/*     */ 
-/*     */   public FullyQualifiedJavaType getReturnType()
-/*     */   {
-/* 231 */     return this.returnType;
-/*     */   }
-/*     */ 
-/*     */   public void setReturnType(FullyQualifiedJavaType returnType)
-/*     */   {
-/* 239 */     this.returnType = returnType;
-/*     */   }
-/*     */ 
-/*     */   public List<FullyQualifiedJavaType> getExceptions()
-/*     */   {
-/* 246 */     return this.exceptions;
-/*     */   }
-/*     */ 
-/*     */   public void addException(FullyQualifiedJavaType exception) {
-/* 250 */     this.exceptions.add(exception);
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.api.dom.java.Method
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2006 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.api.dom.java;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ListIterator;
+
+import org.mybatis.generator.api.dom.OutputUtilities;
+
+/**
+ * @author Jeff Butler
+ */
+public class Method extends JavaElement {
+
+    private List<String> bodyLines;
+
+    private boolean constructor;
+
+    private FullyQualifiedJavaType returnType;
+
+    private String name;
+
+    private List<Parameter> parameters;
+
+    private List<FullyQualifiedJavaType> exceptions;
+
+    /**
+     *  
+     */
+    public Method() {
+        // use a default name to avoid malformed code
+        this("bar"); //$NON-NLS-1$
+    }
+    
+    public Method(String name) {
+        super();
+        bodyLines = new ArrayList<String>();
+        parameters = new ArrayList<Parameter>();
+        exceptions = new ArrayList<FullyQualifiedJavaType>();
+        this.name = name;
+    }
+
+    /**
+     * @return Returns the bodyLines.
+     */
+    public List<String> getBodyLines() {
+        return bodyLines;
+    }
+
+    public void addBodyLine(String line) {
+        bodyLines.add(line);
+    }
+
+    public void addBodyLine(int index, String line) {
+        bodyLines.add(index, line);
+    }
+
+    public void addBodyLines(Collection<String> lines) {
+        bodyLines.addAll(lines);
+    }
+
+    public void addBodyLines(int index, Collection<String> lines) {
+        bodyLines.addAll(index, lines);
+    }
+
+    public String getFormattedContent(int indentLevel, boolean interfaceMethod) {
+        StringBuilder sb = new StringBuilder();
+
+        addFormattedJavadoc(sb, indentLevel);
+        addFormattedAnnotations(sb, indentLevel);
+
+        OutputUtilities.javaIndent(sb, indentLevel);
+
+        if (!interfaceMethod) {
+            sb.append(getVisibility().getValue());
+
+            if (isStatic()) {
+                sb.append("static "); //$NON-NLS-1$
+            }
+
+            if (isFinal()) {
+                sb.append("final "); //$NON-NLS-1$
+            }
+
+            if (bodyLines.size() == 0) {
+                sb.append("abstract "); //$NON-NLS-1$
+            }
+        }
+
+        if (!constructor) {
+            if (getReturnType() == null) {
+                sb.append("void"); //$NON-NLS-1$
+            } else {
+                sb.append(getReturnType().getShortName());
+            }
+            sb.append(' ');
+        }
+
+        sb.append(getName());
+        sb.append('(');
+
+        boolean comma = false;
+        for (Parameter parameter : getParameters()) {
+            if (comma) {
+                sb.append(", "); //$NON-NLS-1$
+            } else {
+                comma = true;
+            }
+
+            sb.append(parameter.getFormattedContent());
+        }
+
+        sb.append(')');
+
+        if (getExceptions().size() > 0) {
+            sb.append(" throws "); //$NON-NLS-1$
+            comma = false;
+            for (FullyQualifiedJavaType fqjt : getExceptions()) {
+                if (comma) {
+                    sb.append(", "); //$NON-NLS-1$
+                } else {
+                    comma = true;
+                }
+
+                sb.append(fqjt.getShortName());
+            }
+        }
+
+        // if no body lines, then this is an abstract method
+        if (bodyLines.size() == 0) {
+            sb.append(';');
+        } else {
+            sb.append(" {"); //$NON-NLS-1$
+            indentLevel++;
+
+            ListIterator<String> listIter = bodyLines.listIterator();
+            while (listIter.hasNext()) {
+                String line = listIter.next();
+                if (line.startsWith("}")) { //$NON-NLS-1$
+                    indentLevel--;
+                }
+
+                OutputUtilities.newLine(sb);
+                OutputUtilities.javaIndent(sb, indentLevel);
+                sb.append(line);
+
+                if ((line.endsWith("{") && !line.startsWith("switch")) //$NON-NLS-1$ //$NON-NLS-2$
+                        || line.endsWith(":")) { //$NON-NLS-1$
+                    indentLevel++;
+                }
+
+                if (line.startsWith("break")) { //$NON-NLS-1$
+                    // if the next line is '}', then don't outdent
+                    if (listIter.hasNext()) {
+                        String nextLine = listIter.next();
+                        if (nextLine.startsWith("}")) { //$NON-NLS-1$
+                            indentLevel++;
+                        }
+
+                        // set back to the previous element
+                        listIter.previous();
+                    }
+                    indentLevel--;
+                }
+            }
+
+            indentLevel--;
+            OutputUtilities.newLine(sb);
+            OutputUtilities.javaIndent(sb, indentLevel);
+            sb.append('}');
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * @return Returns the constructor.
+     */
+    public boolean isConstructor() {
+        return constructor;
+    }
+
+    /**
+     * @param constructor
+     *            The constructor to set.
+     */
+    public void setConstructor(boolean constructor) {
+        this.constructor = constructor;
+    }
+
+    /**
+     * @return Returns the name.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name
+     *            The name to set.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Parameter> getParameters() {
+        return parameters;
+    }
+
+    public void addParameter(Parameter parameter) {
+        parameters.add(parameter);
+    }
+
+    public void addParameter(int index, Parameter parameter) {
+        parameters.add(index, parameter);
+    }
+
+    /**
+     * @return Returns the returnType.
+     */
+    public FullyQualifiedJavaType getReturnType() {
+        return returnType;
+    }
+
+    /**
+     * @param returnType
+     *            The returnType to set.
+     */
+    public void setReturnType(FullyQualifiedJavaType returnType) {
+        this.returnType = returnType;
+    }
+
+    /**
+     * @return Returns the exceptions.
+     */
+    public List<FullyQualifiedJavaType> getExceptions() {
+        return exceptions;
+    }
+
+    public void addException(FullyQualifiedJavaType exception) {
+        exceptions.add(exception);
+    }
+}

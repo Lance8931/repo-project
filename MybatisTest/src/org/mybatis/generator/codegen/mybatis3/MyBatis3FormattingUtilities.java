@@ -1,126 +1,184 @@
-/*     */ package org.mybatis.generator.codegen.mybatis3;
-/*     */ 
-/*     */ import org.mybatis.generator.api.IntrospectedColumn;
-/*     */ import org.mybatis.generator.config.Context;
-/*     */ import org.mybatis.generator.internal.util.StringUtility;
-/*     */ 
-/*     */ public class MyBatis3FormattingUtilities
-/*     */ {
-/*     */   public static String getParameterClause(IntrospectedColumn introspectedColumn)
-/*     */   {
-/*  36 */     return getParameterClause(introspectedColumn, null);
-/*     */   }
-/*     */ 
-/*     */   public static String getParameterClause(IntrospectedColumn introspectedColumn, String prefix)
-/*     */   {
-/*  41 */     StringBuilder sb = new StringBuilder();
-/*     */ 
-/*  43 */     sb.append("#{");
-/*  44 */     sb.append(introspectedColumn.getJavaProperty(prefix));
-/*  45 */     sb.append(",jdbcType=");
-/*  46 */     sb.append(introspectedColumn.getJdbcTypeName());
-/*     */ 
-/*  48 */     if (StringUtility.stringHasValue(introspectedColumn.getTypeHandler())) {
-/*  49 */       sb.append(",typeHandler=");
-/*  50 */       sb.append(introspectedColumn.getTypeHandler());
-/*     */     }
-/*     */ 
-/*  53 */     sb.append('}');
-/*     */ 
-/*  55 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public static String getSelectListPhrase(IntrospectedColumn introspectedColumn)
-/*     */   {
-/*  66 */     if (StringUtility.stringHasValue(introspectedColumn.getTableAlias())) {
-/*  67 */       StringBuilder sb = new StringBuilder();
-/*     */ 
-/*  69 */       sb.append(getAliasedEscapedColumnName(introspectedColumn));
-/*  70 */       sb.append(" as ");
-/*  71 */       if (introspectedColumn.isColumnNameDelimited()) {
-/*  72 */         sb.append(introspectedColumn.getContext().getBeginningDelimiter());
-/*     */       }
-/*     */ 
-/*  75 */       sb.append(introspectedColumn.getTableAlias());
-/*  76 */       sb.append('_');
-/*  77 */       sb.append(escapeStringForMyBatis3(introspectedColumn.getActualColumnName()));
-/*     */ 
-/*  79 */       if (introspectedColumn.isColumnNameDelimited()) {
-/*  80 */         sb.append(introspectedColumn.getContext().getEndingDelimiter());
-/*     */       }
-/*  82 */       return sb.toString();
-/*     */     }
-/*  84 */     return getEscapedColumnName(introspectedColumn);
-/*     */   }
-/*     */ 
-/*     */   public static String getEscapedColumnName(IntrospectedColumn introspectedColumn)
-/*     */   {
-/*  90 */     StringBuilder sb = new StringBuilder();
-/*  91 */     sb.append(escapeStringForMyBatis3(introspectedColumn.getActualColumnName()));
-/*     */ 
-/*  94 */     if (introspectedColumn.isColumnNameDelimited()) {
-/*  95 */       sb.insert(0, introspectedColumn.getContext().getBeginningDelimiter());
-/*     */ 
-/*  97 */       sb.append(introspectedColumn.getContext().getEndingDelimiter());
-/*     */     }
-/*     */ 
-/* 100 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public static String getAliasedEscapedColumnName(IntrospectedColumn introspectedColumn)
-/*     */   {
-/* 110 */     if (StringUtility.stringHasValue(introspectedColumn.getTableAlias())) {
-/* 111 */       StringBuilder sb = new StringBuilder();
-/*     */ 
-/* 113 */       sb.append(introspectedColumn.getTableAlias());
-/* 114 */       sb.append('.');
-/* 115 */       sb.append(getEscapedColumnName(introspectedColumn));
-/* 116 */       return sb.toString();
-/*     */     }
-/* 118 */     return getEscapedColumnName(introspectedColumn);
-/*     */   }
-/*     */ 
-/*     */   public static String getAliasedActualColumnName(IntrospectedColumn introspectedColumn)
-/*     */   {
-/* 136 */     StringBuilder sb = new StringBuilder();
-/* 137 */     if (StringUtility.stringHasValue(introspectedColumn.getTableAlias())) {
-/* 138 */       sb.append(introspectedColumn.getTableAlias());
-/* 139 */       sb.append('.');
-/*     */     }
-/*     */ 
-/* 142 */     if (introspectedColumn.isColumnNameDelimited()) {
-/* 143 */       sb.append(StringUtility.escapeStringForJava(introspectedColumn.getContext().getBeginningDelimiter()));
-/*     */     }
-/*     */ 
-/* 147 */     sb.append(introspectedColumn.getActualColumnName());
-/*     */ 
-/* 149 */     if (introspectedColumn.isColumnNameDelimited()) {
-/* 150 */       sb.append(StringUtility.escapeStringForJava(introspectedColumn.getContext().getEndingDelimiter()));
-/*     */     }
-/*     */ 
-/* 154 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public static String getRenamedColumnNameForResultMap(IntrospectedColumn introspectedColumn)
-/*     */   {
-/* 166 */     if (StringUtility.stringHasValue(introspectedColumn.getTableAlias())) {
-/* 167 */       StringBuilder sb = new StringBuilder();
-/*     */ 
-/* 169 */       sb.append(introspectedColumn.getTableAlias());
-/* 170 */       sb.append('_');
-/* 171 */       sb.append(introspectedColumn.getActualColumnName());
-/* 172 */       return sb.toString();
-/*     */     }
-/* 174 */     return introspectedColumn.getActualColumnName();
-/*     */   }
-/*     */ 
-/*     */   public static String escapeStringForMyBatis3(String s)
-/*     */   {
-/* 180 */     return s;
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2009 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+
+package org.mybatis.generator.codegen.mybatis3;
+
+import static org.mybatis.generator.internal.util.StringUtility.escapeStringForJava;
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+
+import org.mybatis.generator.api.IntrospectedColumn;
+
+/**
+ * @author Jeff Butler
+ * 
+ */
+public class MyBatis3FormattingUtilities {
+    /**
+     * Utility class - no instances
+     */
+    private MyBatis3FormattingUtilities() {
+        super();
+    }
+
+    public static String getParameterClause(
+            IntrospectedColumn introspectedColumn) {
+        return getParameterClause(introspectedColumn, null);
+    }
+
+    public static String getParameterClause(
+            IntrospectedColumn introspectedColumn, String prefix) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("#{"); //$NON-NLS-1$
+        sb.append(introspectedColumn.getJavaProperty(prefix));
+        sb.append(",jdbcType="); //$NON-NLS-1$
+        sb.append(introspectedColumn.getJdbcTypeName());
+
+        if (stringHasValue(introspectedColumn.getTypeHandler())) {
+            sb.append(",typeHandler="); //$NON-NLS-1$
+            sb.append(introspectedColumn.getTypeHandler());
+        }
+
+        sb.append('}');
+
+        return sb.toString();
+    }
+
+    /**
+     * The phrase to use in a select list. If there is a table alias, the value
+     * will be "alias.columnName as alias_columnName"
+     * 
+     * @return the proper phrase
+     */
+    public static String getSelectListPhrase(
+            IntrospectedColumn introspectedColumn) {
+        if (stringHasValue(introspectedColumn.getTableAlias())) {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(getAliasedEscapedColumnName(introspectedColumn));
+            sb.append(" as "); //$NON-NLS-1$
+            if (introspectedColumn.isColumnNameDelimited()) {
+                sb.append(introspectedColumn.getContext()
+                        .getBeginningDelimiter());
+            }
+            sb.append(introspectedColumn.getTableAlias());
+            sb.append('_');
+            sb.append(escapeStringForMyBatis3(introspectedColumn
+                    .getActualColumnName()));
+            if (introspectedColumn.isColumnNameDelimited()) {
+                sb.append(introspectedColumn.getContext().getEndingDelimiter());
+            }
+            return sb.toString();
+        } else {
+            return getEscapedColumnName(introspectedColumn);
+        }
+    }
+
+    public static String getEscapedColumnName(
+            IntrospectedColumn introspectedColumn) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(escapeStringForMyBatis3(introspectedColumn
+                .getActualColumnName()));
+
+        if (introspectedColumn.isColumnNameDelimited()) {
+            sb.insert(0, introspectedColumn.getContext()
+                    .getBeginningDelimiter());
+            sb.append(introspectedColumn.getContext().getEndingDelimiter());
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Calculates the string to use in select phrases in SqlMaps.
+     * 
+     * @return the aliased escaped column name
+     */
+    public static String getAliasedEscapedColumnName(
+            IntrospectedColumn introspectedColumn) {
+        if (stringHasValue(introspectedColumn.getTableAlias())) {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(introspectedColumn.getTableAlias());
+            sb.append('.');
+            sb.append(getEscapedColumnName(introspectedColumn));
+            return sb.toString();
+        } else {
+            return getEscapedColumnName(introspectedColumn);
+        }
+    }
+
+    /**
+     * The aliased column name for a select statement generated by the example
+     * clauses. This is not appropriate for selects in SqlMaps because the
+     * column is not escaped for MyBatis. If there is a table alias, the value
+     * will be alias.columnName.
+     * 
+     * This method is used in the Example classes and the returned value will be
+     * in a Java string. So we need to escape double quotes if they are the
+     * delimiters.
+     * 
+     * @return the aliased column name
+     */
+    public static String getAliasedActualColumnName(
+            IntrospectedColumn introspectedColumn) {
+        StringBuilder sb = new StringBuilder();
+        if (stringHasValue(introspectedColumn.getTableAlias())) {
+            sb.append(introspectedColumn.getTableAlias());
+            sb.append('.');
+        }
+
+        if (introspectedColumn.isColumnNameDelimited()) {
+            sb.append(escapeStringForJava(introspectedColumn
+                    .getContext().getBeginningDelimiter()));
+        }
+
+        sb.append(introspectedColumn.getActualColumnName());
+
+        if (introspectedColumn.isColumnNameDelimited()) {
+            sb.append(escapeStringForJava(introspectedColumn
+                    .getContext().getEndingDelimiter()));
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * The renamed column name for a select statement. If there is a table
+     * alias, the value will be alias_columnName. This is appropriate for use in
+     * a result map.
+     * 
+     * @return the renamed column name
+     */
+    public static String getRenamedColumnNameForResultMap(
+            IntrospectedColumn introspectedColumn) {
+        if (stringHasValue(introspectedColumn.getTableAlias())) {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(introspectedColumn.getTableAlias());
+            sb.append('_');
+            sb.append(introspectedColumn.getActualColumnName());
+            return sb.toString();
+        } else {
+            return introspectedColumn.getActualColumnName();
+        }
+    }
+
+    public static String escapeStringForMyBatis3(String s) {
+        // nothing to do for MyBatis3 so far
+        return s;
+    }
+}

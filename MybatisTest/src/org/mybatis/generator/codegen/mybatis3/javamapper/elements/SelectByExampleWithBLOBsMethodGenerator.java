@@ -1,59 +1,85 @@
-/*    */ package org.mybatis.generator.codegen.mybatis3.javamapper.elements;
-/*    */ 
-/*    */ import java.util.Set;
-/*    */ import java.util.TreeSet;
-/*    */ import org.mybatis.generator.api.CommentGenerator;
-/*    */ import org.mybatis.generator.api.IntrospectedTable;
-/*    */ import org.mybatis.generator.api.Plugin;
-/*    */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*    */ import org.mybatis.generator.api.dom.java.Interface;
-/*    */ import org.mybatis.generator.api.dom.java.JavaVisibility;
-/*    */ import org.mybatis.generator.api.dom.java.Method;
-/*    */ import org.mybatis.generator.api.dom.java.Parameter;
-/*    */ import org.mybatis.generator.config.Context;
-/*    */ import org.mybatis.generator.internal.rules.Rules;
-/*    */ 
-/*    */ public class SelectByExampleWithBLOBsMethodGenerator extends AbstractJavaMapperMethodGenerator
-/*    */ {
-/*    */   public void addInterfaceElements(Interface interfaze)
-/*    */   {
-/* 41 */     Set importedTypes = new TreeSet();
-/* 42 */     FullyQualifiedJavaType type = new FullyQualifiedJavaType(this.introspectedTable.getExampleType());
-/*    */ 
-/* 44 */     importedTypes.add(type);
-/* 45 */     importedTypes.add(FullyQualifiedJavaType.getNewListInstance());
-/*    */ 
-/* 47 */     Method method = new Method();
-/* 48 */     method.setVisibility(JavaVisibility.PUBLIC);
-/*    */ 
-/* 50 */     FullyQualifiedJavaType returnType = FullyQualifiedJavaType.getNewListInstance();
-/*    */     FullyQualifiedJavaType listType;
-/* 53 */     if (this.introspectedTable.getRules().generateRecordWithBLOBsClass()) {
-/* 54 */       listType = new FullyQualifiedJavaType(this.introspectedTable.getRecordWithBLOBsType());
-/*    */     }
-/*    */     else
-/*    */     {
-/* 58 */       listType = new FullyQualifiedJavaType(this.introspectedTable.getBaseRecordType());
-/*    */     }
-/*    */ 
-/* 62 */     importedTypes.add(listType);
-/* 63 */     returnType.addTypeArgument(listType);
-/* 64 */     method.setReturnType(returnType);
-/* 65 */     method.setName(this.introspectedTable.getSelectByExampleWithBLOBsStatementId());
-/*    */ 
-/* 67 */     method.addParameter(new Parameter(type, "example"));
-/*    */ 
-/* 69 */     this.context.getCommentGenerator().addGeneralMethodComment(method, this.introspectedTable);
-/*    */ 
-/* 72 */     if (this.context.getPlugins().clientSelectByExampleWithBLOBsMethodGenerated(method, interfaze, this.introspectedTable))
-/*    */     {
-/* 75 */       interfaze.addImportedTypes(importedTypes);
-/* 76 */       interfaze.addMethod(method);
-/*    */     }
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.mybatis3.javamapper.elements.SelectByExampleWithBLOBsMethodGenerator
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2009 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.mybatis3.javamapper.elements;
+
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.java.Interface;
+import org.mybatis.generator.api.dom.java.JavaVisibility;
+import org.mybatis.generator.api.dom.java.Method;
+import org.mybatis.generator.api.dom.java.Parameter;
+
+/**
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class SelectByExampleWithBLOBsMethodGenerator extends
+        AbstractJavaMapperMethodGenerator {
+
+    public SelectByExampleWithBLOBsMethodGenerator() {
+        super();
+    }
+
+    @Override
+    public void addInterfaceElements(Interface interfaze) {
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        FullyQualifiedJavaType type = new FullyQualifiedJavaType(
+                introspectedTable.getExampleType());
+        importedTypes.add(type);
+        importedTypes.add(FullyQualifiedJavaType.getNewListInstance());
+
+        Method method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+
+        FullyQualifiedJavaType returnType = FullyQualifiedJavaType
+                .getNewListInstance();
+        FullyQualifiedJavaType listType;
+        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            listType = new FullyQualifiedJavaType(introspectedTable
+                    .getRecordWithBLOBsType());
+        } else {
+            // the blob fields must be rolled up into the base class
+            listType = new FullyQualifiedJavaType(introspectedTable
+                    .getBaseRecordType());
+        }
+
+        importedTypes.add(listType);
+        returnType.addTypeArgument(listType);
+        method.setReturnType(returnType);
+        method.setName(introspectedTable
+                .getSelectByExampleWithBLOBsStatementId());
+        method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
+
+        context.getCommentGenerator().addGeneralMethodComment(method,
+                introspectedTable);
+
+        addMapperAnnotations(interfaze, method);
+        
+        if (context.getPlugins()
+                .clientSelectByExampleWithBLOBsMethodGenerated(method, interfaze,
+                        introspectedTable)) {
+            interfaze.addImportedTypes(importedTypes);
+            interfaze.addMethod(method);
+        }
+    }
+
+    public void addMapperAnnotations(Interface interfaze, Method method) {
+        return;
+    }
+}

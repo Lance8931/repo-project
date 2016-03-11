@@ -1,178 +1,228 @@
-/*     */ package org.mybatis.generator.api.dom.java;
-/*     */ 
-/*     */ import java.util.ArrayList;
-/*     */ import java.util.Collections;
-/*     */ import java.util.Iterator;
-/*     */ import java.util.LinkedHashSet;
-/*     */ import java.util.List;
-/*     */ import java.util.Set;
-/*     */ import java.util.TreeSet;
-/*     */ import org.mybatis.generator.api.dom.OutputUtilities;
-/*     */ import org.mybatis.generator.internal.util.StringUtility;
-/*     */ 
-/*     */ public class Interface extends JavaElement
-/*     */   implements CompilationUnit
-/*     */ {
-/*     */   private Set<FullyQualifiedJavaType> importedTypes;
-/*     */   private FullyQualifiedJavaType type;
-/*     */   private Set<FullyQualifiedJavaType> superInterfaceTypes;
-/*     */   private List<Method> methods;
-/*     */   private List<String> fileCommentLines;
-/*     */ 
-/*     */   public Interface(FullyQualifiedJavaType type)
-/*     */   {
-/*  48 */     this.type = type;
-/*  49 */     this.superInterfaceTypes = new LinkedHashSet();
-/*  50 */     this.methods = new ArrayList();
-/*  51 */     this.importedTypes = new TreeSet();
-/*  52 */     this.fileCommentLines = new ArrayList();
-/*     */   }
-/*     */ 
-/*     */   public Interface(String type) {
-/*  56 */     this(new FullyQualifiedJavaType(type));
-/*     */   }
-/*     */ 
-/*     */   public Set<FullyQualifiedJavaType> getImportedTypes() {
-/*  60 */     return Collections.unmodifiableSet(this.importedTypes);
-/*     */   }
-/*     */ 
-/*     */   public void addImportedType(FullyQualifiedJavaType importedType) {
-/*  64 */     if ((importedType.isExplicitlyImported()) && (!importedType.getPackageName().equals(this.type.getPackageName())))
-/*     */     {
-/*  66 */       this.importedTypes.add(importedType);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   public String getFormattedContent() {
-/*  71 */     StringBuilder sb = new StringBuilder();
-/*     */ 
-/*  73 */     for (String commentLine : this.fileCommentLines) {
-/*  74 */       sb.append(commentLine);
-/*  75 */       OutputUtilities.newLine(sb);
-/*     */     }
-/*     */ 
-/*  78 */     if (StringUtility.stringHasValue(getType().getPackageName())) {
-/*  79 */       sb.append("package ");
-/*  80 */       sb.append(getType().getPackageName());
-/*  81 */       sb.append(';');
-/*  82 */       OutputUtilities.newLine(sb);
-/*  83 */       OutputUtilities.newLine(sb);
-/*     */     }
-/*     */ 
-/*  86 */     Set<String> importStrings = OutputUtilities.calculateImports(this.importedTypes);
-/*     */ 
-/*  88 */     for (String importString : importStrings) {
-/*  89 */       sb.append(importString);
-/*  90 */       OutputUtilities.newLine(sb);
-/*     */     }
-/*     */ 
-/*  93 */     if (importStrings.size() > 0) {
-/*  94 */       OutputUtilities.newLine(sb);
-/*     */     }
-/*     */ 
-/*  97 */     int indentLevel = 0;
-/*     */ 
-/*  99 */     addFormattedJavadoc(sb, indentLevel);
-/* 100 */     addFormattedAnnotations(sb, indentLevel);
-/*     */ 
-/* 102 */     sb.append(getVisibility().getValue());
-/*     */ 
-/* 104 */     if (isStatic()) {
-/* 105 */       sb.append("static ");
-/*     */     }
-/*     */ 
-/* 108 */     if (isFinal()) {
-/* 109 */       sb.append("final ");
-/*     */     }
-/*     */ 
-/* 112 */     sb.append("interface ");
-/* 113 */     sb.append(getType().getShortName());
-/*     */     boolean comma;
-/* 115 */     if (getSuperInterfaceTypes().size() > 0) {
-/* 116 */       sb.append(" extends ");
-/*     */ 
-/* 118 */       comma = false;
-/* 119 */       for (FullyQualifiedJavaType fqjt : getSuperInterfaceTypes()) {
-/* 120 */         if (comma)
-/* 121 */           sb.append(", ");
-/*     */         else {
-/* 123 */           comma = true;
-/*     */         }
-/*     */ 
-/* 126 */         sb.append(fqjt.getShortName());
-/*     */       }
-/*     */     }
-/*     */ 
-/* 130 */     sb.append(" {");
-/* 131 */     indentLevel++;
-/*     */ 
-/* 133 */     Iterator mtdIter = getMethods().iterator();
-/* 134 */     while (mtdIter.hasNext()) {
-/* 135 */       OutputUtilities.newLine(sb);
-/* 136 */       Method method = (Method)mtdIter.next();
-/* 137 */       sb.append(method.getFormattedContent(indentLevel, true));
-/* 138 */       if (mtdIter.hasNext()) {
-/* 139 */         OutputUtilities.newLine(sb);
-/*     */       }
-/*     */     }
-/*     */ 
-/* 143 */     indentLevel--;
-/* 144 */     OutputUtilities.newLine(sb);
-/* 145 */     OutputUtilities.javaIndent(sb, indentLevel);
-/* 146 */     sb.append('}');
-/*     */ 
-/* 148 */     return sb.toString();
-/*     */   }
-/*     */ 
-/*     */   public void addSuperInterface(FullyQualifiedJavaType superInterface) {
-/* 152 */     this.superInterfaceTypes.add(superInterface);
-/*     */   }
-/*     */ 
-/*     */   public List<Method> getMethods()
-/*     */   {
-/* 159 */     return this.methods;
-/*     */   }
-/*     */ 
-/*     */   public void addMethod(Method method) {
-/* 163 */     this.methods.add(method);
-/*     */   }
-/*     */ 
-/*     */   public FullyQualifiedJavaType getType()
-/*     */   {
-/* 170 */     return this.type;
-/*     */   }
-/*     */ 
-/*     */   public FullyQualifiedJavaType getSuperClass()
-/*     */   {
-/* 175 */     return null;
-/*     */   }
-/*     */ 
-/*     */   public Set<FullyQualifiedJavaType> getSuperInterfaceTypes() {
-/* 179 */     return this.superInterfaceTypes;
-/*     */   }
-/*     */ 
-/*     */   public boolean isJavaInterface() {
-/* 183 */     return true;
-/*     */   }
-/*     */ 
-/*     */   public boolean isJavaEnumeration() {
-/* 187 */     return false;
-/*     */   }
-/*     */ 
-/*     */   public void addFileCommentLine(String commentLine) {
-/* 191 */     this.fileCommentLines.add(commentLine);
-/*     */   }
-/*     */ 
-/*     */   public List<String> getFileCommentLines() {
-/* 195 */     return this.fileCommentLines;
-/*     */   }
-/*     */ 
-/*     */   public void addImportedTypes(Set<FullyQualifiedJavaType> importedTypes) {
-/* 199 */     this.importedTypes.addAll(importedTypes);
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.api.dom.java.Interface
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2006 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.api.dom.java;
+
+import static org.mybatis.generator.api.dom.OutputUtilities.calculateImports;
+import static org.mybatis.generator.api.dom.OutputUtilities.javaIndent;
+import static org.mybatis.generator.api.dom.OutputUtilities.newLine;
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+/**
+ * @author Jeff Butler
+ */
+public class Interface extends JavaElement implements CompilationUnit {
+    private Set<FullyQualifiedJavaType> importedTypes;
+    
+    private Set<String> staticImports;
+
+    private FullyQualifiedJavaType type;
+
+    private Set<FullyQualifiedJavaType> superInterfaceTypes;
+
+    private List<Method> methods;
+
+    private List<String> fileCommentLines;
+
+    /**
+     *  
+     */
+    public Interface(FullyQualifiedJavaType type) {
+        super();
+        this.type = type;
+        superInterfaceTypes = new LinkedHashSet<FullyQualifiedJavaType>();
+        methods = new ArrayList<Method>();
+        importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        fileCommentLines = new ArrayList<String>();
+        staticImports = new TreeSet<String>();
+    }
+
+    public Interface(String type) {
+        this(new FullyQualifiedJavaType(type));
+    }
+
+    public Set<FullyQualifiedJavaType> getImportedTypes() {
+        return Collections.unmodifiableSet(importedTypes);
+    }
+
+    public void addImportedType(FullyQualifiedJavaType importedType) {
+        if (importedType.isExplicitlyImported()
+                && !importedType.getPackageName().equals(type.getPackageName())) {
+            importedTypes.add(importedType);
+        }
+    }
+
+    public String getFormattedContent() {
+        StringBuilder sb = new StringBuilder();
+
+        for (String commentLine : fileCommentLines) {
+            sb.append(commentLine);
+            newLine(sb);
+        }
+
+        if (stringHasValue(getType().getPackageName())) {
+            sb.append("package "); //$NON-NLS-1$
+            sb.append(getType().getPackageName());
+            sb.append(';');
+            newLine(sb);
+            newLine(sb);
+        }
+
+        for (String staticImport : staticImports) {
+            sb.append("import static "); //$NON-NLS-1$
+            sb.append(staticImport);
+            sb.append(';');
+            newLine(sb);
+        }
+        
+        if (staticImports.size() > 0) {
+            newLine(sb);
+        }
+        
+        Set<String> importStrings = calculateImports(importedTypes);
+        for (String importString : importStrings) {
+            sb.append(importString);
+            newLine(sb);
+        }
+
+        if (importStrings.size() > 0) {
+            newLine(sb);
+        }
+
+        int indentLevel = 0;
+
+        addFormattedJavadoc(sb, indentLevel);
+        addFormattedAnnotations(sb, indentLevel);
+
+        sb.append(getVisibility().getValue());
+
+        if (isStatic()) {
+            sb.append("static "); //$NON-NLS-1$
+        }
+
+        if (isFinal()) {
+            sb.append("final "); //$NON-NLS-1$
+        }
+
+        sb.append("interface "); //$NON-NLS-1$
+        sb.append(getType().getShortName());
+
+        if (getSuperInterfaceTypes().size() > 0) {
+            sb.append(" extends "); //$NON-NLS-1$
+
+            boolean comma = false;
+            for (FullyQualifiedJavaType fqjt : getSuperInterfaceTypes()) {
+                if (comma) {
+                    sb.append(", "); //$NON-NLS-1$
+                } else {
+                    comma = true;
+                }
+
+                sb.append(fqjt.getShortName());
+            }
+        }
+
+        sb.append(" {"); //$NON-NLS-1$
+        indentLevel++;
+
+        Iterator<Method> mtdIter = getMethods().iterator();
+        while (mtdIter.hasNext()) {
+            newLine(sb);
+            Method method = mtdIter.next();
+            sb.append(method.getFormattedContent(indentLevel, true));
+            if (mtdIter.hasNext()) {
+                newLine(sb);
+            }
+        }
+
+        indentLevel--;
+        newLine(sb);
+        javaIndent(sb, indentLevel);
+        sb.append('}');
+
+        return sb.toString();
+    }
+
+    public void addSuperInterface(FullyQualifiedJavaType superInterface) {
+        superInterfaceTypes.add(superInterface);
+    }
+
+    /**
+     * @return Returns the methods.
+     */
+    public List<Method> getMethods() {
+        return methods;
+    }
+
+    public void addMethod(Method method) {
+        methods.add(method);
+    }
+
+    /**
+     * @return Returns the type.
+     */
+    public FullyQualifiedJavaType getType() {
+        return type;
+    }
+
+    public FullyQualifiedJavaType getSuperClass() {
+        // interfaces do not have superclasses
+        return null;
+    }
+
+    public Set<FullyQualifiedJavaType> getSuperInterfaceTypes() {
+        return superInterfaceTypes;
+    }
+
+    public boolean isJavaInterface() {
+        return true;
+    }
+
+    public boolean isJavaEnumeration() {
+        return false;
+    }
+
+    public void addFileCommentLine(String commentLine) {
+        fileCommentLines.add(commentLine);
+    }
+
+    public List<String> getFileCommentLines() {
+        return fileCommentLines;
+    }
+
+    public void addImportedTypes(Set<FullyQualifiedJavaType> importedTypes) {
+        this.importedTypes.addAll(importedTypes);
+    }
+
+    public Set<String> getStaticImports() {
+        return staticImports;
+    }
+
+    public void addStaticImport(String staticImport) {
+        staticImports.add(staticImport);
+    }
+
+    public void addStaticImports(Set<String> staticImports) {
+        this.staticImports.addAll(staticImports);
+    }
+}

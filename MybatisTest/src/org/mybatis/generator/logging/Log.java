@@ -1,19 +1,33 @@
+/*
+ *  Copyright 2009 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package org.mybatis.generator.logging;
 
-public abstract interface Log
-{
-  public abstract boolean isDebugEnabled();
-
-  public abstract void error(String paramString, Throwable paramThrowable);
-
-  public abstract void error(String paramString);
-
-  public abstract void debug(String paramString);
-
-  public abstract void warn(String paramString);
-}
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.logging.Log
- * JD-Core Version:    0.6.0
+/**
+ * 
+ * @author Clinton Begin
  */
+public interface Log {
+
+    boolean isDebugEnabled();
+
+    void error(String s, Throwable e);
+
+    void error(String s);
+
+    public void debug(String s);
+
+    public void warn(String s);
+}

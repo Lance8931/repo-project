@@ -2,9 +2,12 @@ package com.test;
 
 import java.io.Reader;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.ibatis.io.Resources;
+
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -95,8 +98,8 @@ public class Test {
         SqlSession session = sqlSessionFactory.openSession();
         try {
 	        User user = (User) session.selectOne("com.user.mapper.UserMapper.selectUserByID", 1);
-	        System.out.println(user.getUserAddress());
-	        System.out.println(user.getUserName());
+//	        System.out.println(user.getUserAddress());
+//	        System.out.println(user.getUserName());
 	        
 	        Test test = new Test();
 	        UserMapper userOperation= session.getMapper(UserMapper.class);
@@ -114,7 +117,9 @@ public class Test {
             
             //test.getUserArticle(session, userOperation, 1);
 	        
-	        test.selectUsersByHandler(session, userOperation, "%");
+	        //test.selectUsersByHandler(session, userOperation, "%");
+	        Properties properties = System.getProperties();
+	        properties.list(System.out);
         } finally {
         	session.close();
         }

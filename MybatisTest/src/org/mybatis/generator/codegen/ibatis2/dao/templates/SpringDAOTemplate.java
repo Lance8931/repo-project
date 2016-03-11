@@ -1,52 +1,73 @@
-/*    */ package org.mybatis.generator.codegen.ibatis2.dao.templates;
-/*    */ 
-/*    */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*    */ import org.mybatis.generator.api.dom.java.JavaVisibility;
-/*    */ import org.mybatis.generator.api.dom.java.Method;
-/*    */ 
-/*    */ public class SpringDAOTemplate extends AbstractDAOTemplate
-/*    */ {
-/*    */   protected void configureConstructorTemplate()
-/*    */   {
-/* 36 */     Method method = new Method();
-/* 37 */     method.setConstructor(true);
-/* 38 */     method.setVisibility(JavaVisibility.PUBLIC);
-/* 39 */     method.addBodyLine("super();");
-/* 40 */     setConstructorTemplate(method);
-/*    */   }
-/*    */ 
-/*    */   protected void configureDeleteMethodTemplate()
-/*    */   {
-/* 45 */     setDeleteMethodTemplate("getSqlMapClientTemplate().delete(\"{0}.{1}\", {2});");
-/*    */   }
-/*    */ 
-/*    */   protected void configureInsertMethodTemplate()
-/*    */   {
-/* 50 */     setInsertMethodTemplate("getSqlMapClientTemplate().insert(\"{0}.{1}\", {2});");
-/*    */   }
-/*    */ 
-/*    */   protected void configureQueryForListMethodTemplate()
-/*    */   {
-/* 55 */     setQueryForListMethodTemplate("getSqlMapClientTemplate().queryForList(\"{0}.{1}\", {2});");
-/*    */   }
-/*    */ 
-/*    */   protected void configureQueryForObjectMethodTemplate()
-/*    */   {
-/* 60 */     setQueryForObjectMethodTemplate("getSqlMapClientTemplate().queryForObject(\"{0}.{1}\", {2});");
-/*    */   }
-/*    */ 
-/*    */   protected void configureSuperClass()
-/*    */   {
-/* 65 */     setSuperClass(new FullyQualifiedJavaType("org.springframework.orm.ibatis.support.SqlMapClientDaoSupport"));
-/*    */   }
-/*    */ 
-/*    */   protected void configureUpdateMethodTemplate()
-/*    */   {
-/* 71 */     setUpdateMethodTemplate("getSqlMapClientTemplate().update(\"{0}.{1}\", {2});");
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.codegen.ibatis2.dao.templates.SpringDAOTemplate
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2006 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.codegen.ibatis2.dao.templates;
+
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.java.JavaVisibility;
+import org.mybatis.generator.api.dom.java.Method;
+
+/**
+ * @author Jeff Butler
+ */
+public class SpringDAOTemplate extends AbstractDAOTemplate {
+
+    /**
+     *  
+     */
+    public SpringDAOTemplate() {
+        super();
+    }
+
+    @Override
+    protected void configureConstructorTemplate() {
+        Method method = new Method();
+        method.setConstructor(true);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.addBodyLine("super();"); //$NON-NLS-1$
+        setConstructorTemplate(method);
+    }
+
+    @Override
+    protected void configureDeleteMethodTemplate() {
+        setDeleteMethodTemplate("getSqlMapClientTemplate().delete(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+    }
+
+    @Override
+    protected void configureInsertMethodTemplate() {
+        setInsertMethodTemplate("getSqlMapClientTemplate().insert(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+    }
+
+    @Override
+    protected void configureQueryForListMethodTemplate() {
+        setQueryForListMethodTemplate("getSqlMapClientTemplate().queryForList(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+    }
+
+    @Override
+    protected void configureQueryForObjectMethodTemplate() {
+        setQueryForObjectMethodTemplate("getSqlMapClientTemplate().queryForObject(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+    }
+
+    @Override
+    protected void configureSuperClass() {
+        setSuperClass(new FullyQualifiedJavaType(
+                "org.springframework.orm.ibatis.support.SqlMapClientDaoSupport")); //$NON-NLS-1$
+    }
+
+    @Override
+    protected void configureUpdateMethodTemplate() {
+        setUpdateMethodTemplate("getSqlMapClientTemplate().update(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+    }
+}

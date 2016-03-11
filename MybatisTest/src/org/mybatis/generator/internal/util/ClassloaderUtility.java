@@ -1,47 +1,71 @@
-/*    */ package org.mybatis.generator.internal.util;
-/*    */ 
-/*    */ import java.io.File;
-/*    */ import java.net.MalformedURLException;
-/*    */ import java.net.URI;
-/*    */ import java.net.URL;
-/*    */ import java.net.URLClassLoader;
-/*    */ import java.util.ArrayList;
-/*    */ import java.util.List;
-/*    */ import org.mybatis.generator.internal.util.messages.Messages;
-/*    */ 
-/*    */ public class ClassloaderUtility
-/*    */ {
-/*    */   public static ClassLoader getCustomClassloader(List<String> entries)
-/*    */   {
-/* 43 */     List urls = new ArrayList();
-/*    */ 
-/* 46 */     if (entries != null) {
-/* 47 */       for (String classPathEntry : entries) {
-/* 48 */         File file = new File(classPathEntry);
-/* 49 */         if (!file.exists()) {
-/* 50 */           throw new RuntimeException(Messages.getString("RuntimeError.9", classPathEntry));
-/*    */         }
-/*    */ 
-/*    */         try
-/*    */         {
-/* 55 */           urls.add(file.toURI().toURL());
-/*    */         }
-/*    */         catch (MalformedURLException e) {
-/* 58 */           throw new RuntimeException(Messages.getString("RuntimeError.9", classPathEntry));
-/*    */         }
-/*    */       }
-/*    */ 
-/*    */     }
-/*    */ 
-/* 64 */     ClassLoader parent = Thread.currentThread().getContextClassLoader();
-/*    */ 
-/* 66 */     URLClassLoader ucl = new URLClassLoader((URL[])urls.toArray(new URL[urls.size()]), parent);
-/*    */ 
-/* 69 */     return ucl;
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.internal.util.ClassloaderUtility
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2008 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+
+package org.mybatis.generator.internal.util;
+
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * This class holds methods useful for constructing custom classloaders.
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class ClassloaderUtility {
+
+    /**
+     * Utility Class - No Instances
+     */
+    private ClassloaderUtility() {
+    }
+
+    public static ClassLoader getCustomClassloader(List<String> entries) {
+        List<URL> urls = new ArrayList<URL>();
+        File file;
+
+        if (entries != null) {
+            for (String classPathEntry : entries) {
+                file = new File(classPathEntry);
+                if (!file.exists()) {
+                    throw new RuntimeException(getString(
+                            "RuntimeError.9", classPathEntry)); //$NON-NLS-1$
+                }
+
+                try {
+                    urls.add(file.toURI().toURL());
+                } catch (MalformedURLException e) {
+                    // this shouldn't happen, but just in case...
+                    throw new RuntimeException(getString(
+                            "RuntimeError.9", classPathEntry)); //$NON-NLS-1$
+                }
+            }
+        }
+
+        ClassLoader parent = Thread.currentThread().getContextClassLoader();
+
+        URLClassLoader ucl = new URLClassLoader(urls.toArray(new URL[urls
+                .size()]), parent);
+
+        return ucl;
+    }
+}

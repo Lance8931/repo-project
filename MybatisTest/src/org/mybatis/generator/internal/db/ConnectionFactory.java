@@ -1,62 +1,90 @@
-/*    */ package org.mybatis.generator.internal.db;
-/*    */ 
-/*    */ import java.sql.Connection;
-/*    */ import java.sql.Driver;
-/*    */ import java.sql.SQLException;
-/*    */ import java.util.Properties;
-/*    */ import org.mybatis.generator.config.JDBCConnectionConfiguration;
-/*    */ import org.mybatis.generator.internal.ObjectFactory;
-/*    */ import org.mybatis.generator.internal.util.StringUtility;
-/*    */ import org.mybatis.generator.internal.util.messages.Messages;
-/*    */ 
-/*    */ public class ConnectionFactory
-/*    */ {
-/* 38 */   private static ConnectionFactory instance = new ConnectionFactory();
-/*    */ 
-/*    */   public static ConnectionFactory getInstance() {
-/* 41 */     return instance;
-/*    */   }
-/*    */ 
-/*    */   public Connection getConnection(JDBCConnectionConfiguration config)
-/*    */     throws SQLException
-/*    */   {
-/* 53 */     Driver driver = getDriver(config);
-/*    */ 
-/* 55 */     Properties props = new Properties();
-/*    */ 
-/* 57 */     if (StringUtility.stringHasValue(config.getUserId())) {
-/* 58 */       props.setProperty("user", config.getUserId());
-/*    */     }
-/*    */ 
-/* 61 */     if (StringUtility.stringHasValue(config.getPassword())) {
-/* 62 */       props.setProperty("password", config.getPassword());
-/*    */     }
-/*    */ 
-/* 65 */     props.putAll(config.getProperties());
-/*    */ 
-/* 67 */     Connection conn = driver.connect(config.getConnectionURL(), props);
-/*    */ 
-/* 69 */     if (conn == null) {
-/* 70 */       throw new SQLException(Messages.getString("RuntimeError.7"));
-/*    */     }
-/*    */ 
-/* 73 */     return conn;
-/*    */   }
-/*    */ 
-/* 77 */   private Driver getDriver(JDBCConnectionConfiguration connectionInformation) { String driverClass = connectionInformation.getDriverClass();
-/*    */     Driver driver;
-/*    */     try {
-/* 81 */       Class clazz = ObjectFactory.externalClassForName(driverClass);
-/* 82 */       driver = (Driver)clazz.newInstance();
-/*    */     } catch (Exception e) {
-/* 84 */       throw new RuntimeException(Messages.getString("RuntimeError.8"), e);
-/*    */     }
-/*    */ 
-/* 87 */     return driver;
-/*    */   }
-/*    */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.internal.db.ConnectionFactory
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2005 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.internal.db;
+
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
+
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.SQLException;
+import java.util.Properties;
+
+import org.mybatis.generator.config.JDBCConnectionConfiguration;
+import org.mybatis.generator.internal.ObjectFactory;
+
+/**
+ * This class assumes that classes are cached elsewhere for performance reasons,
+ * but also to make sure that any native libraries are only loaded one time
+ * (avoids the dreaded UnsatisfiedLinkError library loaded in another
+ * classloader)
+ * 
+ * @author Jeff Butler
+ */
+public class ConnectionFactory {
+
+    private static ConnectionFactory instance = new ConnectionFactory();
+
+    public static ConnectionFactory getInstance() {
+        return instance;
+    }
+
+    /**
+	 *  
+	 */
+    private ConnectionFactory() {
+        super();
+    }
+
+    public Connection getConnection(JDBCConnectionConfiguration config)
+            throws SQLException {
+        Driver driver = getDriver(config);
+
+        Properties props = new Properties();
+
+        if (stringHasValue(config.getUserId())) {
+            props.setProperty("user", config.getUserId()); //$NON-NLS-1$
+        }
+
+        if (stringHasValue(config.getPassword())) {
+            props.setProperty("password", config.getPassword()); //$NON-NLS-1$
+        }
+
+        props.putAll(config.getProperties());
+
+        Connection conn = driver.connect(config.getConnectionURL(), props);
+
+        if (conn == null) {
+            throw new SQLException(getString("RuntimeError.7")); //$NON-NLS-1$
+        }
+
+        return conn;
+    }
+
+    private Driver getDriver(JDBCConnectionConfiguration connectionInformation) {
+        String driverClass = connectionInformation.getDriverClass();
+        Driver driver;
+
+        try {
+            Class<?> clazz = ObjectFactory.externalClassForName(driverClass);
+            driver = (Driver) clazz.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(getString("RuntimeError.8"), e); //$NON-NLS-1$
+        }
+
+        return driver;
+    }
+}

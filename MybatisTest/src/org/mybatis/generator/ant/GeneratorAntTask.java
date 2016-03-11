@@ -1,167 +1,244 @@
-/*     */ package org.mybatis.generator.ant;
-/*     */ 
-/*     */ import java.io.File;
-/*     */ import java.io.IOException;
-/*     */ import java.sql.SQLException;
-/*     */ import java.util.ArrayList;
-/*     */ import java.util.HashSet;
-/*     */ import java.util.List;
-/*     */ import java.util.Properties;
-/*     */ import java.util.Set;
-/*     */ import java.util.StringTokenizer;
-/*     */ import org.apache.tools.ant.BuildException;
-/*     */ import org.apache.tools.ant.Task;
-/*     */ import org.apache.tools.ant.types.PropertySet;
-/*     */ import org.mybatis.generator.api.MyBatisGenerator;
-/*     */ import org.mybatis.generator.config.Configuration;
-/*     */ import org.mybatis.generator.config.xml.ConfigurationParser;
-/*     */ import org.mybatis.generator.exception.InvalidConfigurationException;
-/*     */ import org.mybatis.generator.exception.XMLParserException;
-/*     */ import org.mybatis.generator.internal.DefaultShellCallback;
-/*     */ import org.mybatis.generator.internal.util.StringUtility;
-/*     */ import org.mybatis.generator.internal.util.messages.Messages;
-/*     */ 
-/*     */ public class GeneratorAntTask extends Task
-/*     */ {
-/*     */   private String configfile;
-/*     */   private boolean overwrite;
-/*     */   private PropertySet propertyset;
-/*     */   private boolean verbose;
-/*     */   private String contextIds;
-/*     */   private String fullyQualifiedTableNames;
-/*     */ 
-/*     */   public void execute()
-/*     */     throws BuildException
-/*     */   {
-/* 102 */     if (!StringUtility.stringHasValue(this.configfile)) {
-/* 103 */       throw new BuildException(Messages.getString("RuntimeError.0"));
-/*     */     }
-/*     */ 
-/* 106 */     List<String> warnings = new ArrayList();
-/*     */ 
-/* 108 */     File configurationFile = new File(this.configfile);
-/* 109 */     if (!configurationFile.exists()) {
-/* 110 */       throw new BuildException(Messages.getString("RuntimeError.1", this.configfile));
-/*     */     }
-/*     */ 
-/* 114 */     Set fullyqualifiedTables = new HashSet();
-/* 115 */     if (StringUtility.stringHasValue(this.fullyQualifiedTableNames)) {
-/* 116 */       StringTokenizer st = new StringTokenizer(this.fullyQualifiedTableNames, ",");
-/*     */ 
-/* 118 */       while (st.hasMoreTokens()) {
-/* 119 */         String s = st.nextToken().trim();
-/* 120 */         if (s.length() > 0) {
-/* 121 */           fullyqualifiedTables.add(s);
-/*     */         }
-/*     */       }
-/*     */     }
-/*     */ 
-/* 126 */     Set contexts = new HashSet();
-/* 127 */     if (StringUtility.stringHasValue(this.contextIds)) {
-/* 128 */       StringTokenizer st = new StringTokenizer(this.contextIds, ",");
-/* 129 */       while (st.hasMoreTokens()) {
-/* 130 */         String s = st.nextToken().trim();
-/* 131 */         if (s.length() > 0) {
-/* 132 */           contexts.add(s);
-/*     */         }
-/*     */       }
-/*     */     }
-/*     */     try
-/*     */     {
-/* 138 */       Properties p = this.propertyset == null ? null : this.propertyset.getProperties();
-/*     */ 
-/* 141 */       ConfigurationParser cp = new ConfigurationParser(p, warnings);
-/* 142 */       Configuration config = cp.parseConfiguration(configurationFile);
-/*     */ 
-/* 144 */       DefaultShellCallback callback = new DefaultShellCallback(this.overwrite);
-/*     */ 
-/* 146 */       MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
-/*     */ 
-/* 148 */       myBatisGenerator.generate(new AntProgressCallback(this, this.verbose), contexts, fullyqualifiedTables);
-/*     */     }
-/*     */     catch (XMLParserException e)
-/*     */     {
-/* 152 */       for (String error : e.getErrors()) {
-/* 153 */         log(error, 0);
-/*     */       }
-/*     */ 
-/* 156 */       throw new BuildException(e.getMessage());
-/*     */     } catch (SQLException e) {
-/* 158 */       throw new BuildException(e.getMessage());
-/*     */     } catch (IOException e) {
-/* 160 */       throw new BuildException(e.getMessage());
-/*     */     } catch (InvalidConfigurationException e) {
-/* 162 */       for (String error : e.getErrors()) {
-/* 163 */         log(error, 0);
-/*     */       }
-/*     */ 
-/* 166 */       throw new BuildException(e.getMessage());
-/*     */     }
-/*     */     catch (InterruptedException e) {
-/*     */     }
-/*     */     catch (Exception e) {
-/* 171 */       e.printStackTrace();
-/* 172 */       throw new BuildException(e.getMessage());
-/*     */     }
-/*     */ 
-/* 175 */     for (String error : warnings)
-/* 176 */       log(error, 1);
-/*     */   }
-/*     */ 
-/*     */   public String getConfigfile()
-/*     */   {
-/* 184 */     return this.configfile;
-/*     */   }
-/*     */ 
-/*     */   public void setConfigfile(String configfile)
-/*     */   {
-/* 192 */     this.configfile = configfile;
-/*     */   }
-/*     */ 
-/*     */   public boolean isOverwrite()
-/*     */   {
-/* 199 */     return this.overwrite;
-/*     */   }
-/*     */ 
-/*     */   public void setOverwrite(boolean overwrite)
-/*     */   {
-/* 207 */     this.overwrite = overwrite;
-/*     */   }
-/*     */ 
-/*     */   public PropertySet createPropertyset() {
-/* 211 */     if (this.propertyset == null) {
-/* 212 */       this.propertyset = new PropertySet();
-/*     */     }
-/*     */ 
-/* 215 */     return this.propertyset;
-/*     */   }
-/*     */ 
-/*     */   public boolean isVerbose() {
-/* 219 */     return this.verbose;
-/*     */   }
-/*     */ 
-/*     */   public void setVerbose(boolean verbose) {
-/* 223 */     this.verbose = verbose;
-/*     */   }
-/*     */ 
-/*     */   public String getContextIds() {
-/* 227 */     return this.contextIds;
-/*     */   }
-/*     */ 
-/*     */   public void setContextIds(String contextIds) {
-/* 231 */     this.contextIds = contextIds;
-/*     */   }
-/*     */ 
-/*     */   public String getFullyQualifiedTableNames() {
-/* 235 */     return this.fullyQualifiedTableNames;
-/*     */   }
-/*     */ 
-/*     */   public void setFullyQualifiedTableNames(String fullyQualifiedTableNames) {
-/* 239 */     this.fullyQualifiedTableNames = fullyQualifiedTableNames;
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.ant.GeneratorAntTask
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2005 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.ant;
+
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.PropertySet;
+import org.mybatis.generator.api.MyBatisGenerator;
+import org.mybatis.generator.config.Configuration;
+import org.mybatis.generator.config.xml.ConfigurationParser;
+import org.mybatis.generator.exception.InvalidConfigurationException;
+import org.mybatis.generator.exception.XMLParserException;
+import org.mybatis.generator.internal.DefaultShellCallback;
+import org.mybatis.generator.util.LogFileUtil;
+
+/**
+ * This is an Ant task that will run the generator. The following is a sample
+ * Ant script that shows how to run the generator from Ant:
+ * 
+ * <pre>
+ *  &lt;project default="genfiles" basedir="."&gt;
+ *    &lt;property name="generated.source.dir" value="${basedir}" /&gt;
+ *    &lt;target name="genfiles" description="Generate the files"&gt;
+ *      &lt;taskdef name="mbgenerator"
+ *               classname="org.mybatis.generator.ant.GeneratorAntTask"
+ *               classpath="mybatis-generator-core-x.x.x.jar" /&gt;
+ *      &lt;mbgenerator overwrite="true" configfile="generatorConfig.xml" verbose="false" &gt;
+ *        &lt;propertyset&gt;
+ *          &lt;propertyref name="generated.source.dir"/&gt;
+ *        &lt;/propertyset&gt;
+ *      &lt;/mbgenerator&gt;
+ *    &lt;/target&gt;
+ *  &lt;/project&gt;
+ * </pre>
+ * 
+ * The task requires that the attribute "configFile" be set to an existing XML
+ * configuration file.
+ * <p>
+ * The task supports these optional attributes:
+ * <ul>
+ * <li>"overwrite" - if true, then existing Java files will be overwritten. if
+ * false (default), then existing Java files will be untouched and the generator
+ * will write new Java files with a unique name</li>
+ * <li>"verbose" - if true, then the generator will log progress messages to the
+ * Ant log. Default is false</li>
+ * <li>"contextIds" - a comma delimited list of contaxtIds to use for this run</li>
+ * <li>"fullyQualifiedTableNames" - a comma delimited list of fully qualified
+ * table names to use for this run</li>
+ * </ul>
+ * 
+ * 
+ * @author Jeff Butler
+ */
+public class GeneratorAntTask extends Task {
+
+    private String configfile;
+    private boolean overwrite;
+    private PropertySet propertyset;
+    private boolean verbose;
+    private String contextIds;
+    private String fullyQualifiedTableNames;
+
+    /**
+     * 
+     */
+    public GeneratorAntTask() {
+        super();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.tools.ant.Task#execute()
+     */
+    @Override
+    public void execute() throws BuildException {
+    	LogFileUtil.LogFileUtils(new Date(), GeneratorAntTask.class.getName(), "execute");
+        if (!stringHasValue(configfile)) {
+            throw new BuildException(getString("RuntimeError.0")); //$NON-NLS-1$
+        }
+        List<String> warnings = new ArrayList<String>();
+
+        File configurationFile = new File(configfile);
+        if (!configurationFile.exists()) {
+            throw new BuildException(getString(
+                    "RuntimeError.1", configfile)); //$NON-NLS-1$
+        }
+
+        Set<String> fullyqualifiedTables = new HashSet<String>();
+        if (stringHasValue(fullyQualifiedTableNames)) {
+            StringTokenizer st = new StringTokenizer(fullyQualifiedTableNames,
+                    ","); //$NON-NLS-1$
+            while (st.hasMoreTokens()) {
+                String s = st.nextToken().trim();
+                if (s.length() > 0) {
+                    fullyqualifiedTables.add(s);
+                }
+            }
+        }
+
+        Set<String> contexts = new HashSet<String>();
+        if (stringHasValue(contextIds)) {
+            StringTokenizer st = new StringTokenizer(contextIds, ","); //$NON-NLS-1$
+            while (st.hasMoreTokens()) {
+                String s = st.nextToken().trim();
+                if (s.length() > 0) {
+                    contexts.add(s);
+                }
+            }
+        }
+
+        try {
+            Properties p = propertyset == null ? null : propertyset
+                    .getProperties();
+
+            ConfigurationParser cp = new ConfigurationParser(p, warnings);
+            Configuration config = cp.parseConfiguration(configurationFile);
+
+            DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+
+            MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+
+            myBatisGenerator.generate(new AntProgressCallback(this, verbose), contexts,
+                    fullyqualifiedTables);
+
+        } catch (XMLParserException e) {
+            for (String error : e.getErrors()) {
+                log(error, Project.MSG_ERR);
+            }
+
+            throw new BuildException(e.getMessage());
+        } catch (SQLException e) {
+            throw new BuildException(e.getMessage());
+        } catch (IOException e) {
+            throw new BuildException(e.getMessage());
+        } catch (InvalidConfigurationException e) {
+            for (String error : e.getErrors()) {
+                log(error, Project.MSG_ERR);
+            }
+
+            throw new BuildException(e.getMessage());
+        } catch (InterruptedException e) {
+            // ignore (will never happen with the DefaultShellCallback)
+            ;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BuildException(e.getMessage());
+        }
+
+        for (String error : warnings) {
+            log(error, Project.MSG_WARN);
+        }
+    }
+
+    /**
+     * @return Returns the configfile.
+     */
+    public String getConfigfile() {
+        return configfile;
+    }
+
+    /**
+     * @param configfile
+     *            The configfile to set.
+     */
+    public void setConfigfile(String configfile) {
+        this.configfile = configfile;
+    }
+
+    /**
+     * @return Returns the overwrite.
+     */
+    public boolean isOverwrite() {
+        return overwrite;
+    }
+
+    /**
+     * @param overwrite
+     *            The overwrite to set.
+     */
+    public void setOverwrite(boolean overwrite) {
+        this.overwrite = overwrite;
+    }
+
+    public PropertySet createPropertyset() {
+        if (propertyset == null) {
+            propertyset = new PropertySet();
+        }
+
+        return propertyset;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    public String getContextIds() {
+        return contextIds;
+    }
+
+    public void setContextIds(String contextIds) {
+        this.contextIds = contextIds;
+    }
+
+    public String getFullyQualifiedTableNames() {
+        return fullyQualifiedTableNames;
+    }
+
+    public void setFullyQualifiedTableNames(String fullyQualifiedTableNames) {
+        this.fullyQualifiedTableNames = fullyQualifiedTableNames;
+    }
+}

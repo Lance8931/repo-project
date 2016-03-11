@@ -1,638 +1,671 @@
-/*     */ package org.mybatis.generator.config.xml;
-/*     */ 
-/*     */ import java.io.IOException;
-/*     */ import java.io.InputStream;
-/*     */ import java.net.URL;
-/*     */ import java.net.URLConnection;
-/*     */ import java.util.Properties;
-/*     */ import org.mybatis.generator.config.ColumnOverride;
-/*     */ import org.mybatis.generator.config.ColumnRenamingRule;
-/*     */ import org.mybatis.generator.config.CommentGeneratorConfiguration;
-/*     */ import org.mybatis.generator.config.Configuration;
-/*     */ import org.mybatis.generator.config.Context;
-/*     */ import org.mybatis.generator.config.GeneratedKey;
-/*     */ import org.mybatis.generator.config.IgnoredColumn;
-/*     */ import org.mybatis.generator.config.JDBCConnectionConfiguration;
-/*     */ import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-/*     */ import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
-/*     */ import org.mybatis.generator.config.JavaTypeResolverConfiguration;
-/*     */ import org.mybatis.generator.config.ModelType;
-/*     */ import org.mybatis.generator.config.PluginConfiguration;
-/*     */ import org.mybatis.generator.config.PropertyHolder;
-/*     */ import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
-/*     */ import org.mybatis.generator.config.TableConfiguration;
-/*     */ import org.mybatis.generator.exception.XMLParserException;
-/*     */ import org.mybatis.generator.internal.util.StringUtility;
-/*     */ import org.mybatis.generator.internal.util.messages.Messages;
-/*     */ import org.w3c.dom.Element;
-/*     */ import org.w3c.dom.NamedNodeMap;
-/*     */ import org.w3c.dom.Node;
-/*     */ import org.w3c.dom.NodeList;
-/*     */ 
-/*     */ public class MyBatisGeneratorConfigurationParser
-/*     */ {
-/*     */   private Properties properties;
-/*     */ 
-/*     */   public MyBatisGeneratorConfigurationParser(Properties properties)
-/*     */   {
-/*  55 */     if (properties == null)
-/*  56 */       this.properties = System.getProperties();
-/*     */     else
-/*  58 */       this.properties = properties;
-/*     */   }
-/*     */ 
-/*     */   public Configuration parseConfiguration(Element rootNode)
-/*     */     throws XMLParserException
-/*     */   {
-/*  65 */     Configuration configuration = new Configuration();
-/*     */ 
-/*  67 */     NodeList nodeList = rootNode.getChildNodes();
-/*  68 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/*  69 */       Node childNode = nodeList.item(i);
-/*     */ 
-/*  71 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/*  75 */       if ("properties".equals(childNode.getNodeName()))
-/*  76 */         parseProperties(configuration, childNode);
-/*  77 */       else if ("classPathEntry".equals(childNode.getNodeName()))
-/*  78 */         parseClassPathEntry(configuration, childNode);
-/*  79 */       else if ("context".equals(childNode.getNodeName())) {
-/*  80 */         parseContext(configuration, childNode);
-/*     */       }
-/*     */     }
-/*     */ 
-/*  84 */     return configuration;
-/*     */   }
-/*     */ 
-/*     */   private void parseProperties(Configuration configuration, Node node) throws XMLParserException
-/*     */   {
-/*  89 */     Properties attributes = parseAttributes(node);
-/*  90 */     String resource = attributes.getProperty("resource");
-/*  91 */     String url = attributes.getProperty("url");
-/*     */ 
-/*  93 */     if ((!StringUtility.stringHasValue(resource)) && (!StringUtility.stringHasValue(url)))
-/*     */     {
-/*  95 */       throw new XMLParserException(Messages.getString("RuntimeError.14"));
-/*     */     }
-/*     */ 
-/*  98 */     if ((StringUtility.stringHasValue(resource)) && (StringUtility.stringHasValue(url)))
-/*     */     {
-/* 100 */       throw new XMLParserException(Messages.getString("RuntimeError.14"));
-/*     */     }
-/*     */     try
-/*     */     {
-/*     */       URL resourceUrl;
-/* 106 */       if (StringUtility.stringHasValue(resource)) {
-/* 107 */         resourceUrl = Thread.currentThread().getContextClassLoader().getResource(resource);
-/*     */ 
-/* 109 */         if (resourceUrl == null)
-/* 110 */           throw new XMLParserException(Messages.getString("RuntimeError.15", resource));
-/*     */       }
-/*     */       else
-/*     */       {
-/* 114 */         resourceUrl = new URL(url);
-/*     */       }
-/*     */ 
-/* 117 */       InputStream inputStream = resourceUrl.openConnection().getInputStream();
-/*     */ 
-/* 120 */       this.properties.load(inputStream);
-/* 121 */       inputStream.close();
-/*     */     } catch (IOException e) {
-/* 123 */       if (StringUtility.stringHasValue(resource)) {
-/* 124 */         throw new XMLParserException(Messages.getString("RuntimeError.16", resource));
-/*     */       }
-/*     */ 
-/* 127 */       throw new XMLParserException(Messages.getString("RuntimeError.17", url));
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private void parseContext(Configuration configuration, Node node)
-/*     */   {
-/* 135 */     Properties attributes = parseAttributes(node);
-/* 136 */     String defaultModelType = attributes.getProperty("defaultModelType");
-/* 137 */     String targetRuntime = attributes.getProperty("targetRuntime");
-/* 138 */     String introspectedColumnImpl = attributes.getProperty("introspectedColumnImpl");
-/*     */ 
-/* 140 */     String id = attributes.getProperty("id");
-/*     */ 
-/* 142 */     ModelType mt = defaultModelType == null ? null : ModelType.getModelType(defaultModelType);
-/*     */ 
-/* 145 */     Context context = new Context(mt);
-/* 146 */     context.setId(id);
-/* 147 */     if (StringUtility.stringHasValue(introspectedColumnImpl)) {
-/* 148 */       context.setIntrospectedColumnImpl(introspectedColumnImpl);
-/*     */     }
-/* 150 */     if (StringUtility.stringHasValue(targetRuntime)) {
-/* 151 */       context.setTargetRuntime(targetRuntime);
-/*     */     }
-/*     */ 
-/* 154 */     configuration.addContext(context);
-/*     */ 
-/* 156 */     NodeList nodeList = node.getChildNodes();
-/* 157 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/* 158 */       Node childNode = nodeList.item(i);
-/*     */ 
-/* 160 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/* 164 */       if ("property".equals(childNode.getNodeName()))
-/* 165 */         parseProperty(context, childNode);
-/* 166 */       else if ("plugin".equals(childNode.getNodeName()))
-/* 167 */         parsePlugin(context, childNode);
-/* 168 */       else if ("commentGenerator".equals(childNode.getNodeName()))
-/* 169 */         parseCommentGenerator(context, childNode);
-/* 170 */       else if ("jdbcConnection".equals(childNode.getNodeName()))
-/* 171 */         parseJdbcConnection(context, childNode);
-/* 172 */       else if ("javaModelGenerator".equals(childNode.getNodeName()))
-/* 173 */         parseJavaModelGenerator(context, childNode);
-/* 174 */       else if ("javaTypeResolver".equals(childNode.getNodeName()))
-/* 175 */         parseJavaTypeResolver(context, childNode);
-/* 176 */       else if ("sqlMapGenerator".equals(childNode.getNodeName()))
-/* 177 */         parseSqlMapGenerator(context, childNode);
-/* 178 */       else if ("javaClientGenerator".equals(childNode.getNodeName()))
-/* 179 */         parseJavaClientGenerator(context, childNode);
-/* 180 */       else if ("table".equals(childNode.getNodeName()))
-/* 181 */         parseTable(context, childNode);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private void parseSqlMapGenerator(Context context, Node node)
-/*     */   {
-/* 187 */     SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
-/*     */ 
-/* 189 */     context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
-/*     */ 
-/* 191 */     Properties attributes = parseAttributes(node);
-/* 192 */     String targetPackage = attributes.getProperty("targetPackage");
-/* 193 */     String targetProject = attributes.getProperty("targetProject");
-/*     */ 
-/* 195 */     sqlMapGeneratorConfiguration.setTargetPackage(targetPackage);
-/* 196 */     sqlMapGeneratorConfiguration.setTargetProject(targetProject);
-/*     */ 
-/* 198 */     NodeList nodeList = node.getChildNodes();
-/* 199 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/* 200 */       Node childNode = nodeList.item(i);
-/*     */ 
-/* 202 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/* 206 */       if ("property".equals(childNode.getNodeName()))
-/* 207 */         parseProperty(sqlMapGeneratorConfiguration, childNode);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private void parseTable(Context context, Node node)
-/*     */   {
-/* 213 */     TableConfiguration tc = new TableConfiguration(context);
-/* 214 */     context.addTableConfiguration(tc);
-/*     */ 
-/* 216 */     Properties attributes = parseAttributes(node);
-/* 217 */     String catalog = attributes.getProperty("catalog");
-/* 218 */     String schema = attributes.getProperty("schema");
-/* 219 */     String tableName = attributes.getProperty("tableName");
-/* 220 */     String domainObjectName = attributes.getProperty("domainObjectName");
-/* 221 */     String alias = attributes.getProperty("alias");
-/* 222 */     String enableInsert = attributes.getProperty("enableInsert");
-/* 223 */     String enableSelectByPrimaryKey = attributes.getProperty("enableSelectByPrimaryKey");
-/*     */ 
-/* 225 */     String enableSelectByExample = attributes.getProperty("enableSelectByExample");
-/*     */ 
-/* 227 */     String enableUpdateByPrimaryKey = attributes.getProperty("enableUpdateByPrimaryKey");
-/*     */ 
-/* 229 */     String enableDeleteByPrimaryKey = attributes.getProperty("enableDeleteByPrimaryKey");
-/*     */ 
-/* 231 */     String enableDeleteByExample = attributes.getProperty("enableDeleteByExample");
-/*     */ 
-/* 233 */     String enableCountByExample = attributes.getProperty("enableCountByExample");
-/*     */ 
-/* 235 */     String enableUpdateByExample = attributes.getProperty("enableUpdateByExample");
-/*     */ 
-/* 237 */     String selectByPrimaryKeyQueryId = attributes.getProperty("selectByPrimaryKeyQueryId");
-/*     */ 
-/* 239 */     String selectByExampleQueryId = attributes.getProperty("selectByExampleQueryId");
-/*     */ 
-/* 241 */     String modelType = attributes.getProperty("modelType");
-/* 242 */     String escapeWildcards = attributes.getProperty("escapeWildcards");
-/* 243 */     String delimitIdentifiers = attributes.getProperty("delimitIdentifiers");
-/*     */ 
-/* 245 */     String delimitAllColumns = attributes.getProperty("delimitAllColumns");
-/*     */ 
-/* 247 */     if (StringUtility.stringHasValue(catalog)) {
-/* 248 */       tc.setCatalog(catalog);
-/*     */     }
-/*     */ 
-/* 251 */     if (StringUtility.stringHasValue(schema)) {
-/* 252 */       tc.setSchema(schema);
-/*     */     }
-/*     */ 
-/* 255 */     if (StringUtility.stringHasValue(tableName)) {
-/* 256 */       tc.setTableName(tableName);
-/*     */     }
-/*     */ 
-/* 259 */     if (StringUtility.stringHasValue(domainObjectName)) {
-/* 260 */       tc.setDomainObjectName(domainObjectName);
-/*     */     }
-/*     */ 
-/* 263 */     if (StringUtility.stringHasValue(alias)) {
-/* 264 */       tc.setAlias(alias);
-/*     */     }
-/*     */ 
-/* 267 */     if (StringUtility.stringHasValue(enableInsert)) {
-/* 268 */       tc.setInsertStatementEnabled(StringUtility.isTrue(enableInsert));
-/*     */     }
-/*     */ 
-/* 271 */     if (StringUtility.stringHasValue(enableSelectByPrimaryKey)) {
-/* 272 */       tc.setSelectByPrimaryKeyStatementEnabled(StringUtility.isTrue(enableSelectByPrimaryKey));
-/*     */     }
-/*     */ 
-/* 276 */     if (StringUtility.stringHasValue(enableSelectByExample)) {
-/* 277 */       tc.setSelectByExampleStatementEnabled(StringUtility.isTrue(enableSelectByExample));
-/*     */     }
-/*     */ 
-/* 281 */     if (StringUtility.stringHasValue(enableUpdateByPrimaryKey)) {
-/* 282 */       tc.setUpdateByPrimaryKeyStatementEnabled(StringUtility.isTrue(enableUpdateByPrimaryKey));
-/*     */     }
-/*     */ 
-/* 286 */     if (StringUtility.stringHasValue(enableDeleteByPrimaryKey)) {
-/* 287 */       tc.setDeleteByPrimaryKeyStatementEnabled(StringUtility.isTrue(enableDeleteByPrimaryKey));
-/*     */     }
-/*     */ 
-/* 291 */     if (StringUtility.stringHasValue(enableDeleteByExample)) {
-/* 292 */       tc.setDeleteByExampleStatementEnabled(StringUtility.isTrue(enableDeleteByExample));
-/*     */     }
-/*     */ 
-/* 296 */     if (StringUtility.stringHasValue(enableCountByExample)) {
-/* 297 */       tc.setCountByExampleStatementEnabled(StringUtility.isTrue(enableCountByExample));
-/*     */     }
-/*     */ 
-/* 301 */     if (StringUtility.stringHasValue(enableUpdateByExample)) {
-/* 302 */       tc.setUpdateByExampleStatementEnabled(StringUtility.isTrue(enableUpdateByExample));
-/*     */     }
-/*     */ 
-/* 306 */     if (StringUtility.stringHasValue(selectByPrimaryKeyQueryId)) {
-/* 307 */       tc.setSelectByPrimaryKeyQueryId(selectByPrimaryKeyQueryId);
-/*     */     }
-/*     */ 
-/* 310 */     if (StringUtility.stringHasValue(selectByExampleQueryId)) {
-/* 311 */       tc.setSelectByExampleQueryId(selectByExampleQueryId);
-/*     */     }
-/*     */ 
-/* 314 */     if (StringUtility.stringHasValue(modelType)) {
-/* 315 */       tc.setConfiguredModelType(modelType);
-/*     */     }
-/*     */ 
-/* 318 */     if (StringUtility.stringHasValue(escapeWildcards)) {
-/* 319 */       tc.setWildcardEscapingEnabled(StringUtility.isTrue(escapeWildcards));
-/*     */     }
-/*     */ 
-/* 324 */     if (StringUtility.stringHasValue(delimitIdentifiers)) {
-/* 325 */       tc.setDelimitIdentifiers(StringUtility.isTrue(delimitIdentifiers));
-/*     */     }
-/*     */ 
-/* 328 */     if (StringUtility.stringHasValue(delimitAllColumns)) {
-/* 329 */       tc.setAllColumnDelimitingEnabled(StringUtility.isTrue(delimitAllColumns));
-/*     */     }
-/*     */ 
-/* 333 */     NodeList nodeList = node.getChildNodes();
-/* 334 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/* 335 */       Node childNode = nodeList.item(i);
-/*     */ 
-/* 337 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/* 341 */       if ("property".equals(childNode.getNodeName()))
-/* 342 */         parseProperty(tc, childNode);
-/* 343 */       else if ("columnOverride".equals(childNode.getNodeName()))
-/* 344 */         parseColumnOverride(tc, childNode);
-/* 345 */       else if ("ignoreColumn".equals(childNode.getNodeName()))
-/* 346 */         parseIgnoreColumn(tc, childNode);
-/* 347 */       else if ("generatedKey".equals(childNode.getNodeName()))
-/* 348 */         parseGeneratedKey(tc, childNode);
-/* 349 */       else if ("columnRenamingRule".equals(childNode.getNodeName()))
-/* 350 */         parseColumnRenamingRule(tc, childNode);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private void parseColumnOverride(TableConfiguration tc, Node node)
-/*     */   {
-/* 356 */     Properties attributes = parseAttributes(node);
-/* 357 */     String column = attributes.getProperty("column");
-/* 358 */     String property = attributes.getProperty("property");
-/* 359 */     String javaType = attributes.getProperty("javaType");
-/* 360 */     String jdbcType = attributes.getProperty("jdbcType");
-/* 361 */     String typeHandler = attributes.getProperty("typeHandler");
-/* 362 */     String delimitedColumnName = attributes.getProperty("delimitedColumnName");
-/*     */ 
-/* 365 */     ColumnOverride co = new ColumnOverride(column);
-/*     */ 
-/* 367 */     if (StringUtility.stringHasValue(property)) {
-/* 368 */       co.setJavaProperty(property);
-/*     */     }
-/*     */ 
-/* 371 */     if (StringUtility.stringHasValue(javaType)) {
-/* 372 */       co.setJavaType(javaType);
-/*     */     }
-/*     */ 
-/* 375 */     if (StringUtility.stringHasValue(jdbcType)) {
-/* 376 */       co.setJdbcType(jdbcType);
-/*     */     }
-/*     */ 
-/* 379 */     if (StringUtility.stringHasValue(typeHandler)) {
-/* 380 */       co.setTypeHandler(typeHandler);
-/*     */     }
-/*     */ 
-/* 383 */     if (StringUtility.stringHasValue(delimitedColumnName)) {
-/* 384 */       co.setColumnNameDelimited(StringUtility.isTrue(delimitedColumnName));
-/*     */     }
-/*     */ 
-/* 389 */     NodeList nodeList = node.getChildNodes();
-/* 390 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/* 391 */       Node childNode = nodeList.item(i);
-/*     */ 
-/* 393 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/* 397 */       if ("property".equals(childNode.getNodeName())) {
-/* 398 */         parseProperty(co, childNode);
-/*     */       }
-/*     */     }
-/*     */ 
-/* 402 */     tc.addColumnOverride(co);
-/*     */   }
-/*     */ 
-/*     */   private void parseGeneratedKey(TableConfiguration tc, Node node) {
-/* 406 */     Properties attributes = parseAttributes(node);
-/*     */ 
-/* 408 */     String column = attributes.getProperty("column");
-/* 409 */     boolean identity = StringUtility.isTrue(attributes.getProperty("identity"));
-/*     */ 
-/* 411 */     String sqlStatement = attributes.getProperty("sqlStatement");
-/* 412 */     String type = attributes.getProperty("type");
-/*     */ 
-/* 414 */     GeneratedKey gk = new GeneratedKey(column, sqlStatement, identity, type);
-/*     */ 
-/* 416 */     tc.setGeneratedKey(gk);
-/*     */   }
-/*     */ 
-/*     */   private void parseIgnoreColumn(TableConfiguration tc, Node node) {
-/* 420 */     Properties attributes = parseAttributes(node);
-/* 421 */     String column = attributes.getProperty("column");
-/* 422 */     String delimitedColumnName = attributes.getProperty("delimitedColumnName");
-/*     */ 
-/* 425 */     IgnoredColumn ic = new IgnoredColumn(column);
-/*     */ 
-/* 427 */     if (StringUtility.stringHasValue(delimitedColumnName)) {
-/* 428 */       ic.setColumnNameDelimited(StringUtility.isTrue(delimitedColumnName));
-/*     */     }
-/*     */ 
-/* 433 */     tc.addIgnoredColumn(ic);
-/*     */   }
-/*     */ 
-/*     */   private void parseColumnRenamingRule(TableConfiguration tc, Node node) {
-/* 437 */     Properties attributes = parseAttributes(node);
-/* 438 */     String searchString = attributes.getProperty("searchString");
-/* 439 */     String replaceString = attributes.getProperty("replaceString");
-/*     */ 
-/* 441 */     ColumnRenamingRule crr = new ColumnRenamingRule();
-/*     */ 
-/* 443 */     crr.setSearchString(searchString);
-/*     */ 
-/* 445 */     if (StringUtility.stringHasValue(replaceString)) {
-/* 446 */       crr.setReplaceString(replaceString);
-/*     */     }
-/*     */ 
-/* 449 */     tc.setColumnRenamingRule(crr);
-/*     */   }
-/*     */ 
-/*     */   private void parseJavaTypeResolver(Context context, Node node) {
-/* 453 */     JavaTypeResolverConfiguration javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
-/*     */ 
-/* 455 */     context.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
-/*     */ 
-/* 457 */     Properties attributes = parseAttributes(node);
-/* 458 */     String type = attributes.getProperty("type");
-/*     */ 
-/* 460 */     if (StringUtility.stringHasValue(type)) {
-/* 461 */       javaTypeResolverConfiguration.setConfigurationType(type);
-/*     */     }
-/*     */ 
-/* 464 */     NodeList nodeList = node.getChildNodes();
-/* 465 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/* 466 */       Node childNode = nodeList.item(i);
-/*     */ 
-/* 468 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/* 472 */       if ("property".equals(childNode.getNodeName()))
-/* 473 */         parseProperty(javaTypeResolverConfiguration, childNode);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private void parsePlugin(Context context, Node node)
-/*     */   {
-/* 479 */     PluginConfiguration pluginConfiguration = new PluginConfiguration();
-/*     */ 
-/* 481 */     context.addPluginConfiguration(pluginConfiguration);
-/*     */ 
-/* 483 */     Properties attributes = parseAttributes(node);
-/* 484 */     String type = attributes.getProperty("type");
-/*     */ 
-/* 486 */     pluginConfiguration.setConfigurationType(type);
-/*     */ 
-/* 488 */     NodeList nodeList = node.getChildNodes();
-/* 489 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/* 490 */       Node childNode = nodeList.item(i);
-/*     */ 
-/* 492 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/* 496 */       if ("property".equals(childNode.getNodeName()))
-/* 497 */         parseProperty(pluginConfiguration, childNode);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private void parseJavaModelGenerator(Context context, Node node)
-/*     */   {
-/* 503 */     JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
-/*     */ 
-/* 505 */     context.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
-/*     */ 
-/* 508 */     Properties attributes = parseAttributes(node);
-/* 509 */     String targetPackage = attributes.getProperty("targetPackage");
-/* 510 */     String targetProject = attributes.getProperty("targetProject");
-/*     */ 
-/* 512 */     javaModelGeneratorConfiguration.setTargetPackage(targetPackage);
-/* 513 */     javaModelGeneratorConfiguration.setTargetProject(targetProject);
-/*     */ 
-/* 515 */     NodeList nodeList = node.getChildNodes();
-/* 516 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/* 517 */       Node childNode = nodeList.item(i);
-/*     */ 
-/* 519 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/* 523 */       if ("property".equals(childNode.getNodeName()))
-/* 524 */         parseProperty(javaModelGeneratorConfiguration, childNode);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private void parseJavaClientGenerator(Context context, Node node)
-/*     */   {
-/* 530 */     JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
-/*     */ 
-/* 532 */     context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
-/*     */ 
-/* 534 */     Properties attributes = parseAttributes(node);
-/* 535 */     String type = attributes.getProperty("type");
-/* 536 */     String targetPackage = attributes.getProperty("targetPackage");
-/* 537 */     String targetProject = attributes.getProperty("targetProject");
-/* 538 */     String implementationPackage = attributes.getProperty("implementationPackage");
-/*     */ 
-/* 541 */     javaClientGeneratorConfiguration.setConfigurationType(type);
-/* 542 */     javaClientGeneratorConfiguration.setTargetPackage(targetPackage);
-/* 543 */     javaClientGeneratorConfiguration.setTargetProject(targetProject);
-/* 544 */     javaClientGeneratorConfiguration.setImplementationPackage(implementationPackage);
-/*     */ 
-/* 547 */     NodeList nodeList = node.getChildNodes();
-/* 548 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/* 549 */       Node childNode = nodeList.item(i);
-/*     */ 
-/* 551 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/* 555 */       if ("property".equals(childNode.getNodeName()))
-/* 556 */         parseProperty(javaClientGeneratorConfiguration, childNode);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private void parseJdbcConnection(Context context, Node node)
-/*     */   {
-/* 562 */     JDBCConnectionConfiguration jdbcConnectionConfiguration = new JDBCConnectionConfiguration();
-/*     */ 
-/* 564 */     context.setJdbcConnectionConfiguration(jdbcConnectionConfiguration);
-/*     */ 
-/* 566 */     Properties attributes = parseAttributes(node);
-/* 567 */     String driverClass = attributes.getProperty("driverClass");
-/* 568 */     String connectionURL = attributes.getProperty("connectionURL");
-/* 569 */     String userId = attributes.getProperty("userId");
-/* 570 */     String password = attributes.getProperty("password");
-/*     */ 
-/* 572 */     jdbcConnectionConfiguration.setDriverClass(driverClass);
-/* 573 */     jdbcConnectionConfiguration.setConnectionURL(connectionURL);
-/*     */ 
-/* 575 */     if (StringUtility.stringHasValue(userId)) {
-/* 576 */       jdbcConnectionConfiguration.setUserId(userId);
-/*     */     }
-/*     */ 
-/* 579 */     if (StringUtility.stringHasValue(password)) {
-/* 580 */       jdbcConnectionConfiguration.setPassword(password);
-/*     */     }
-/*     */ 
-/* 583 */     NodeList nodeList = node.getChildNodes();
-/* 584 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/* 585 */       Node childNode = nodeList.item(i);
-/*     */ 
-/* 587 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/* 591 */       if ("property".equals(childNode.getNodeName()))
-/* 592 */         parseProperty(jdbcConnectionConfiguration, childNode);
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   private void parseClassPathEntry(Configuration configuration, Node node)
-/*     */   {
-/* 598 */     Properties attributes = parseAttributes(node);
-/*     */ 
-/* 600 */     configuration.addClasspathEntry(attributes.getProperty("location"));
-/*     */   }
-/*     */ 
-/*     */   private void parseProperty(PropertyHolder propertyHolder, Node node) {
-/* 604 */     Properties attributes = parseAttributes(node);
-/*     */ 
-/* 606 */     String name = attributes.getProperty("name");
-/* 607 */     String value = attributes.getProperty("value");
-/*     */ 
-/* 609 */     propertyHolder.addProperty(name, value);
-/*     */   }
-/*     */ 
-/*     */   private Properties parseAttributes(Node node) {
-/* 613 */     Properties attributes = new Properties();
-/* 614 */     NamedNodeMap nnm = node.getAttributes();
-/* 615 */     for (int i = 0; i < nnm.getLength(); i++) {
-/* 616 */       Node attribute = nnm.item(i);
-/* 617 */       String value = parsePropertyTokens(attribute.getNodeValue());
-/* 618 */       attributes.put(attribute.getNodeName(), value);
-/*     */     }
-/*     */ 
-/* 621 */     return attributes;
-/*     */   }
-/*     */ 
-/*     */   private String parsePropertyTokens(String string) {
-/* 625 */     String OPEN = "${";
-/* 626 */     String CLOSE = "}";
-/*     */ 
-/* 628 */     String newString = string;
-/* 629 */     if (newString != null) {
-/* 630 */       int start = newString.indexOf("${");
-/* 631 */       int end = newString.indexOf("}");
-/*     */ 
-/* 633 */       while ((start > -1) && (end > start)) {
-/* 634 */         String prepend = newString.substring(0, start);
-/* 635 */         String append = newString.substring(end + "}".length());
-/* 636 */         String propName = newString.substring(start + "${".length(), end);
-/*     */ 
-/* 638 */         String propValue = this.properties.getProperty(propName);
-/* 639 */         if (propValue != null) {
-/* 640 */           newString = prepend + propValue + append;
-/*     */         }
-/*     */ 
-/* 643 */         start = newString.indexOf("${", end);
-/* 644 */         end = newString.indexOf("}", end);
-/*     */       }
-/*     */     }
-/*     */ 
-/* 648 */     return newString;
-/*     */   }
-/*     */ 
-/*     */   private void parseCommentGenerator(Context context, Node node) {
-/* 652 */     CommentGeneratorConfiguration commentGeneratorConfiguration = new CommentGeneratorConfiguration();
-/*     */ 
-/* 654 */     context.setCommentGeneratorConfiguration(commentGeneratorConfiguration);
-/*     */ 
-/* 656 */     Properties attributes = parseAttributes(node);
-/* 657 */     String type = attributes.getProperty("type");
-/*     */ 
-/* 659 */     if (StringUtility.stringHasValue(type)) {
-/* 660 */       commentGeneratorConfiguration.setConfigurationType(type);
-/*     */     }
-/*     */ 
-/* 663 */     NodeList nodeList = node.getChildNodes();
-/* 664 */     for (int i = 0; i < nodeList.getLength(); i++) {
-/* 665 */       Node childNode = nodeList.item(i);
-/*     */ 
-/* 667 */       if (childNode.getNodeType() != 1)
-/*     */       {
-/*     */         continue;
-/*     */       }
-/* 671 */       if ("property".equals(childNode.getNodeName()))
-/* 672 */         parseProperty(commentGeneratorConfiguration, childNode);
-/*     */     }
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.config.xml.MyBatisGeneratorConfigurationParser
- * JD-Core Version:    0.6.0
+/*
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.config.xml;
+
+import static org.mybatis.generator.internal.util.StringUtility.isTrue;
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Properties;
+
+import org.mybatis.generator.config.ColumnOverride;
+import org.mybatis.generator.config.ColumnRenamingRule;
+import org.mybatis.generator.config.CommentGeneratorConfiguration;
+import org.mybatis.generator.config.Configuration;
+import org.mybatis.generator.config.Context;
+import org.mybatis.generator.config.GeneratedKey;
+import org.mybatis.generator.config.IgnoredColumn;
+import org.mybatis.generator.config.JDBCConnectionConfiguration;
+import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
+import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
+import org.mybatis.generator.config.JavaTypeResolverConfiguration;
+import org.mybatis.generator.config.ModelType;
+import org.mybatis.generator.config.PluginConfiguration;
+import org.mybatis.generator.config.PropertyHolder;
+import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
+import org.mybatis.generator.config.TableConfiguration;
+import org.mybatis.generator.exception.XMLParserException;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+/**
+ * This class parses configuration files into the new Configuration API
+ * 
+ * @author Jeff Butler
+ */
+public class MyBatisGeneratorConfigurationParser {
+    private Properties properties;
+
+    public MyBatisGeneratorConfigurationParser(Properties properties) {
+        super();
+        if (properties == null) {
+            this.properties = System.getProperties();
+        } else {
+            this.properties = properties;
+        }
+    }
+
+    public Configuration parseConfiguration(Element rootNode)
+            throws XMLParserException {
+
+        Configuration configuration = new Configuration();
+
+        NodeList nodeList = rootNode.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("properties".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperties(configuration, childNode);
+            } else if ("classPathEntry".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseClassPathEntry(configuration, childNode);
+            } else if ("context".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseContext(configuration, childNode);
+            }
+        }
+
+        return configuration;
+    }
+
+    private void parseProperties(Configuration configuration, Node node)
+            throws XMLParserException {
+        Properties attributes = parseAttributes(node);
+        String resource = attributes.getProperty("resource"); //$NON-NLS-1$
+        String url = attributes.getProperty("url"); //$NON-NLS-1$
+
+        if (!stringHasValue(resource)
+                && !stringHasValue(url)) {
+            throw new XMLParserException(getString("RuntimeError.14")); //$NON-NLS-1$
+        }
+
+        if (stringHasValue(resource)
+                && stringHasValue(url)) {
+            throw new XMLParserException(getString("RuntimeError.14")); //$NON-NLS-1$
+        }
+
+        URL resourceUrl;
+
+        try {
+            if (stringHasValue(resource)) {
+                resourceUrl = Thread.currentThread().getContextClassLoader()
+                        .getResource(resource);
+                if (resourceUrl == null) {
+                    throw new XMLParserException(getString(
+                            "RuntimeError.15", resource)); //$NON-NLS-1$
+                }
+            } else {
+                resourceUrl = new URL(url);
+            }
+
+            InputStream inputStream = resourceUrl.openConnection()
+                    .getInputStream();
+
+            properties.load(inputStream);
+            inputStream.close();
+        } catch (IOException e) {
+            if (stringHasValue(resource)) {
+                throw new XMLParserException(getString(
+                        "RuntimeError.16", resource)); //$NON-NLS-1$
+            } else {
+                throw new XMLParserException(getString(
+                        "RuntimeError.17", url)); //$NON-NLS-1$
+            }
+        }
+    }
+
+    private void parseContext(Configuration configuration, Node node) {
+
+        Properties attributes = parseAttributes(node);
+        String defaultModelType = attributes.getProperty("defaultModelType"); //$NON-NLS-1$
+        String targetRuntime = attributes.getProperty("targetRuntime"); //$NON-NLS-1$
+        String introspectedColumnImpl = attributes
+                .getProperty("introspectedColumnImpl"); //$NON-NLS-1$
+        String id = attributes.getProperty("id"); //$NON-NLS-1$
+
+        ModelType mt = defaultModelType == null ? null : ModelType
+                .getModelType(defaultModelType);
+
+        Context context = new Context(mt);
+        context.setId(id);
+        if (stringHasValue(introspectedColumnImpl)) {
+            context.setIntrospectedColumnImpl(introspectedColumnImpl);
+        }
+        if (stringHasValue(targetRuntime)) {
+            context.setTargetRuntime(targetRuntime);
+        }
+
+        configuration.addContext(context);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(context, childNode);
+            } else if ("plugin".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parsePlugin(context, childNode);
+            } else if ("commentGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseCommentGenerator(context, childNode);
+            } else if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJdbcConnection(context, childNode);
+            } else if ("javaModelGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJavaModelGenerator(context, childNode);
+            } else if ("javaTypeResolver".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJavaTypeResolver(context, childNode);
+            } else if ("sqlMapGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseSqlMapGenerator(context, childNode);
+            } else if ("javaClientGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJavaClientGenerator(context, childNode);
+            } else if ("table".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseTable(context, childNode);
+            }
+        }
+    }
+
+    private void parseSqlMapGenerator(Context context, Node node) {
+        SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
+
+        context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+
+        sqlMapGeneratorConfiguration.setTargetPackage(targetPackage);
+        sqlMapGeneratorConfiguration.setTargetProject(targetProject);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(sqlMapGeneratorConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseTable(Context context, Node node) {
+        TableConfiguration tc = new TableConfiguration(context);
+        context.addTableConfiguration(tc);
+
+        Properties attributes = parseAttributes(node);
+        String catalog = attributes.getProperty("catalog"); //$NON-NLS-1$
+        String schema = attributes.getProperty("schema"); //$NON-NLS-1$
+        String tableName = attributes.getProperty("tableName"); //$NON-NLS-1$
+        String domainObjectName = attributes.getProperty("domainObjectName"); //$NON-NLS-1$
+        String alias = attributes.getProperty("alias"); //$NON-NLS-1$
+        String enableInsert = attributes.getProperty("enableInsert"); //$NON-NLS-1$
+        String enableSelectByPrimaryKey = attributes
+                .getProperty("enableSelectByPrimaryKey"); //$NON-NLS-1$
+        String enableSelectByExample = attributes
+                .getProperty("enableSelectByExample"); //$NON-NLS-1$
+        String enableUpdateByPrimaryKey = attributes
+                .getProperty("enableUpdateByPrimaryKey"); //$NON-NLS-1$
+        String enableDeleteByPrimaryKey = attributes
+                .getProperty("enableDeleteByPrimaryKey"); //$NON-NLS-1$
+        String enableDeleteByExample = attributes
+                .getProperty("enableDeleteByExample"); //$NON-NLS-1$
+        String enableCountByExample = attributes
+                .getProperty("enableCountByExample"); //$NON-NLS-1$
+        String enableUpdateByExample = attributes
+                .getProperty("enableUpdateByExample"); //$NON-NLS-1$
+        String selectByPrimaryKeyQueryId = attributes
+                .getProperty("selectByPrimaryKeyQueryId"); //$NON-NLS-1$
+        String selectByExampleQueryId = attributes
+                .getProperty("selectByExampleQueryId"); //$NON-NLS-1$
+        String modelType = attributes.getProperty("modelType"); //$NON-NLS-1$
+        String escapeWildcards = attributes.getProperty("escapeWildcards"); //$NON-NLS-1$
+        String delimitIdentifiers = attributes
+                .getProperty("delimitIdentifiers"); //$NON-NLS-1$
+        String delimitAllColumns = attributes.getProperty("delimitAllColumns"); //$NON-NLS-1$
+
+        if (stringHasValue(catalog)) {
+            tc.setCatalog(catalog);
+        }
+
+        if (stringHasValue(schema)) {
+            tc.setSchema(schema);
+        }
+
+        if (stringHasValue(tableName)) {
+            tc.setTableName(tableName);
+        }
+
+        if (stringHasValue(domainObjectName)) {
+            tc.setDomainObjectName(domainObjectName);
+        }
+
+        if (stringHasValue(alias)) {
+            tc.setAlias(alias);
+        }
+
+        if (stringHasValue(enableInsert)) {
+            tc.setInsertStatementEnabled(isTrue(enableInsert));
+        }
+
+        if (stringHasValue(enableSelectByPrimaryKey)) {
+            tc.setSelectByPrimaryKeyStatementEnabled(
+                    isTrue(enableSelectByPrimaryKey));
+        }
+
+        if (stringHasValue(enableSelectByExample)) {
+            tc.setSelectByExampleStatementEnabled(
+                    isTrue(enableSelectByExample));
+        }
+
+        if (stringHasValue(enableUpdateByPrimaryKey)) {
+            tc.setUpdateByPrimaryKeyStatementEnabled(
+                    isTrue(enableUpdateByPrimaryKey));
+        }
+
+        if (stringHasValue(enableDeleteByPrimaryKey)) {
+            tc.setDeleteByPrimaryKeyStatementEnabled(
+                    isTrue(enableDeleteByPrimaryKey));
+        }
+
+        if (stringHasValue(enableDeleteByExample)) {
+            tc.setDeleteByExampleStatementEnabled(
+                    isTrue(enableDeleteByExample));
+        }
+
+        if (stringHasValue(enableCountByExample)) {
+            tc.setCountByExampleStatementEnabled(
+                    isTrue(enableCountByExample));
+        }
+
+        if (stringHasValue(enableUpdateByExample)) {
+            tc.setUpdateByExampleStatementEnabled(
+                    isTrue(enableUpdateByExample));
+        }
+
+        if (stringHasValue(selectByPrimaryKeyQueryId)) {
+            tc.setSelectByPrimaryKeyQueryId(selectByPrimaryKeyQueryId);
+        }
+
+        if (stringHasValue(selectByExampleQueryId)) {
+            tc.setSelectByExampleQueryId(selectByExampleQueryId);
+        }
+
+        if (stringHasValue(modelType)) {
+            tc.setConfiguredModelType(modelType);
+        }
+
+        if (stringHasValue(escapeWildcards)) {
+            tc.setWildcardEscapingEnabled(isTrue(escapeWildcards));
+        }
+
+        if (stringHasValue(delimitIdentifiers)) {
+            tc.setDelimitIdentifiers(isTrue(delimitIdentifiers));
+        }
+
+        if (stringHasValue(delimitAllColumns)) {
+            tc.setAllColumnDelimitingEnabled(isTrue(delimitAllColumns));
+        }
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(tc, childNode);
+            } else if ("columnOverride".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseColumnOverride(tc, childNode);
+            } else if ("ignoreColumn".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseIgnoreColumn(tc, childNode);
+            } else if ("generatedKey".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseGeneratedKey(tc, childNode);
+            } else if ("columnRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseColumnRenamingRule(tc, childNode);
+            }
+        }
+    }
+
+    private void parseColumnOverride(TableConfiguration tc, Node node) {
+        Properties attributes = parseAttributes(node);
+        String column = attributes.getProperty("column"); //$NON-NLS-1$
+        String property = attributes.getProperty("property"); //$NON-NLS-1$
+        String javaType = attributes.getProperty("javaType"); //$NON-NLS-1$
+        String jdbcType = attributes.getProperty("jdbcType"); //$NON-NLS-1$
+        String typeHandler = attributes.getProperty("typeHandler"); //$NON-NLS-1$
+        String delimitedColumnName = attributes
+                .getProperty("delimitedColumnName"); //$NON-NLS-1$
+
+        ColumnOverride co = new ColumnOverride(column);
+
+        if (stringHasValue(property)) {
+            co.setJavaProperty(property);
+        }
+
+        if (stringHasValue(javaType)) {
+            co.setJavaType(javaType);
+        }
+
+        if (stringHasValue(jdbcType)) {
+            co.setJdbcType(jdbcType);
+        }
+
+        if (stringHasValue(typeHandler)) {
+            co.setTypeHandler(typeHandler);
+        }
+
+        if (stringHasValue(delimitedColumnName)) {
+            co.setColumnNameDelimited(isTrue(delimitedColumnName));
+        }
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(co, childNode);
+            }
+        }
+
+        tc.addColumnOverride(co);
+    }
+
+    private void parseGeneratedKey(TableConfiguration tc, Node node) {
+        Properties attributes = parseAttributes(node);
+
+        String column = attributes.getProperty("column"); //$NON-NLS-1$
+        boolean identity = isTrue(attributes
+                .getProperty("identity")); //$NON-NLS-1$
+        String sqlStatement = attributes.getProperty("sqlStatement"); //$NON-NLS-1$
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+
+        GeneratedKey gk = new GeneratedKey(column, sqlStatement, identity, type);
+
+        tc.setGeneratedKey(gk);
+    }
+
+    private void parseIgnoreColumn(TableConfiguration tc, Node node) {
+        Properties attributes = parseAttributes(node);
+        String column = attributes.getProperty("column"); //$NON-NLS-1$
+        String delimitedColumnName = attributes
+                .getProperty("delimitedColumnName"); //$NON-NLS-1$
+
+        IgnoredColumn ic = new IgnoredColumn(column);
+
+        if (stringHasValue(delimitedColumnName)) {
+            ic.setColumnNameDelimited(isTrue(delimitedColumnName));
+        }
+
+        tc.addIgnoredColumn(ic);
+    }
+
+    private void parseColumnRenamingRule(TableConfiguration tc, Node node) {
+        Properties attributes = parseAttributes(node);
+        String searchString = attributes.getProperty("searchString"); //$NON-NLS-1$
+        String replaceString = attributes.getProperty("replaceString"); //$NON-NLS-1$
+
+        ColumnRenamingRule crr = new ColumnRenamingRule();
+
+        crr.setSearchString(searchString);
+
+        if (stringHasValue(replaceString)) {
+            crr.setReplaceString(replaceString);
+        }
+
+        tc.setColumnRenamingRule(crr);
+    }
+
+    private void parseJavaTypeResolver(Context context, Node node) {
+        JavaTypeResolverConfiguration javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
+
+        context.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+
+        if (stringHasValue(type)) {
+            javaTypeResolverConfiguration.setConfigurationType(type);
+        }
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(javaTypeResolverConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parsePlugin(Context context, Node node) {
+        PluginConfiguration pluginConfiguration = new PluginConfiguration();
+
+        context.addPluginConfiguration(pluginConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+
+        pluginConfiguration.setConfigurationType(type);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(pluginConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseJavaModelGenerator(Context context, Node node) {
+        JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
+
+        context
+                .setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+
+        javaModelGeneratorConfiguration.setTargetPackage(targetPackage);
+        javaModelGeneratorConfiguration.setTargetProject(targetProject);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(javaModelGeneratorConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseJavaClientGenerator(Context context, Node node) {
+        JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
+
+        context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+        String implementationPackage = attributes
+                .getProperty("implementationPackage"); //$NON-NLS-1$
+
+        javaClientGeneratorConfiguration.setConfigurationType(type);
+        javaClientGeneratorConfiguration.setTargetPackage(targetPackage);
+        javaClientGeneratorConfiguration.setTargetProject(targetProject);
+        javaClientGeneratorConfiguration
+                .setImplementationPackage(implementationPackage);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(javaClientGeneratorConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseJdbcConnection(Context context, Node node) {
+        JDBCConnectionConfiguration jdbcConnectionConfiguration = new JDBCConnectionConfiguration();
+
+        context.setJdbcConnectionConfiguration(jdbcConnectionConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String driverClass = attributes.getProperty("driverClass"); //$NON-NLS-1$
+        String connectionURL = attributes.getProperty("connectionURL"); //$NON-NLS-1$
+        String userId = attributes.getProperty("userId"); //$NON-NLS-1$
+        String password = attributes.getProperty("password"); //$NON-NLS-1$
+
+        jdbcConnectionConfiguration.setDriverClass(driverClass);
+        jdbcConnectionConfiguration.setConnectionURL(connectionURL);
+
+        if (stringHasValue(userId)) {
+            jdbcConnectionConfiguration.setUserId(userId);
+        }
+
+        if (stringHasValue(password)) {
+            jdbcConnectionConfiguration.setPassword(password);
+        }
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(jdbcConnectionConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseClassPathEntry(Configuration configuration, Node node) {
+        Properties attributes = parseAttributes(node);
+
+        configuration.addClasspathEntry(attributes.getProperty("location")); //$NON-NLS-1$
+    }
+
+    private void parseProperty(PropertyHolder propertyHolder, Node node) {
+        Properties attributes = parseAttributes(node);
+
+        String name = attributes.getProperty("name"); //$NON-NLS-1$
+        String value = attributes.getProperty("value"); //$NON-NLS-1$
+
+        propertyHolder.addProperty(name, value);
+    }
+
+    private Properties parseAttributes(Node node) {
+        Properties attributes = new Properties();
+        NamedNodeMap nnm = node.getAttributes();
+        for (int i = 0; i < nnm.getLength(); i++) {
+            Node attribute = nnm.item(i);
+            String value = parsePropertyTokens(attribute.getNodeValue());
+            attributes.put(attribute.getNodeName(), value);
+        }
+
+        return attributes;
+    }
+
+    private String parsePropertyTokens(String string) {
+        final String OPEN = "${"; //$NON-NLS-1$
+        final String CLOSE = "}"; //$NON-NLS-1$
+
+        String newString = string;
+        if (newString != null) {
+            int start = newString.indexOf(OPEN);
+            int end = newString.indexOf(CLOSE);
+
+            while (start > -1 && end > start) {
+                String prepend = newString.substring(0, start);
+                String append = newString.substring(end + CLOSE.length());
+                String propName = newString.substring(start + OPEN.length(),
+                        end);
+                String propValue = properties.getProperty(propName);
+                if (propValue != null) {
+                    newString = prepend + propValue + append;
+                }
+
+                start = newString.indexOf(OPEN, end);
+                end = newString.indexOf(CLOSE, end);
+            }
+        }
+
+        return newString;
+    }
+
+    private void parseCommentGenerator(Context context, Node node) {
+        CommentGeneratorConfiguration commentGeneratorConfiguration = new CommentGeneratorConfiguration();
+
+        context.setCommentGeneratorConfiguration(commentGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+
+        if (stringHasValue(type)) {
+            commentGeneratorConfiguration.setConfigurationType(type);
+        }
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(commentGeneratorConfiguration, childNode);
+            }
+        }
+    }
+}

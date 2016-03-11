@@ -1,238 +1,311 @@
-/*     */ package org.mybatis.generator.plugins;
-/*     */ 
-/*     */ import java.util.Iterator;
-/*     */ import java.util.List;
-/*     */ import org.mybatis.generator.api.CommentGenerator;
-/*     */ import org.mybatis.generator.api.IntrospectedColumn;
-/*     */ import org.mybatis.generator.api.IntrospectedTable;
-/*     */ import org.mybatis.generator.api.PluginAdapter;
-/*     */ import org.mybatis.generator.api.dom.OutputUtilities;
-/*     */ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-/*     */ import org.mybatis.generator.api.dom.java.JavaVisibility;
-/*     */ import org.mybatis.generator.api.dom.java.Method;
-/*     */ import org.mybatis.generator.api.dom.java.Parameter;
-/*     */ import org.mybatis.generator.api.dom.java.TopLevelClass;
-/*     */ import org.mybatis.generator.config.Context;
-/*     */ import org.mybatis.generator.internal.rules.Rules;
-/*     */ import org.mybatis.generator.internal.util.JavaBeansUtil;
-/*     */ 
-/*     */ public class EqualsHashCodePlugin extends PluginAdapter
-/*     */ {
-/*     */   public boolean validate(List<String> warnings)
-/*     */   {
-/*  56 */     return true;
-/*     */   }
-/*     */ 
-/*     */   public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable)
-/*     */   {
-/*     */     List columns;
-/*  63 */     if (introspectedTable.getRules().generateRecordWithBLOBsClass())
-/*  64 */       columns = introspectedTable.getNonBLOBColumns();
-/*     */     else {
-/*  66 */       columns = introspectedTable.getAllColumns();
-/*     */     }
-/*     */ 
-/*  69 */     generateEquals(topLevelClass, columns, introspectedTable);
-/*  70 */     generateHashCode(topLevelClass, columns, introspectedTable);
-/*     */ 
-/*  72 */     return true;
-/*     */   }
-/*     */ 
-/*     */   public boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable)
-/*     */   {
-/*  78 */     generateEquals(topLevelClass, introspectedTable.getPrimaryKeyColumns(), introspectedTable);
-/*     */ 
-/*  80 */     generateHashCode(topLevelClass, introspectedTable.getPrimaryKeyColumns(), introspectedTable);
-/*     */ 
-/*  83 */     return true;
-/*     */   }
-/*     */ 
-/*     */   public boolean modelRecordWithBLOBsClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable)
-/*     */   {
-/*  89 */     generateEquals(topLevelClass, introspectedTable.getAllColumns(), introspectedTable);
-/*     */ 
-/*  91 */     generateHashCode(topLevelClass, introspectedTable.getAllColumns(), introspectedTable);
-/*     */ 
-/*  94 */     return true;
-/*     */   }
-/*     */ 
-/*     */   protected void generateEquals(TopLevelClass topLevelClass, List<IntrospectedColumn> introspectedColumns, IntrospectedTable introspectedTable)
-/*     */   {
-/* 117 */     Method method = new Method();
-/* 118 */     method.setVisibility(JavaVisibility.PUBLIC);
-/* 119 */     method.setReturnType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
-/*     */ 
-/* 121 */     method.setName("equals");
-/* 122 */     method.addParameter(new Parameter(FullyQualifiedJavaType.getObjectInstance(), "that"));
-/*     */ 
-/* 124 */     if (introspectedTable.isJava5Targeted()) {
-/* 125 */       method.addAnnotation("@Override");
-/*     */     }
-/*     */ 
-/* 128 */     this.context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
-/*     */ 
-/* 131 */     method.addBodyLine("if (this == that) {");
-/* 132 */     method.addBodyLine("return true;");
-/* 133 */     method.addBodyLine("}");
-/*     */ 
-/* 135 */     method.addBodyLine("if (that == null) {");
-/* 136 */     method.addBodyLine("return false;");
-/* 137 */     method.addBodyLine("}");
-/*     */ 
-/* 139 */     method.addBodyLine("if (getClass() != that.getClass()) {");
-/* 140 */     method.addBodyLine("return false;");
-/* 141 */     method.addBodyLine("}");
-/*     */ 
-/* 143 */     StringBuilder sb = new StringBuilder();
-/* 144 */     sb.append(topLevelClass.getType().getShortName());
-/* 145 */     sb.append(" other = (");
-/* 146 */     sb.append(topLevelClass.getType().getShortName());
-/* 147 */     sb.append(") that;");
-/* 148 */     method.addBodyLine(sb.toString());
-/*     */ 
-/* 150 */     boolean first = true;
-/* 151 */     Iterator iter = introspectedColumns.iterator();
-/* 152 */     while (iter.hasNext()) {
-/* 153 */       IntrospectedColumn introspectedColumn = (IntrospectedColumn)iter.next();
-/*     */ 
-/* 155 */       sb.setLength(0);
-/*     */ 
-/* 157 */       if (first) {
-/* 158 */         sb.append("return (");
-/* 159 */         first = false;
-/*     */       } else {
-/* 161 */         OutputUtilities.javaIndent(sb, 1);
-/* 162 */         sb.append("&& (");
-/*     */       }
-/*     */ 
-/* 165 */       String getterMethod = JavaBeansUtil.getGetterMethodName(introspectedColumn.getJavaProperty(), introspectedColumn.getFullyQualifiedJavaType());
-/*     */ 
-/* 169 */       if (introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
-/* 170 */         sb.append("this.");
-/* 171 */         sb.append(getterMethod);
-/* 172 */         sb.append("() == ");
-/* 173 */         sb.append("other.");
-/* 174 */         sb.append(getterMethod);
-/* 175 */         sb.append("())");
-/*     */       } else {
-/* 177 */         sb.append("this.");
-/* 178 */         sb.append(getterMethod);
-/* 179 */         sb.append("() == null ? other.");
-/* 180 */         sb.append(getterMethod);
-/* 181 */         sb.append("() == null : this.");
-/* 182 */         sb.append(getterMethod);
-/* 183 */         sb.append("().equals(other.");
-/* 184 */         sb.append(getterMethod);
-/* 185 */         sb.append("()))");
-/*     */       }
-/*     */ 
-/* 188 */       if (!iter.hasNext()) {
-/* 189 */         sb.append(';');
-/*     */       }
-/*     */ 
-/* 192 */       method.addBodyLine(sb.toString());
-/*     */     }
-/*     */ 
-/* 195 */     topLevelClass.addMethod(method);
-/*     */   }
-/*     */ 
-/*     */   protected void generateHashCode(TopLevelClass topLevelClass, List<IntrospectedColumn> introspectedColumns, IntrospectedTable introspectedTable)
-/*     */   {
-/* 215 */     Method method = new Method();
-/* 216 */     method.setVisibility(JavaVisibility.PUBLIC);
-/* 217 */     method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-/* 218 */     method.setName("hashCode");
-/* 219 */     if (introspectedTable.isJava5Targeted()) {
-/* 220 */       method.addAnnotation("@Override");
-/*     */     }
-/*     */ 
-/* 223 */     this.context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
-/*     */ 
-/* 226 */     method.addBodyLine("final int prime = 31;");
-/* 227 */     method.addBodyLine("int result = 1;");
-/*     */ 
-/* 229 */     StringBuilder sb = new StringBuilder();
-/* 230 */     boolean hasTemp = false;
-/* 231 */     Iterator iter = introspectedColumns.iterator();
-/* 232 */     while (iter.hasNext()) {
-/* 233 */       IntrospectedColumn introspectedColumn = (IntrospectedColumn)iter.next();
-/*     */ 
-/* 235 */       FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
-/*     */ 
-/* 238 */       String getterMethod = JavaBeansUtil.getGetterMethodName(introspectedColumn.getJavaProperty(), fqjt);
-/*     */ 
-/* 241 */       sb.setLength(0);
-/* 242 */       if (fqjt.isPrimitive()) {
-/* 243 */         if ("boolean".equals(fqjt.getFullyQualifiedName())) {
-/* 244 */           sb.append("result = prime * result + (");
-/* 245 */           sb.append(getterMethod);
-/* 246 */           sb.append("() ? 1231 : 1237);");
-/* 247 */           method.addBodyLine(sb.toString());
-/* 248 */         } else if ("byte".equals(fqjt.getFullyQualifiedName())) {
-/* 249 */           sb.append("result = prime * result + ");
-/* 250 */           sb.append(getterMethod);
-/* 251 */           sb.append("();");
-/* 252 */           method.addBodyLine(sb.toString());
-/* 253 */         } else if ("char".equals(fqjt.getFullyQualifiedName())) {
-/* 254 */           sb.append("result = prime * result + ");
-/* 255 */           sb.append(getterMethod);
-/* 256 */           sb.append("();");
-/* 257 */           method.addBodyLine(sb.toString());
-/* 258 */         } else if ("double".equals(fqjt.getFullyQualifiedName())) {
-/* 259 */           if (!hasTemp) {
-/* 260 */             method.addBodyLine("long temp;");
-/* 261 */             hasTemp = true;
-/*     */           }
-/* 263 */           sb.append("temp = Double.doubleToLongBits(");
-/* 264 */           sb.append(getterMethod);
-/* 265 */           sb.append("());");
-/* 266 */           method.addBodyLine(sb.toString());
-/* 267 */           method.addBodyLine("result = prime * result + (int) (temp ^ (temp >>> 32));");
-/*     */         }
-/* 269 */         else if ("float".equals(fqjt.getFullyQualifiedName())) {
-/* 270 */           sb.append("result = prime * result + Float.floatToIntBits(");
-/*     */ 
-/* 272 */           sb.append(getterMethod);
-/* 273 */           sb.append("());");
-/* 274 */           method.addBodyLine(sb.toString());
-/* 275 */         } else if ("int".equals(fqjt.getFullyQualifiedName())) {
-/* 276 */           sb.append("result = prime * result + ");
-/* 277 */           sb.append(getterMethod);
-/* 278 */           sb.append("();");
-/* 279 */           method.addBodyLine(sb.toString());
-/* 280 */         } else if ("long".equals(fqjt.getFullyQualifiedName())) {
-/* 281 */           sb.append("result = prime * result + (int) (");
-/* 282 */           sb.append(getterMethod);
-/* 283 */           sb.append("() ^ (");
-/* 284 */           sb.append(getterMethod);
-/* 285 */           sb.append("() >>> 32));");
-/* 286 */           method.addBodyLine(sb.toString());
-/* 287 */         } else if ("short".equals(fqjt.getFullyQualifiedName())) {
-/* 288 */           sb.append("result = prime * result + ");
-/* 289 */           sb.append(getterMethod);
-/* 290 */           sb.append("();");
-/* 291 */           method.addBodyLine(sb.toString());
-/*     */         }
-/*     */ 
-/*     */       }
-/*     */       else
-/*     */       {
-/* 297 */         sb.append("result = prime * result + ((");
-/* 298 */         sb.append(getterMethod);
-/* 299 */         sb.append("() == null) ? 0 : ");
-/* 300 */         sb.append(getterMethod);
-/* 301 */         sb.append("().hashCode());");
-/* 302 */         method.addBodyLine(sb.toString());
-/*     */       }
-/*     */     }
-/*     */ 
-/* 306 */     method.addBodyLine("return result;");
-/*     */ 
-/* 308 */     topLevelClass.addMethod(method);
-/*     */   }
-/*     */ }
-
-/* Location:           C:\Users\sipingsoft-LILU.LJH\Desktop\mybatis-generator-core-1.3.0.jar
- * Qualified Name:     org.mybatis.generator.plugins.EqualsHashCodePlugin
- * JD-Core Version:    0.6.0
+/*
+ *  Copyright 2008 The Apache Software Foundation
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+package org.mybatis.generator.plugins;
+
+import static org.mybatis.generator.internal.util.JavaBeansUtil.getGetterMethodName;
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.mybatis.generator.api.PluginAdapter;
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.IntrospectedTable;
+import org.mybatis.generator.api.dom.OutputUtilities;
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.java.JavaVisibility;
+import org.mybatis.generator.api.dom.java.Method;
+import org.mybatis.generator.api.dom.java.Parameter;
+import org.mybatis.generator.api.dom.java.TopLevelClass;
+
+/**
+ * This plugin adds equals() and hashCode() methods to the generated model
+ * classes. It demonstrates the process of adding methods to generated classes
+ * <p>
+ * The <tt>equals</tt> method generated by this class is correct in most cases,
+ * but will probably NOT be correct if you have specified a rootClass - because
+ * our equals method only checks the fields it knows about.
+ * <p>
+ * Similarly, the <tt>hashCode</tt> method generated by this class only relies
+ * on fields it knows about. Anything you add, or fields in a super class will
+ * not be factored into the hash code.
+ * 
+ * @author Jeff Butler
+ * 
+ */
+public class EqualsHashCodePlugin extends PluginAdapter {
+
+    public EqualsHashCodePlugin() {
+    }
+
+    /**
+     * This plugin is always valid - no properties are required
+     */
+    public boolean validate(List<String> warnings) {
+        return true;
+    }
+
+    @Override
+    public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
+            IntrospectedTable introspectedTable) {
+        List<IntrospectedColumn> columns;
+        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            columns = introspectedTable.getNonBLOBColumns();
+        } else {
+            columns = introspectedTable.getAllColumns();
+        }
+
+        generateEquals(topLevelClass, columns, introspectedTable);
+        generateHashCode(topLevelClass, columns, introspectedTable);
+
+        return true;
+    }
+
+    @Override
+    public boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass,
+            IntrospectedTable introspectedTable) {
+        generateEquals(topLevelClass, introspectedTable.getPrimaryKeyColumns(),
+                introspectedTable);
+        generateHashCode(topLevelClass, introspectedTable
+                .getPrimaryKeyColumns(), introspectedTable);
+
+        return true;
+    }
+
+    @Override
+    public boolean modelRecordWithBLOBsClassGenerated(
+            TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        generateEquals(topLevelClass, introspectedTable.getAllColumns(),
+                introspectedTable);
+        generateHashCode(topLevelClass, introspectedTable.getAllColumns(),
+                introspectedTable);
+
+        return true;
+    }
+
+    /**
+     * Generates an <tt>equals</tt> method that does a comparison of all fields.
+     * <p>
+     * The generated <tt>equals</tt> method will be correct unless:
+     * <ul>
+     * <li>Other fields have been added to the generated classes</li>
+     * <li>A <tt>rootClass</tt> is specified that holds state</li>
+     * </ul>
+     * 
+     * @param topLevelClass
+     *            the class to which the method will be added
+     * @param introspectedColumns
+     *            column definitions of this class and any superclass of this
+     *            class
+     * @param introspectedTable
+     *            the table corresponding to this class
+     */
+    protected void generateEquals(TopLevelClass topLevelClass,
+            List<IntrospectedColumn> introspectedColumns,
+            IntrospectedTable introspectedTable) {
+        Method method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType
+                .getBooleanPrimitiveInstance());
+        method.setName("equals"); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getObjectInstance(), "that")); //$NON-NLS-1$
+        if (introspectedTable.isJava5Targeted()) {
+            method.addAnnotation("@Override"); //$NON-NLS-1$
+        }
+
+        context.getCommentGenerator().addGeneralMethodComment(method,
+                introspectedTable);
+
+        method.addBodyLine("if (this == that) {"); //$NON-NLS-1$
+        method.addBodyLine("return true;"); //$NON-NLS-1$
+        method.addBodyLine("}"); //$NON-NLS-1$
+
+        method.addBodyLine("if (that == null) {"); //$NON-NLS-1$
+        method.addBodyLine("return false;"); //$NON-NLS-1$
+        method.addBodyLine("}"); //$NON-NLS-1$
+
+        method.addBodyLine("if (getClass() != that.getClass()) {"); //$NON-NLS-1$
+        method.addBodyLine("return false;"); //$NON-NLS-1$
+        method.addBodyLine("}"); //$NON-NLS-1$
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(topLevelClass.getType().getShortName());
+        sb.append(" other = ("); //$NON-NLS-1$
+        sb.append(topLevelClass.getType().getShortName());
+        sb.append(") that;"); //$NON-NLS-1$
+        method.addBodyLine(sb.toString());
+
+        boolean first = true;
+        Iterator<IntrospectedColumn> iter = introspectedColumns.iterator();
+        while (iter.hasNext()) {
+            IntrospectedColumn introspectedColumn = iter.next();
+
+            sb.setLength(0);
+
+            if (first) {
+                sb.append("return ("); //$NON-NLS-1$
+                first = false;
+            } else {
+                OutputUtilities.javaIndent(sb, 1);
+                sb.append("&& ("); //$NON-NLS-1$
+            }
+
+            String getterMethod = getGetterMethodName(
+                    introspectedColumn.getJavaProperty(), introspectedColumn
+                            .getFullyQualifiedJavaType());
+
+            if (introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
+                sb.append("this."); //$NON-NLS-1$
+                sb.append(getterMethod);
+                sb.append("() == "); //$NON-NLS-1$
+                sb.append("other."); //$NON-NLS-1$
+                sb.append(getterMethod);
+                sb.append("())"); //$NON-NLS-1$
+            } else {
+                sb.append("this."); //$NON-NLS-1$
+                sb.append(getterMethod);
+                sb.append("() == null ? other."); //$NON-NLS-1$
+                sb.append(getterMethod);
+                sb.append("() == null : this."); //$NON-NLS-1$
+                sb.append(getterMethod);
+                sb.append("().equals(other."); //$NON-NLS-1$
+                sb.append(getterMethod);
+                sb.append("()))"); //$NON-NLS-1$
+            }
+
+            if (!iter.hasNext()) {
+                sb.append(';');
+            }
+
+            method.addBodyLine(sb.toString());
+        }
+
+        topLevelClass.addMethod(method);
+    }
+
+    /**
+     * Generates a <tt>hashCode</tt> method that includes all fields.
+     * <p>
+     * Note that this implementation is based on the eclipse foundation hashCode
+     * generator.
+     * 
+     * @param topLevelClass
+     *            the class to which the method will be added
+     * @param introspectedColumns
+     *            column definitions of this class and any superclass of this
+     *            class
+     * @param introspectedTable
+     *            the table corresponding to this class
+     */
+    protected void generateHashCode(TopLevelClass topLevelClass,
+            List<IntrospectedColumn> introspectedColumns,
+            IntrospectedTable introspectedTable) {
+        Method method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.setName("hashCode"); //$NON-NLS-1$
+        if (introspectedTable.isJava5Targeted()) {
+            method.addAnnotation("@Override"); //$NON-NLS-1$
+        }
+
+        context.getCommentGenerator().addGeneralMethodComment(method,
+                introspectedTable);
+
+        method.addBodyLine("final int prime = 31;"); //$NON-NLS-1$
+        method.addBodyLine("int result = 1;"); //$NON-NLS-1$
+
+        StringBuilder sb = new StringBuilder();
+        boolean hasTemp = false;
+        Iterator<IntrospectedColumn> iter = introspectedColumns.iterator();
+        while (iter.hasNext()) {
+            IntrospectedColumn introspectedColumn = iter.next();
+
+            FullyQualifiedJavaType fqjt = introspectedColumn
+                    .getFullyQualifiedJavaType();
+
+            String getterMethod = getGetterMethodName(
+                    introspectedColumn.getJavaProperty(), fqjt);
+
+            sb.setLength(0);
+            if (fqjt.isPrimitive()) {
+                if ("boolean".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    sb.append("result = prime * result + ("); //$NON-NLS-1$
+                    sb.append(getterMethod);
+                    sb.append("() ? 1231 : 1237);"); //$NON-NLS-1$
+                    method.addBodyLine(sb.toString());
+                } else if ("byte".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    sb.append("result = prime * result + "); //$NON-NLS-1$
+                    sb.append(getterMethod);
+                    sb.append("();"); //$NON-NLS-1$
+                    method.addBodyLine(sb.toString());
+                } else if ("char".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    sb.append("result = prime * result + "); //$NON-NLS-1$
+                    sb.append(getterMethod);
+                    sb.append("();"); //$NON-NLS-1$
+                    method.addBodyLine(sb.toString());
+                } else if ("double".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    if (!hasTemp) {
+                        method.addBodyLine("long temp;"); //$NON-NLS-1$
+                        hasTemp = true;
+                    }
+                    sb.append("temp = Double.doubleToLongBits("); //$NON-NLS-1$
+                    sb.append(getterMethod);
+                    sb.append("());"); //$NON-NLS-1$
+                    method.addBodyLine(sb.toString());
+                    method
+                            .addBodyLine("result = prime * result + (int) (temp ^ (temp >>> 32));"); //$NON-NLS-1$
+                } else if ("float".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    sb
+                            .append("result = prime * result + Float.floatToIntBits("); //$NON-NLS-1$
+                    sb.append(getterMethod);
+                    sb.append("());"); //$NON-NLS-1$
+                    method.addBodyLine(sb.toString());
+                } else if ("int".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    sb.append("result = prime * result + "); //$NON-NLS-1$
+                    sb.append(getterMethod);
+                    sb.append("();"); //$NON-NLS-1$
+                    method.addBodyLine(sb.toString());
+                } else if ("long".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    sb.append("result = prime * result + (int) ("); //$NON-NLS-1$
+                    sb.append(getterMethod);
+                    sb.append("() ^ ("); //$NON-NLS-1$
+                    sb.append(getterMethod);
+                    sb.append("() >>> 32));"); //$NON-NLS-1$
+                    method.addBodyLine(sb.toString());
+                } else if ("short".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    sb.append("result = prime * result + "); //$NON-NLS-1$
+                    sb.append(getterMethod);
+                    sb.append("();"); //$NON-NLS-1$
+                    method.addBodyLine(sb.toString());
+                } else {
+                    // should never happen
+                    continue;
+                }
+            } else {
+                sb.append("result = prime * result + (("); //$NON-NLS-1$
+                sb.append(getterMethod);
+                sb.append("() == null) ? 0 : "); //$NON-NLS-1$
+                sb.append(getterMethod);
+                sb.append("().hashCode());"); //$NON-NLS-1$
+                method.addBodyLine(sb.toString());
+            }
+        }
+
+        method.addBodyLine("return result;"); //$NON-NLS-1$
+
+        topLevelClass.addMethod(method);
+    }
+}
