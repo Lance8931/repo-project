@@ -18,7 +18,11 @@ package org.mybatis.generator.internal;
 
 import static org.mybatis.generator.internal.util.StringUtility.isTrue;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import org.mybatis.generator.api.CommentGenerator;
@@ -205,8 +209,13 @@ public class DefaultCommentGenerator implements CommentGenerator {
         sb.append(introspectedTable.getFullyQualifiedTable());
         sb.append('.');
         sb.append(introspectedColumn.getActualColumnName());
-        sb.append(introspectedColumn.getRemarks());
-        LogFileUtil.LogFileUtils(new Date(), DefaultCommentGenerator.class.getName(), introspectedColumn.getRemarks());
+		try {
+			sb.append(new String(introspectedColumn.getRemarks().getBytes(), "UTF-8"));
+			LogFileUtil.LogFileUtils(new Date(), DefaultCommentGenerator.class.getName(), "  属性值为："+sb);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         field.addJavaDocLine(sb.toString());
 
         addJavadocTag(field, false);

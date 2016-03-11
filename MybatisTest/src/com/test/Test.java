@@ -1,6 +1,7 @@
 package com.test;
 
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -120,6 +121,22 @@ public class Test {
 	        //test.selectUsersByHandler(session, userOperation, "%");
 	        Properties properties = System.getProperties();
 	        properties.list(System.out);
+	        
+	        List<String> list = new ArrayList<String>();
+			String s1 = new String("GB2312");
+			String s2 = new String("ISO8859_1");
+			String s3 = new String("utf-8");
+			String s4 = new String("GBK");
+			
+			list.add(s1);
+			list.add(s2);
+			list.add(s3);
+			list.add(s4);
+			
+			for (int i = 0; i < list.size(); i++) {
+				System.out.println(list.get(i));
+			}
+			
         } finally {
         	session.close();
         }
