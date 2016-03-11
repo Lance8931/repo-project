@@ -24,7 +24,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -37,6 +39,7 @@ import org.mybatis.generator.internal.DefaultShellCallback;
 import org.mybatis.generator.internal.ObjectFactory;
 import org.mybatis.generator.internal.NullProgressCallback;
 import org.mybatis.generator.internal.XmlFileMergerJaxp;
+import org.mybatis.generator.util.LogFileUtil;
 
 /**
  * This class is the main interface to MyBatis generator. A typical execution of
@@ -89,6 +92,7 @@ public class MyBatisGenerator {
     public MyBatisGenerator(Configuration configuration, ShellCallback shellCallback,
             List<String> warnings) throws InvalidConfigurationException {
         super();
+        LogFileUtil.LogFileUtils(new Date(), MyBatisGenerator.class.getName(), "MyBatisGenerator");
         if (configuration == null) {
             throw new IllegalArgumentException(getString("RuntimeError.2")); //$NON-NLS-1$
         } else {
@@ -187,7 +191,24 @@ public class MyBatisGenerator {
         if (callback == null) {
             callback = new NullProgressCallback();
         }
-
+        if(null != fullyQualifiedTableNames){
+	        for (Iterator iterator = fullyQualifiedTableNames.iterator(); iterator
+					.hasNext();) {
+				String string = (String) iterator.next();
+				LogFileUtil.LogFileUtils(new Date(), MyBatisGenerator.class.getName(), "generate"+"  fullyQualifiedTableName的值："+string);
+			}
+        }else {
+        	LogFileUtil.LogFileUtils(new Date(), MyBatisGenerator.class.getName(), "generate"+"  fullyQualifiedTableName的值：null");
+		}
+        if(null != contextIds){
+	        for (Iterator iterator = contextIds.iterator(); iterator
+					.hasNext();) {
+				String string = (String) iterator.next();
+				LogFileUtil.LogFileUtils(new Date(), MyBatisGenerator.class.getName(), "generate"+"  contextIds的值："+string);
+			}
+        }else {
+        	LogFileUtil.LogFileUtils(new Date(), MyBatisGenerator.class.getName(), "generate"+"  contextIds的值：null");
+		}
         generatedJavaFiles.clear();
         generatedXmlFiles.clear();
 
@@ -221,7 +242,17 @@ public class MyBatisGenerator {
             context.introspectTables(callback, warnings,
                     fullyQualifiedTableNames);
         }
-
+        
+        if(null != fullyQualifiedTableNames){
+	        for (Iterator iterator = fullyQualifiedTableNames.iterator(); iterator
+					.hasNext();) {
+				String string = (String) iterator.next();
+				LogFileUtil.LogFileUtils(new Date(), MyBatisGenerator.class.getName(), "generate"+"  fullyQualifiedTableName的值："+string);
+			}
+        }else {
+        	LogFileUtil.LogFileUtils(new Date(), MyBatisGenerator.class.getName(), "generate"+"  fullyQualifiedTableName的值：null");
+		}
+        
         // now run the generates
         totalSteps = 0;
         for (Context context : contextsToRun) {
