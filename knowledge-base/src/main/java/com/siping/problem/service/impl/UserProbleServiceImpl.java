@@ -39,7 +39,12 @@ public class UserProbleServiceImpl implements UserProblemService{
 			userProblem.setUpdateBy(sysUser.getId());
 			userProblem.setProblemDate(new Date());
 			userProblem.setUserId(sysUser.getId());
-			userProblemMapper.insert(userProblem);
+			try {
+				userProblemMapper.insert(userProblem);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new Exception();
+			}
 		} else {
 			throw new Exception("存在无效数据，数据插入失败！");
 		}
@@ -54,7 +59,11 @@ public class UserProbleServiceImpl implements UserProblemService{
 			userProblem.setUpdateTime(new Date());
 			userProblem.setUpdateBy(sysUser.getId());
 			userProblem.setProblemDate(new Date());
-			userProblemMapper.updateByPrimaryKeySelective(userProblem);
+			try {
+				userProblemMapper.updateByPrimaryKeySelective(userProblem);
+			} catch (Exception e) {
+				throw new Exception("更新数据异常，数据更新失败！");
+			}
 		} else {
 			throw new Exception("存在无效数据，数据更新失败！");
 		}
@@ -64,8 +73,13 @@ public class UserProbleServiceImpl implements UserProblemService{
 	@Override
 	public void deleteProblemsAndAnswers(Integer[] ids) throws Exception{
 		if (null != ids && 0 > ids.length) {
-			userProblemMapper.deleteByIds(Arrays.asList(ids));
-			userAnswerMapper.deleteByProblemIds(Arrays.asList(ids));
+			try {
+				userProblemMapper.deleteByIds(Arrays.asList(ids));
+				userAnswerMapper.deleteByProblemIds(Arrays.asList(ids));
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new Exception("删除数据出现异常，删除问题与答案失败！");
+			}
 		} else {
 			throw new Exception("存在无效数据，删除问题与答案失败！");
 		}

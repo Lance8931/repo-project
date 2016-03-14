@@ -132,7 +132,7 @@ public class ProblemAction {
 			userProblemService.insertProblem(userProblem, sysUser);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultMsg(false, 0, "添加失败！");
+			return new ResultMsg(false, 0, e.getMessage());
 		}
 		return new ResultMsg(true, 1, "添加成功！");
 	}
@@ -154,7 +154,7 @@ public class ProblemAction {
 			userProblemService.updateProblem(userProblem, sysUser);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultMsg(false, 0, "更新失败！");
+			return new ResultMsg(false, 0, e.getMessage());
 		}
 		return new ResultMsg(true, 1, "更新成功！");
 	}
@@ -164,7 +164,7 @@ public class ProblemAction {
 			userProblemService.deleteProblemsAndAnswers(ids);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultMsg(false, 0, "删除失败！");
+			return new ResultMsg(false, 0, e.getMessage());
 		}
 		return new ResultMsg(true, 1, "删除成功！");
 	}

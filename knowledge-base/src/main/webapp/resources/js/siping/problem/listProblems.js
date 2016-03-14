@@ -40,7 +40,9 @@ function submitProblem(){
         dataType : "json",
         success : function(data) {
             layer.alert(data.msg);
-            getProblemList(1,10);
+            if(data.success){
+            	getProblemList(1,10);
+            }
             /* var date = new Date();
             date.setTime(data.addTime);
             alert(date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate());*/
