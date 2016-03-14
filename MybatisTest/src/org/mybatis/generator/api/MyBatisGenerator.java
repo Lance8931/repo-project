@@ -361,7 +361,8 @@ public class MyBatisGenerator {
      */
     private void writeFile(File file, String content) throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
-        bw.write(new String(content.getBytes("GBK"),"UTF-8") );
+//        bw.write(new String(content.getBytes("GB2312"),"UTF-8") );
+        bw.write(content);
         bw.close();
     }
 

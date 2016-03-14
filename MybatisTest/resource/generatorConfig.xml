@@ -6,6 +6,7 @@
 <!-- 数据库驱动-->
 	<classPathEntry	location="D:\\code\\maven\\repo\\mysql\\mysql-connector-java\\5.1.6\\mysql-connector-java-5.1.6.jar"/>
 	<context id="DB2Tables"	targetRuntime="MyBatis3">
+		<property name="javaFileEncoding" value="GBK"/>
 		<!-- 扩展插件代码 -->
 		<plugin type="com.util.MyBatisPlugin"></plugin>
 		<commentGenerator>
