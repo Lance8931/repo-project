@@ -1,6 +1,5 @@
 package com.siping.system.bean;
 
-import java.util.Date;
 
 public class KnowledgeType {
     private Integer id;
@@ -9,11 +8,11 @@ public class KnowledgeType {
 
     private Integer knowledgeType;
 
-    private Date addTime;
+    private String addTime;
 
     private Integer addBy;
 
-    private Date updateTime;
+    private String updateTime;
 
     private Integer updateBy;
 
@@ -41,11 +40,11 @@ public class KnowledgeType {
         this.knowledgeType = knowledgeType;
     }
 
-    public Date getAddTime() {
+    public String getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(Date addTime) {
+    public void setAddTime(String addTime) {
         this.addTime = addTime;
     }
 
@@ -57,11 +56,11 @@ public class KnowledgeType {
         this.addBy = addBy;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 

@@ -118,7 +118,8 @@ var sipingUI = {
         var method = ajax.type || 'get';
         var async = ajax.async !== false;
         var isOrder = opt.rowNum !== false;
-        var isEdit = opt.isEdit !== false;
+        var isEdit = opt.isEdit == true;
+        var resetPass = opt.resetPass == true;
         var contentType = ajax.contentType || 'application/x-www-form-urlencoded';
         var data = ajax.data;
         var checkbox = opt.checkbox;
@@ -183,15 +184,18 @@ var sipingUI = {
                                 var celldata = rowData[i][col];
                                 if(celldata == null || celldata == undefined){ celldata = ""; }
                                 if(typeof celldata == "number"){
-                                    celldata = Number(celldata);
+                                    celldata = Number(celldata);;
                                     celldata = Math.round(celldata*100)/100;
                                 }
                                 rowHtml += '<td style="width:'+headerObj.header[j].width+'px;"><div class="lf_table_cell_padding">'+celldata+'</div></td>';
                             }
                         }
                         if(isEdit){
-                            rowHtml += '<td style="width:241px;"><button class="btn_common my_radius btn_search" onclick="examineUser('+rowData[0]["id"]+',1);">通过</button>'
-                            +'&nbsp;&nbsp;<button class="btn_common my_radius btn_search" onclick="examineUser('+rowData[0]["id"]+',3);">不通过</button></td>';
+                            rowHtml += '<td style="width:280px;"><button class="btn_common my_radius btn_search" onclick="examineUser('+rowData[0]["id"]+',1);">通过</button>'
+                            +'&nbsp;&nbsp;<button class="btn_common my_radius btn_search" onclick="examineUser('+rowData[i]["id"]+',3);">不通过</button></td>';
+                        }
+                        if(resetPass){
+                            rowHtml += '<td style="width:140px;"><button class="btn_common my_radius btn_chong" onclick="resetPass('+rowData[i]["id"]+');">重置密码</button>';
                         }
                         rowHtml += '</tr>';
                     }
@@ -255,7 +259,6 @@ var sipingUI = {
         var async = ajax.async !== false;
         var isOrder = opt.rowNum !== false;
         var isCheck = opt.checkBox != false; // 是否有CheckBox控件
-        var idColomn = opt.idColomn || 'id'; // 指定id列
         var contentType = ajax.contentType || 'application/x-www-form-urlencoded';
         var data = ajax.data;
         var checkbox = opt.checkbox;
@@ -269,7 +272,7 @@ var sipingUI = {
             gridHtml += '<td style="width: '+_orderColumnWidth+'px;text-align:center;"></td>';
         }
         if(isCheck){
-            gridHtml += '<td style="width: '+_orderColumnWidth+'px;"><input type="checkBox"></td>';
+            gridHtml += '<td style="width: '+_orderColumnWidth+'px;"><input name="checkBoxs" onclick="mm(this)" type="checkBox"></td>';
         }
         for(var i=0;i<headerObj.header.length;i++){
             gridHtml += '<td style="width:'+headerObj.header[i].width+'px;"><div class="lf_table_cell_padding">'+headerObj.header[i].name+'</div></td>';
@@ -317,7 +320,7 @@ var sipingUI = {
                             rowHtml += '<td style="width: '+_orderColumnWidth+'px;text-align: center;color: rgb(94, 94, 247);">'+(i+1)+'</td>';
                         }
                         if(isCheck){
-                            rowHtml += '<td style="width: '+_orderColumnWidth+'px;"><input type="checkbox" keyId="'+rowData[i][idColomn]+'"></td>';
+                            rowHtml += '<td style="width: '+_orderColumnWidth+'px;"><input name="checkBox" value="'+rowData[i]["id"]+'" type="checkbox"></td>';
                         }
                         for(var j=0;j<dataColumn.length;j++){
                             var col = dataColumn[j];

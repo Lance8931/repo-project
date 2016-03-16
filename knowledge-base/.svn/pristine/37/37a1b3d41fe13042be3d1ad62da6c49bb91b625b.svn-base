@@ -1,0 +1,41 @@
+package com.siping.system.service;
+
+import com.siping.system.bean.KnowledgeType;
+import com.siping.web.bean.PageRequest;
+import com.siping.web.bean.PageResponse;
+
+public interface KnowledgeTypeService {
+    /**
+     * 查询所有的知识类别
+     * @return
+     */
+    PageResponse<KnowledgeType> getAll(PageRequest pageRequest) throws Exception;
+
+    /**
+     * 修改知识类别
+     * @param id
+     * @return
+     */
+    String updateKnow(KnowledgeType tk) throws Exception;
+
+    /**
+     * 添加知识类别
+     * @param kt
+     * @return
+     */
+    String insertKnow(KnowledgeType kt) throws Exception;
+
+    /**
+     * 删除知识类别
+     * @param id
+     * @return
+     */
+    String deleteKnow(Integer[] id) throws Exception;
+    /**
+     * 根据ID查询知识类别详细信息
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    KnowledgeType selectKnow(Integer id) throws Exception;
+}

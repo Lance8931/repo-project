@@ -12,7 +12,7 @@
 </head>
 <body>
     <div>
-       <form action="answer/userLogin" method="post">
+       <form action="system/userLogin" method="post">
          <input type="text" name="userName"/>账号
          <input type="password" name="userPass"/>密码
          <input type="submit" value="提交">

@@ -25,9 +25,9 @@
     <!-- 配置 dataSource -->
     <bean id="myDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="com.mysql.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/knowledge_base?allowMultiQueries=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+        <property name="jdbcUrl" value="jdbc:mysql://192.168.10.103:3306/knowledge_base?allowMultiQueries=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
         <property name="user" value="root" />
-        <property name="password" value="password" />
+        <property name="password" value="root" />
         <property name="maxPoolSize" value="40" />
         <property name="minPoolSize" value="2" />
         <property name="initialPoolSize" value="1" />
@@ -85,6 +85,7 @@
         <aop:pointcut id="pointcut" expression="execution(* com.siping..service..*.*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut" />
     </aop:config>
+    
     <!-- 上传拦截，如最大上传值及最小上传值 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- 解析request的编码 ，Default is ISO-8859-1 -->

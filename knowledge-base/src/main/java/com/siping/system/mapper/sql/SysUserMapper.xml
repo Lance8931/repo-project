@@ -35,8 +35,8 @@
       user_pass, nick_name, user_type, 
       user_email, user_depart, user_position
       )
-    values (#{id,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, #{addBy,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, STR_TO_DATE(#{addTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'), #{addBy,jdbcType=INTEGER}, 
+       STR_TO_DATE(#{updateTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'), #{updateBy,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
       #{userPass,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}, 
       #{userEmail,jdbcType=VARCHAR}, #{userDepart,jdbcType=VARCHAR}, #{userPosition,jdbcType=VARCHAR}
       )
@@ -86,13 +86,13 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="addTime != null" >
-        #{addTime,jdbcType=TIMESTAMP},
+        STR_TO_DATE(#{addTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       </if>
       <if test="addBy != null" >
         #{addBy,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
+        STR_TO_DATE(#{updateTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       </if>
       <if test="updateBy != null" >
         #{updateBy,jdbcType=INTEGER},
@@ -124,13 +124,13 @@
     update sys_user
     <set >
       <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=TIMESTAMP},
+        add_time = STR_TO_DATE(#{addTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       </if>
       <if test="addBy != null" >
         add_by = #{addBy,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_time =  STR_TO_DATE(#{updateTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       </if>
       <if test="updateBy != null" >
         update_by = #{updateBy,jdbcType=INTEGER},
@@ -159,11 +159,14 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectNewName" parameterType="com.siping.system.bean.SysUser">
+    select count(*) from sys_user t where t.user_name = #{userName,jdbcType=VARCHAR}
+  </select>
   <update id="updateByPrimaryKey" parameterType="com.siping.system.bean.SysUser" >
     update sys_user
-    set add_time = #{addTime,jdbcType=TIMESTAMP},
+    set add_time = STR_TO_DATE(#{addTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       add_by = #{addBy,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_time =  STR_TO_DATE(#{updateTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       update_by = #{updateBy,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
       user_pass = #{userPass,jdbcType=VARCHAR},
@@ -253,7 +256,7 @@
     </trim>
   </sql>
   <select id="getAll" resultMap="BaseResultMap" >
-    select * from sys_user
+    select * from sys_user u where u.user_type=1
   </select>
   <delete id="deleteByIds" >
      delete from sys_user where id in 
@@ -278,4 +281,7 @@
       LIMIT #{startNo},#{pageSize}
     </if>
   </select>
+  <select id="getTotalUsers" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(m.id) from sys_user m where m.user_type=#{userType,jdbcType=INTEGER}
+    </select>
 </mapper>

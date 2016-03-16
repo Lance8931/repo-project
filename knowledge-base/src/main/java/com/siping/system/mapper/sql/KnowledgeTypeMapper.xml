@@ -28,7 +28,7 @@
       add_time, add_by, update_time, 
       update_by)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{knowledgeType,jdbcType=INTEGER}, 
-      #{addTime,jdbcType=TIMESTAMP}, #{addBy,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      STR_TO_DATE(#{addTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'), #{addBy,jdbcType=INTEGER},  STR_TO_DATE(#{updateTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'), 
       #{updateBy,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.siping.system.bean.KnowledgeType" >
@@ -67,13 +67,13 @@
         #{knowledgeType,jdbcType=INTEGER},
       </if>
       <if test="addTime != null" >
-        #{addTime,jdbcType=TIMESTAMP},
+        STR_TO_DATE(#{addTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       </if>
       <if test="addBy != null" >
         #{addBy,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
+       STR_TO_DATE(#{updateTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       </if>
       <if test="updateBy != null" >
         #{updateBy,jdbcType=INTEGER},
@@ -90,13 +90,13 @@
         knowledge_type = #{knowledgeType,jdbcType=INTEGER},
       </if>
       <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=TIMESTAMP},
+        add_time = STR_TO_DATE(#{addTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       </if>
       <if test="addBy != null" >
         add_by = #{addBy,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_time = STR_TO_DATE(#{updateTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       </if>
       <if test="updateBy != null" >
         update_by = #{updateBy,jdbcType=INTEGER},
@@ -108,9 +108,9 @@
     update knowledge_type
     set name = #{name,jdbcType=VARCHAR},
       knowledge_type = #{knowledgeType,jdbcType=INTEGER},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
+      add_time = STR_TO_DATE(#{addTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       add_by = #{addBy,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_time =  STR_TO_DATE(#{updateTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s'),
       update_by = #{updateBy,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -179,11 +179,26 @@
      select count(*) from knowledge_type t
     <include refid="conditions"/>
   </select>
-  <select id="getByPage" parameterType="java.util.Map" resultMap="BaseResultMap" >
-    select * from knowledge_type t
-    <include refid="conditions"/>
+  <select id="getByPage" parameterType="com.siping.web.bean.PageRequest" resultMap="BaseResultMap" >
+    select 
+     <include refid="Base_Column_List" />
+     from knowledge_type t
     <if test="startNo != null" >
       LIMIT #{startNo},#{pageSize}
     </if>
+  </select>
+  <select id="getTotalKnow" resultType="java.lang.Integer">
+    select count(k.id) from knowledge_type k
+  </select>
+  <select id="getProblem" resultType="java.lang.Integer">
+    select count(k.type) from user_problem k where k.type=#{id,jdbcType=INTEGER}
+  </select>
+  <select id="getKnowById" resultType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"/>
+    from knowledge_type where id=#{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectNewName" parameterType="com.siping.system.bean.KnowledgeType" resultType="java.lang.Integer">
+    select count(t.name) from knowledge_type t where t.name = #{name,jdbcType=VARCHAR}
   </select>
 </mapper>
