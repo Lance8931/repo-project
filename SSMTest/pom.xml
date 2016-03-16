@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com</groupId>
-  <artifactId>SSMTestTwo</artifactId>
+  <artifactId>SSMTest</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>SSMTestTwo Maven Webapp</name>
+  <name>SSMTest Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -164,8 +164,19 @@
             <artifactId>commons-codec</artifactId>  
             <version>1.9</version>  
         </dependency>  
-  </dependencies>
+        </dependencies>
   <build>
-    <finalName>SSMTestTwo</finalName>
+    <finalName>SSMTest</finalName>
+    <plugins>
+        <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+        </configuration>
+    </plugin>
+    </plugins>
   </build>
 </project>
