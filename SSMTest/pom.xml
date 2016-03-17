@@ -9,6 +9,7 @@
   <url>http://maven.apache.org</url>
   <!-- 同步测试 -->
   <!-- 同步测试继续111  -->
+  <!-- 同步测试继续222 -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- spring版本号 -->  
