@@ -20,19 +20,18 @@ import com.siping.web.bean.PageRequest;
 import com.siping.web.bean.PageResponse;
 
 @Service
-public class UserProbleServiceImpl implements UserProblemService{
+public class UserProbleServiceImpl implements UserProblemService {
 
 	@Autowired
 	private UserProblemMapper userProblemMapper;
-	
+
 	@Autowired
 	private UserAnswerMapper userAnswerMapper;
-	
+
 	@Override
-	public void insertProblem(UserProblem userProblem, SysUser sysUser) throws Exception {
-		if (null != userProblem 
-				&& null != sysUser 
-				&& null != sysUser.getId()) {
+	public void insertProblem(UserProblem userProblem, SysUser sysUser)
+			throws Exception {
+		if (null != userProblem && null != sysUser && null != sysUser.getId()) {
 			userProblem.setAddTime(new Date());
 			userProblem.setAddBy(sysUser.getId());
 			userProblem.setUpdateTime(new Date());
@@ -49,13 +48,12 @@ public class UserProbleServiceImpl implements UserProblemService{
 			throw new Exception("存在无效数据，数据插入失败！");
 		}
 	}
-	
+
 	@Override
-	public void updateProblem(UserProblem userProblem, SysUser sysUser) throws Exception{
-		if (null != userProblem 
-				&& null != userProblem.getId() 
-				&& null != sysUser 
-				&& null != sysUser.getId()) {
+	public void updateProblem(UserProblem userProblem, SysUser sysUser)
+			throws Exception {
+		if (null != userProblem && null != userProblem.getId()
+				&& null != sysUser && null != sysUser.getId()) {
 			userProblem.setUpdateTime(new Date());
 			userProblem.setUpdateBy(sysUser.getId());
 			userProblem.setProblemDate(new Date());
@@ -67,11 +65,11 @@ public class UserProbleServiceImpl implements UserProblemService{
 		} else {
 			throw new Exception("存在无效数据，数据更新失败！");
 		}
-		
+
 	}
-	
+
 	@Override
-	public void deleteProblemsAndAnswers(Integer[] ids) throws Exception{
+	public void deleteProblemsAndAnswers(Integer[] ids) throws Exception {
 		if (null != ids && 0 > ids.length) {
 			try {
 				userProblemMapper.deleteByIds(Arrays.asList(ids));
@@ -83,22 +81,24 @@ public class UserProbleServiceImpl implements UserProblemService{
 		} else {
 			throw new Exception("存在无效数据，删除问题与答案失败！");
 		}
-		
+
 	}
 
 	@Override
-	public PageResponse<ProblemInfo> getByPage(UserProblem userProblem,PageRequest pageRequest) throws Exception {
+	public PageResponse<ProblemInfo> getByPage(UserProblem userProblem,
+			PageRequest pageRequest) throws Exception {
 		PageResponse<ProblemInfo> pageResponse = new PageResponse<ProblemInfo>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map = PropertyUtils.describe(userProblem);
 		map.put("startNo", pageRequest.getStartNo());
 		map.put("pageSize", pageRequest.getPageSize());
-		List<ProblemInfo> list = userProblemMapper.getProblemInfoListByPage(map);
+		List<ProblemInfo> list = userProblemMapper
+				.getProblemInfoListByPage(map);
 		if (null != list && 0 != list.size()) {
 			pageResponse.setRecords(list);
 			pageResponse.setTotal(userProblemMapper.getCount(map).intValue());
 			return pageResponse;
-		}else {
+		} else {
 			throw new Exception("无数据");
 		}
 	}
@@ -107,15 +107,15 @@ public class UserProbleServiceImpl implements UserProblemService{
 	public UserProblem getProblem(UserProblem userProblem) throws Exception {
 		Map<String, Object> map = PropertyUtils.describe(userProblem);
 		List<UserProblem> list = userProblemMapper.get(map);
-		if(null != list && 0 != list.size()){
+		if (null != list && 0 != list.size()) {
 			return list.get(0);
-		}else {
+		} else {
 			throw new Exception("无数据");
 		}
 	}
-	
+
 	@Override
-	public ProblemInfo getProblemInfo(UserProblem userProblem) throws Exception{
+	public ProblemInfo getProblemInfo(UserProblem userProblem) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map = PropertyUtils.describe(userProblem);
 		return userProblemMapper.getProblemInfoListByPage(map).get(0);

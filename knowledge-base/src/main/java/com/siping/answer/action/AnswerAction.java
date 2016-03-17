@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.siping.answer.bean.UserAnswer;
 import com.siping.answer.service.UserAnswerService;
-import com.siping.problem.bean.UserProblem;
 import com.siping.system.bean.SysUser;
 import com.siping.web.bean.PageModel;
 import com.siping.web.bean.PageRequest;
@@ -27,21 +26,23 @@ import com.siping.web.bean.ResultMsg;
  */
 @Controller
 public class AnswerAction {
-	
+
 	@Autowired
 	private UserAnswerService userAnswerService;
-	
+
 	/**
 	 * 根据ProblemId获取答案列表
+	 * 
 	 * @param pageRequest
 	 * @return
 	 *
 	 * @date 2016年3月10日上午11:23:52
 	 * @author siping-L.J.H
 	 */
-	@RequestMapping(value="/answer/getlist/data", method=RequestMethod.POST)
+	@RequestMapping(value = "/answer/getlist/data", method = RequestMethod.POST)
 	@ResponseBody
-	public PageModel<UserAnswer> getAnswersByProblemId(@RequestBody PageRequest pageRequest){
+	public PageModel<UserAnswer> getAnswersByProblemId(
+			@RequestBody PageRequest pageRequest) {
 		PageModel<UserAnswer> pageModel = null;
 		PageResponse<UserAnswer> pageResponse = new PageResponse<UserAnswer>();
 		UserAnswer userAnswer = new UserAnswer();
@@ -51,21 +52,25 @@ public class AnswerAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		pageModel = new PageModel<UserAnswer>(pageRequest.getPageNo(), pageRequest.getPageSize(), pageResponse.getTotal(), pageResponse.getRecords());
+		pageModel = new PageModel<UserAnswer>(pageRequest.getPageNo(),
+				pageRequest.getPageSize(), pageResponse.getTotal(),
+				pageResponse.getRecords());
 		return pageModel;
 	}
-	
+
 	/**
 	 * 根据用户Id获取答案列表
+	 * 
 	 * @param pageRequest
 	 * @return
 	 *
 	 * @date 2016年3月10日上午11:26:06
 	 * @author siping-L.J.H
 	 */
-	@RequestMapping(value="/answer/getlist/dataByUserId", method=RequestMethod.POST)
+	@RequestMapping(value = "/answer/getlist/dataByUserId", method = RequestMethod.POST)
 	@ResponseBody
-	public PageModel<UserAnswer> getAnswersByUserId(@RequestBody PageRequest pageRequest){
+	public PageModel<UserAnswer> getAnswersByUserId(
+			@RequestBody PageRequest pageRequest) {
 		PageModel<UserAnswer> pageModel = null;
 		PageResponse<UserAnswer> pageResponse = new PageResponse<UserAnswer>();
 		UserAnswer userAnswer = new UserAnswer();
@@ -75,12 +80,15 @@ public class AnswerAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		pageModel = new PageModel<UserAnswer>(pageRequest.getPageNo(), pageRequest.getPageSize(), pageResponse.getTotal(), pageResponse.getRecords());
+		pageModel = new PageModel<UserAnswer>(pageRequest.getPageNo(),
+				pageRequest.getPageSize(), pageResponse.getTotal(),
+				pageResponse.getRecords());
 		return pageModel;
 	}
-	
+
 	/**
 	 * 添加答案
+	 * 
 	 * @param userAnswer
 	 * @param session
 	 * @return
@@ -88,10 +96,11 @@ public class AnswerAction {
 	 * @date 2016年3月10日上午11:24:09
 	 * @author siping-L.J.H
 	 */
-	@RequestMapping(value="/answer/add", method=RequestMethod.POST)
+	@RequestMapping(value = "/answer/add", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultMsg addAnswer(@RequestBody UserAnswer userAnswer, HttpSession session){
-		SysUser sysUser = (SysUser)session.getAttribute("loginUser");
+	public ResultMsg addAnswer(@RequestBody UserAnswer userAnswer,
+			HttpSession session) {
+		SysUser sysUser = (SysUser) session.getAttribute("loginUser");
 		try {
 			userAnswerService.insertAnswer(userAnswer, sysUser);
 		} catch (Exception e) {
@@ -100,9 +109,10 @@ public class AnswerAction {
 		}
 		return new ResultMsg(true, 1, "添加成功！");
 	}
-	
+
 	/**
 	 * 更新问题
+	 * 
 	 * @param userAnswer
 	 * @param session
 	 * @return
@@ -110,10 +120,11 @@ public class AnswerAction {
 	 * @date 2016年3月10日上午11:36:21
 	 * @author siping-L.J.H
 	 */
-	@RequestMapping(value="/answer/update", method=RequestMethod.POST)
+	@RequestMapping(value = "/answer/update", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultMsg updateAnswer(@RequestBody UserAnswer userAnswer, HttpSession session){
-		SysUser sysUser = (SysUser)session.getAttribute("loginUser");
+	public ResultMsg updateAnswer(@RequestBody UserAnswer userAnswer,
+			HttpSession session) {
+		SysUser sysUser = (SysUser) session.getAttribute("loginUser");
 		try {
 			userAnswerService.updateAnswer(userAnswer, sysUser);
 		} catch (Exception e) {

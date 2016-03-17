@@ -17,7 +17,7 @@
     select 
     <include refid="Base_Column_List" />
     from knowledge_type
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} 
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from knowledge_type

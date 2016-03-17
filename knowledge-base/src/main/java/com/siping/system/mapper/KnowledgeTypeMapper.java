@@ -7,78 +7,90 @@ import com.siping.system.bean.KnowledgeType;
 import com.siping.web.bean.PageRequest;
 
 public interface KnowledgeTypeMapper {
-    /**
-     * 删除知识类别
-     * @param id
-     * @return
-     */
-    int deleteByPrimaryKey(Integer id);
+	/**
+	 * 删除知识类别
+	 * 
+	 * @param id
+	 * @return
+	 */
+	int deleteByPrimaryKey(Integer id);
 
-    int insert(KnowledgeType record);
+	int insert(KnowledgeType record);
 
-    /**
-     * 添加知识类别
-     * @param record
-     * @return
-     */
-    int insertSelective(KnowledgeType record);
-    /**
-     * 根据ID获取知识类别详细信息
-     * @param id
-     * @return
-     */
-    KnowledgeType selectByPrimaryKey(Integer id);
+	/**
+	 * 添加知识类别
+	 * 
+	 * @param record
+	 * @return
+	 */
+	int insertSelective(KnowledgeType record);
 
-    /**
-     * 修改知识类别
-     * @param record
-     * @return
-     */
-    int updateByPrimaryKeySelective(KnowledgeType record);
+	/**
+	 * 根据ID获取知识类别详细信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	KnowledgeType selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKey(KnowledgeType record);
+	/**
+	 * 修改知识类别
+	 * 
+	 * @param record
+	 * @return
+	 */
+	int updateByPrimaryKeySelective(KnowledgeType record);
 
-    List<KnowledgeType> getAll();
+	int updateByPrimaryKey(KnowledgeType record);
 
-    List<KnowledgeType> get(Map<String, Object> par);
+	List<KnowledgeType> getAll();
 
-    void deleteByIds(List<Integer> ids);
+	List<KnowledgeType> get(Map<String, Object> par);
 
-    Long getCount(Map<?, ?> map);
+	void deleteByIds(List<Integer> ids);
 
-    /**
-     * 查询知识类别分页显示
-     * @param pageRequest
-     * @return
-     */
-    List<KnowledgeType> getByPage(PageRequest pageRequest) throws Exception;
+	Long getCount(Map<?, ?> map);
 
-    /**
-     * 查询知识类别总条数
-     * @return
-     * @throws Exception
-     */
-    Integer getTotalKnow() throws Exception;
+	/**
+	 * 查询知识类别分页显示
+	 * 
+	 * @param pageRequest
+	 * @return
+	 */
+	List<KnowledgeType> getByPage(PageRequest pageRequest) throws Exception;
 
-    /**
-     * 查询问题表是否引用了要删除的知识类别
-     * @param id
-     * @return
-     * @throws Exception
-     */
-    Integer getProblem(Integer id) throws Exception;
-    /**
-     * 根据ID获取类型详情
-     * @param id
-     * @return
-     * @throws Exception
-     */
-    List<KnowledgeType> getKnowById(Integer id) throws Exception;
-    /**
-     * 验证知识类别是否存在
-     * @param kt
-     * @return
-     * @throws Exception
-     */
-    Integer selectNewName(KnowledgeType kt)throws Exception;
+	/**
+	 * 查询知识类别总条数
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	Integer getTotalKnow() throws Exception;
+
+	/**
+	 * 查询问题表是否引用了要删除的知识类别
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	Integer getProblem(Integer id) throws Exception;
+
+	/**
+	 * 根据ID获取类型详情
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	List<KnowledgeType> getKnowById(Integer id) throws Exception;
+
+	/**
+	 * 验证知识类别是否存在
+	 * 
+	 * @param kt
+	 * @return
+	 * @throws Exception
+	 */
+	Integer selectNewName(KnowledgeType kt) throws Exception;
 }

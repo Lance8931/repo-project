@@ -11,7 +11,7 @@
     <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
     <result column="add_by" property="addBy" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" /> 
   </resultMap>
   <sql id="Base_Column_List" >
     id, problem_id, user_id, content, nick_name, answer_date, add_time, add_by, update_time, 

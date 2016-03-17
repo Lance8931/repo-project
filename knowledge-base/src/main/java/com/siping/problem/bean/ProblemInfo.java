@@ -1,20 +1,19 @@
 package com.siping.problem.bean;
 
-
 public class ProblemInfo {
-	
+
 	private Integer Id;
-	
+
 	private Integer userId;
-	
+
 	private String nickName;
-	
+
 	private String content;
-	
+
 	private String theme;
-	
+
 	private Integer type;
-	
+
 	private String problemDate;
 
 	public Integer getId() {

@@ -7,30 +7,31 @@ import com.siping.problem.bean.ProblemInfo;
 import com.siping.problem.bean.UserProblem;
 
 public interface UserProblemMapper {
-    int deleteByPrimaryKey(Integer id);
+	int deleteByPrimaryKey(Integer id);
 
-    int insert(UserProblem record);
+	int insert(UserProblem record);
 
-    int insertSelective(UserProblem record);
+	int insertSelective(UserProblem record);
 
-    UserProblem selectByPrimaryKey(Integer id);
+	UserProblem selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(UserProblem record);
+	int updateByPrimaryKeySelective(UserProblem record);
 
-    int updateByPrimaryKey(UserProblem record);
-    
-    List<UserProblem> getAll();
-	
+	int updateByPrimaryKey(UserProblem record);
+
+	List<UserProblem> getAll();
+
 	List<UserProblem> get(Map<String, Object> par);
-	
+
 	void deleteByIds(List<Integer> ids);
-	
+
 	Long getCount(Map<?, ?> map);
 
 	List<UserProblem> getByPage(Map<?, ?> map);
-	
+
 	/**
 	 * 分页获取问题信息
+	 * 
 	 * @param map
 	 * @return
 	 *

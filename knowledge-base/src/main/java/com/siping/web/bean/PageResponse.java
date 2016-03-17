@@ -13,12 +13,15 @@ public class PageResponse<T> implements Serializable {
 	public Integer getTotal() {
 		return total;
 	}
+
 	public void setTotal(Integer total) {
 		this.total = total;
 	}
+
 	public List<T> getRecords() {
 		return records;
 	}
+
 	public void setRecords(List<T> records) {
 		this.records = records;
 	}

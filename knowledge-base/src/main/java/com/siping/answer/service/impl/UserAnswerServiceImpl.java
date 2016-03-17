@@ -28,13 +28,12 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
 	@Autowired
 	private UserAnswerMapper userAnswerMapper;
-	
+
 	@Override
-	public void insertAnswer(UserAnswer userAnswer, SysUser sysUser) throws Exception {
-		if (null != userAnswer 
-				&& null != userAnswer.getProblemId() 
-				&& null != userAnswer.getContent()
-				&& null != sysUser
+	public void insertAnswer(UserAnswer userAnswer, SysUser sysUser)
+			throws Exception {
+		if (null != userAnswer && null != userAnswer.getProblemId()
+				&& null != userAnswer.getContent() && null != sysUser
 				&& null != sysUser.getId()) {
 			userAnswer.setAddBy(sysUser.getId());
 			userAnswer.setAddTime(new Date());
@@ -44,34 +43,33 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 			userAnswer.setUserId(sysUser.getId());
 			userAnswer.setNickName(sysUser.getNickName());
 			userAnswerMapper.insert(userAnswer);
-		}else {
+		} else {
 			throw new Exception("存在无效信息，插入答案失败！");
 		}
-		
+
 	}
 
 	@Override
-	public void updateAnswer(UserAnswer userAnswer, SysUser sysUser) throws Exception {
-		if (null != userAnswer 
-				&& null != userAnswer.getProblemId() 
+	public void updateAnswer(UserAnswer userAnswer, SysUser sysUser)
+			throws Exception {
+		if (null != userAnswer && null != userAnswer.getProblemId()
 				&& null != userAnswer.getId()
-				&& null != userAnswer.getContent()
-				&& null != sysUser
+				&& null != userAnswer.getContent() && null != sysUser
 				&& null != sysUser.getId()) {
 			userAnswer.setUpdateBy(sysUser.getId());
 			userAnswer.setUpdateTime(new Date());
 			userAnswer.setNickName(sysUser.getNickName());
 			userAnswerMapper.updateByPrimaryKeySelective(userAnswer);
-		}else {
+		} else {
 			throw new Exception("存在无效信息，更新答案失败！");
 		}
 	}
-	
+
 	@Override
-	public void deleteAnswer(UserAnswer userAnswer) throws Exception  {
+	public void deleteAnswer(UserAnswer userAnswer) throws Exception {
 		if (null != userAnswer.getProblemId()) {
 			userAnswerMapper.deleteByPrimaryKey(userAnswer.getId());
-		}else {
+		} else {
 			throw new Exception("Id为null，删除答案失败！");
 		}
 	}
@@ -89,7 +87,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 			pageResponse.setRecords(list);
 			pageResponse.setTotal(userAnswerMapper.getCount(map).intValue());
 			return pageResponse;
-		}else {
+		} else {
 			throw new Exception("无数据");
 		}
 	}
