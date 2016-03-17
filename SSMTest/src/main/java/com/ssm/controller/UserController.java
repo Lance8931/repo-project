@@ -19,12 +19,12 @@ import com.ssm.service.IUserService;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-	
+
 	@Resource
 	private IUserService userService;
-	
+
 	@RequestMapping("/showUser")
-	public String toIndex(int id,Model model){
+	public String toIndex(int id, Model model) {
 		User user = userService.getUserById(id);
 		model.addAttribute("user", user);
 		return "showUser";

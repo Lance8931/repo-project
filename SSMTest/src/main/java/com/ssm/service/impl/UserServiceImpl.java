@@ -16,11 +16,11 @@ import com.ssm.service.IUserService;
  * @version 1.0
  */
 @Service("userService")
-public class UserServiceImpl implements IUserService{
+public class UserServiceImpl implements IUserService {
 
 	@Resource
 	private UserMapper userMapper;
-	
+
 	public User getUserById(int userId) {
 		return this.userMapper.selectByPrimaryKey(userId);
 	}
