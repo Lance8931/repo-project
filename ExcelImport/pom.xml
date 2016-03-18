@@ -127,6 +127,66 @@
     </dependency>    
     <!-- spring核心包 结束-->  
     
+    <!-- 引入JSON -->  
+    <dependency>  
+        <groupId>org.codehaus.jackson</groupId>  
+        <artifactId>jackson-mapper-asl</artifactId>  
+        <version>1.9.13</version>  
+    </dependency>  
+    
+     <!-- mybatis核心包 -->  
+     <dependency>  
+         <groupId>org.mybatis</groupId>  
+         <artifactId>mybatis</artifactId>  
+         <version>${mybatis.version}</version>  
+     </dependency>  
+     <!-- mybatis/spring包 -->  
+     <dependency>  
+         <groupId>org.mybatis</groupId>  
+         <artifactId>mybatis-spring</artifactId>  
+         <version>1.2.2</version>  
+     </dependency>  
+     <!-- 导入Mysql数据库链接jar包 -->  
+     <dependency>  
+         <groupId>mysql</groupId>  
+         <artifactId>mysql-connector-java</artifactId>  
+         <version>5.1.30</version>  
+     </dependency>
+      <!-- 导入dbcp的jar包，用来在applicationContext.xml中配置数据库 -->  
+      <dependency>  
+          <groupId>commons-dbcp</groupId>  
+          <artifactId>commons-dbcp</artifactId>  
+          <version>1.2.2</version>  
+      </dependency>   
+      <!-- 日志文件管理包 -->  
+      <!-- log start -->  
+      <dependency>  
+          <groupId>log4j</groupId>  
+          <artifactId>log4j</artifactId>  
+          <version>${log4j.version}</version>  
+      </dependency>  
+        
+        
+      <!-- 格式化对象，方便输出日志 -->  
+      <dependency>  
+          <groupId>com.alibaba</groupId>  
+          <artifactId>fastjson</artifactId>  
+          <version>1.1.41</version>  
+      </dependency>  
+
+
+      <dependency>  
+          <groupId>org.slf4j</groupId>  
+          <artifactId>slf4j-api</artifactId>  
+          <version>${slf4j.version}</version>  
+      </dependency>  
+
+      <dependency>  
+          <groupId>org.slf4j</groupId>  
+          <artifactId>slf4j-log4j12</artifactId>  
+          <version>${slf4j.version}</version>  
+      </dependency>  
+      <!-- log end --> 
   </dependencies>
   <build>
     <finalName>ExcelImport</finalName>

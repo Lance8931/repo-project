@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.siping.dao.MaterialMapper" >
+  <resultMap id="BaseResultMap" type="com.siping.bean.Material" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="material_no" property="materialNo" jdbcType="VARCHAR" />
+    <result column="material_name" property="materialName" jdbcType="VARCHAR" />
+    <result column="foreign_name" property="foreignName" jdbcType="VARCHAR" />
+    <result column="material_type" property="materialType" jdbcType="INTEGER" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="specifications_model" property="specificationsModel" jdbcType="VARCHAR" />
+    <result column="season" property="season" jdbcType="VARCHAR" />
+    <result column="is_purchase" property="isPurchase" jdbcType="BIT" />
+    <result column="is_sell" property="isSell" jdbcType="BIT" />
+    <result column="is_inventory" property="isInventory" jdbcType="BIT" />
+    <result column="unit_id" property="unitId" jdbcType="INTEGER" />
+    <result column="barcode" property="barcode" jdbcType="VARCHAR" />
+    <result column="shops" property="shops" jdbcType="VARCHAR" />
+    <result column="is_batch" property="isBatch" jdbcType="BIT" />
+    <result column="expiration_date" property="expirationDate" jdbcType="INTEGER" />
+    <result column="partner_id" property="partnerId" jdbcType="INTEGER" />
+    <result column="min_order" property="minOrder" jdbcType="INTEGER" />
+    <result column="min_inventory" property="minInventory" jdbcType="INTEGER" />
+    <result column="max_inventory" property="maxInventory" jdbcType="INTEGER" />
+    <result column="is_enable" property="isEnable" jdbcType="BIT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="BIT" />
+    <result column="transaction_id" property="transactionId" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="INTEGER" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="declare_unit" property="declareUnit" jdbcType="INTEGER" />
+    <result column="legal_unit" property="legalUnit" jdbcType="INTEGER" />
+    <result column="legal_translation_quantity" property="legalTranslationQuantity" jdbcType="REAL" />
+    <result column="entry_unit" property="entryUnit" jdbcType="INTEGER" />
+    <result column="entry_translation_quantity" property="entryTranslationQuantity" jdbcType="REAL" />
+    <result column="manufacturer" property="manufacturer" jdbcType="VARCHAR" />
+    <result column="provenance" property="provenance" jdbcType="VARCHAR" />
+    <result column="ebec" property="ebec" jdbcType="VARCHAR" />
+    <result column="eben" property="eben" jdbcType="VARCHAR" />
+    <result column="hscode" property="hscode" jdbcType="VARCHAR" />
+    <result column="post_tax_number" property="postTaxNumber" jdbcType="VARCHAR" />
+    <result column="custom1" property="custom1" jdbcType="VARCHAR" />
+    <result column="custom2" property="custom2" jdbcType="VARCHAR" />
+    <result column="custom3" property="custom3" jdbcType="VARCHAR" />
+    <result column="item_no" property="itemNo" jdbcType="VARCHAR" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="post_tax_rate" property="postTaxRate" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, material_no, material_name, foreign_name, material_type, brand, specifications_model, 
+    season, is_purchase, is_sell, is_inventory, unit_id, barcode, shops, is_batch, expiration_date, 
+    partner_id, min_order, min_inventory, max_inventory, is_enable, description, is_delete, 
+    transaction_id, create_date, create_by, update_date, update_by, declare_unit, legal_unit, 
+    legal_translation_quantity, entry_unit, entry_translation_quantity, manufacturer, 
+    provenance, ebec, eben, hscode, post_tax_number, custom1, custom2, custom3, item_no, 
+    weight, post_tax_rate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from material
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from material
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.siping.bean.Material" >
+    insert into material (id, material_no, material_name, 
+      foreign_name, material_type, brand, 
+      specifications_model, season, is_purchase, 
+      is_sell, is_inventory, unit_id, 
+      barcode, shops, is_batch, 
+      expiration_date, partner_id, min_order, 
+      min_inventory, max_inventory, is_enable, 
+      description, is_delete, transaction_id, 
+      create_date, create_by, update_date, 
+      update_by, declare_unit, legal_unit, 
+      legal_translation_quantity, entry_unit, entry_translation_quantity, 
+      manufacturer, provenance, ebec, 
+      eben, hscode, post_tax_number, 
+      custom1, custom2, custom3, 
+      item_no, weight, post_tax_rate
+      )
+    values (#{id,jdbcType=INTEGER}, #{materialNo,jdbcType=VARCHAR}, #{materialName,jdbcType=VARCHAR}, 
+      #{foreignName,jdbcType=VARCHAR}, #{materialType,jdbcType=INTEGER}, #{brand,jdbcType=VARCHAR}, 
+      #{specificationsModel,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR}, #{isPurchase,jdbcType=BIT}, 
+      #{isSell,jdbcType=BIT}, #{isInventory,jdbcType=BIT}, #{unitId,jdbcType=INTEGER}, 
+      #{barcode,jdbcType=VARCHAR}, #{shops,jdbcType=VARCHAR}, #{isBatch,jdbcType=BIT}, 
+      #{expirationDate,jdbcType=INTEGER}, #{partnerId,jdbcType=INTEGER}, #{minOrder,jdbcType=INTEGER}, 
+      #{minInventory,jdbcType=INTEGER}, #{maxInventory,jdbcType=INTEGER}, #{isEnable,jdbcType=BIT}, 
+      #{description,jdbcType=VARCHAR}, #{isDelete,jdbcType=BIT}, #{transactionId,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=INTEGER}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=INTEGER}, #{declareUnit,jdbcType=INTEGER}, #{legalUnit,jdbcType=INTEGER}, 
+      #{legalTranslationQuantity,jdbcType=REAL}, #{entryUnit,jdbcType=INTEGER}, #{entryTranslationQuantity,jdbcType=REAL}, 
+      #{manufacturer,jdbcType=VARCHAR}, #{provenance,jdbcType=VARCHAR}, #{ebec,jdbcType=VARCHAR}, 
+      #{eben,jdbcType=VARCHAR}, #{hscode,jdbcType=VARCHAR}, #{postTaxNumber,jdbcType=VARCHAR}, 
+      #{custom1,jdbcType=VARCHAR}, #{custom2,jdbcType=VARCHAR}, #{custom3,jdbcType=VARCHAR}, 
+      #{itemNo,jdbcType=VARCHAR}, #{weight,jdbcType=DECIMAL}, #{postTaxRate,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.siping.bean.Material" >
+    insert into material
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="materialNo != null" >
+        material_no,
+      </if>
+      <if test="materialName != null" >
+        material_name,
+      </if>
+      <if test="foreignName != null" >
+        foreign_name,
+      </if>
+      <if test="materialType != null" >
+        material_type,
+      </if>
+      <if test="brand != null" >
+        brand,
+      </if>
+      <if test="specificationsModel != null" >
+        specifications_model,
+      </if>
+      <if test="season != null" >
+        season,
+      </if>
+      <if test="isPurchase != null" >
+        is_purchase,
+      </if>
+      <if test="isSell != null" >
+        is_sell,
+      </if>
+      <if test="isInventory != null" >
+        is_inventory,
+      </if>
+      <if test="unitId != null" >
+        unit_id,
+      </if>
+      <if test="barcode != null" >
+        barcode,
+      </if>
+      <if test="shops != null" >
+        shops,
+      </if>
+      <if test="isBatch != null" >
+        is_batch,
+      </if>
+      <if test="expirationDate != null" >
+        expiration_date,
+      </if>
+      <if test="partnerId != null" >
+        partner_id,
+      </if>
+      <if test="minOrder != null" >
+        min_order,
+      </if>
+      <if test="minInventory != null" >
+        min_inventory,
+      </if>
+      <if test="maxInventory != null" >
+        max_inventory,
+      </if>
+      <if test="isEnable != null" >
+        is_enable,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
+      </if>
+      <if test="transactionId != null" >
+        transaction_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="declareUnit != null" >
+        declare_unit,
+      </if>
+      <if test="legalUnit != null" >
+        legal_unit,
+      </if>
+      <if test="legalTranslationQuantity != null" >
+        legal_translation_quantity,
+      </if>
+      <if test="entryUnit != null" >
+        entry_unit,
+      </if>
+      <if test="entryTranslationQuantity != null" >
+        entry_translation_quantity,
+      </if>
+      <if test="manufacturer != null" >
+        manufacturer,
+      </if>
+      <if test="provenance != null" >
+        provenance,
+      </if>
+      <if test="ebec != null" >
+        ebec,
+      </if>
+      <if test="eben != null" >
+        eben,
+      </if>
+      <if test="hscode != null" >
+        hscode,
+      </if>
+      <if test="postTaxNumber != null" >
+        post_tax_number,
+      </if>
+      <if test="custom1 != null" >
+        custom1,
+      </if>
+      <if test="custom2 != null" >
+        custom2,
+      </if>
+      <if test="custom3 != null" >
+        custom3,
+      </if>
+      <if test="itemNo != null" >
+        item_no,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>
+      <if test="postTaxRate != null" >
+        post_tax_rate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="materialNo != null" >
+        #{materialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materialName != null" >
+        #{materialName,jdbcType=VARCHAR},
+      </if>
+      <if test="foreignName != null" >
+        #{foreignName,jdbcType=VARCHAR},
+      </if>
+      <if test="materialType != null" >
+        #{materialType,jdbcType=INTEGER},
+      </if>
+      <if test="brand != null" >
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="specificationsModel != null" >
+        #{specificationsModel,jdbcType=VARCHAR},
+      </if>
+      <if test="season != null" >
+        #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="isPurchase != null" >
+        #{isPurchase,jdbcType=BIT},
+      </if>
+      <if test="isSell != null" >
+        #{isSell,jdbcType=BIT},
+      </if>
+      <if test="isInventory != null" >
+        #{isInventory,jdbcType=BIT},
+      </if>
+      <if test="unitId != null" >
+        #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="barcode != null" >
+        #{barcode,jdbcType=VARCHAR},
+      </if>
+      <if test="shops != null" >
+        #{shops,jdbcType=VARCHAR},
+      </if>
+      <if test="isBatch != null" >
+        #{isBatch,jdbcType=BIT},
+      </if>
+      <if test="expirationDate != null" >
+        #{expirationDate,jdbcType=INTEGER},
+      </if>
+      <if test="partnerId != null" >
+        #{partnerId,jdbcType=INTEGER},
+      </if>
+      <if test="minOrder != null" >
+        #{minOrder,jdbcType=INTEGER},
+      </if>
+      <if test="minInventory != null" >
+        #{minInventory,jdbcType=INTEGER},
+      </if>
+      <if test="maxInventory != null" >
+        #{maxInventory,jdbcType=INTEGER},
+      </if>
+      <if test="isEnable != null" >
+        #{isEnable,jdbcType=BIT},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="transactionId != null" >
+        #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="declareUnit != null" >
+        #{declareUnit,jdbcType=INTEGER},
+      </if>
+      <if test="legalUnit != null" >
+        #{legalUnit,jdbcType=INTEGER},
+      </if>
+      <if test="legalTranslationQuantity != null" >
+        #{legalTranslationQuantity,jdbcType=REAL},
+      </if>
+      <if test="entryUnit != null" >
+        #{entryUnit,jdbcType=INTEGER},
+      </if>
+      <if test="entryTranslationQuantity != null" >
+        #{entryTranslationQuantity,jdbcType=REAL},
+      </if>
+      <if test="manufacturer != null" >
+        #{manufacturer,jdbcType=VARCHAR},
+      </if>
+      <if test="provenance != null" >
+        #{provenance,jdbcType=VARCHAR},
+      </if>
+      <if test="ebec != null" >
+        #{ebec,jdbcType=VARCHAR},
+      </if>
+      <if test="eben != null" >
+        #{eben,jdbcType=VARCHAR},
+      </if>
+      <if test="hscode != null" >
+        #{hscode,jdbcType=VARCHAR},
+      </if>
+      <if test="postTaxNumber != null" >
+        #{postTaxNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="custom1 != null" >
+        #{custom1,jdbcType=VARCHAR},
+      </if>
+      <if test="custom2 != null" >
+        #{custom2,jdbcType=VARCHAR},
+      </if>
+      <if test="custom3 != null" >
+        #{custom3,jdbcType=VARCHAR},
+      </if>
+      <if test="itemNo != null" >
+        #{itemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="postTaxRate != null" >
+        #{postTaxRate,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.siping.bean.Material" >
+    update material
+    <set >
+      <if test="materialNo != null" >
+        material_no = #{materialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materialName != null" >
+        material_name = #{materialName,jdbcType=VARCHAR},
+      </if>
+      <if test="foreignName != null" >
+        foreign_name = #{foreignName,jdbcType=VARCHAR},
+      </if>
+      <if test="materialType != null" >
+        material_type = #{materialType,jdbcType=INTEGER},
+      </if>
+      <if test="brand != null" >
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="specificationsModel != null" >
+        specifications_model = #{specificationsModel,jdbcType=VARCHAR},
+      </if>
+      <if test="season != null" >
+        season = #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="isPurchase != null" >
+        is_purchase = #{isPurchase,jdbcType=BIT},
+      </if>
+      <if test="isSell != null" >
+        is_sell = #{isSell,jdbcType=BIT},
+      </if>
+      <if test="isInventory != null" >
+        is_inventory = #{isInventory,jdbcType=BIT},
+      </if>
+      <if test="unitId != null" >
+        unit_id = #{unitId,jdbcType=INTEGER},
+      </if>
+      <if test="barcode != null" >
+        barcode = #{barcode,jdbcType=VARCHAR},
+      </if>
+      <if test="shops != null" >
+        shops = #{shops,jdbcType=VARCHAR},
+      </if>
+      <if test="isBatch != null" >
+        is_batch = #{isBatch,jdbcType=BIT},
+      </if>
+      <if test="expirationDate != null" >
+        expiration_date = #{expirationDate,jdbcType=INTEGER},
+      </if>
+      <if test="partnerId != null" >
+        partner_id = #{partnerId,jdbcType=INTEGER},
+      </if>
+      <if test="minOrder != null" >
+        min_order = #{minOrder,jdbcType=INTEGER},
+      </if>
+      <if test="minInventory != null" >
+        min_inventory = #{minInventory,jdbcType=INTEGER},
+      </if>
+      <if test="maxInventory != null" >
+        max_inventory = #{maxInventory,jdbcType=INTEGER},
+      </if>
+      <if test="isEnable != null" >
+        is_enable = #{isEnable,jdbcType=BIT},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="transactionId != null" >
+        transaction_id = #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="declareUnit != null" >
+        declare_unit = #{declareUnit,jdbcType=INTEGER},
+      </if>
+      <if test="legalUnit != null" >
+        legal_unit = #{legalUnit,jdbcType=INTEGER},
+      </if>
+      <if test="legalTranslationQuantity != null" >
+        legal_translation_quantity = #{legalTranslationQuantity,jdbcType=REAL},
+      </if>
+      <if test="entryUnit != null" >
+        entry_unit = #{entryUnit,jdbcType=INTEGER},
+      </if>
+      <if test="entryTranslationQuantity != null" >
+        entry_translation_quantity = #{entryTranslationQuantity,jdbcType=REAL},
+      </if>
+      <if test="manufacturer != null" >
+        manufacturer = #{manufacturer,jdbcType=VARCHAR},
+      </if>
+      <if test="provenance != null" >
+        provenance = #{provenance,jdbcType=VARCHAR},
+      </if>
+      <if test="ebec != null" >
+        ebec = #{ebec,jdbcType=VARCHAR},
+      </if>
+      <if test="eben != null" >
+        eben = #{eben,jdbcType=VARCHAR},
+      </if>
+      <if test="hscode != null" >
+        hscode = #{hscode,jdbcType=VARCHAR},
+      </if>
+      <if test="postTaxNumber != null" >
+        post_tax_number = #{postTaxNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="custom1 != null" >
+        custom1 = #{custom1,jdbcType=VARCHAR},
+      </if>
+      <if test="custom2 != null" >
+        custom2 = #{custom2,jdbcType=VARCHAR},
+      </if>
+      <if test="custom3 != null" >
+        custom3 = #{custom3,jdbcType=VARCHAR},
+      </if>
+      <if test="itemNo != null" >
+        item_no = #{itemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="postTaxRate != null" >
+        post_tax_rate = #{postTaxRate,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.siping.bean.Material" >
+    update material
+    set material_no = #{materialNo,jdbcType=VARCHAR},
+      material_name = #{materialName,jdbcType=VARCHAR},
+      foreign_name = #{foreignName,jdbcType=VARCHAR},
+      material_type = #{materialType,jdbcType=INTEGER},
+      brand = #{brand,jdbcType=VARCHAR},
+      specifications_model = #{specificationsModel,jdbcType=VARCHAR},
+      season = #{season,jdbcType=VARCHAR},
+      is_purchase = #{isPurchase,jdbcType=BIT},
+      is_sell = #{isSell,jdbcType=BIT},
+      is_inventory = #{isInventory,jdbcType=BIT},
+      unit_id = #{unitId,jdbcType=INTEGER},
+      barcode = #{barcode,jdbcType=VARCHAR},
+      shops = #{shops,jdbcType=VARCHAR},
+      is_batch = #{isBatch,jdbcType=BIT},
+      expiration_date = #{expirationDate,jdbcType=INTEGER},
+      partner_id = #{partnerId,jdbcType=INTEGER},
+      min_order = #{minOrder,jdbcType=INTEGER},
+      min_inventory = #{minInventory,jdbcType=INTEGER},
+      max_inventory = #{maxInventory,jdbcType=INTEGER},
+      is_enable = #{isEnable,jdbcType=BIT},
+      description = #{description,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=BIT},
+      transaction_id = #{transactionId,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=INTEGER},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=INTEGER},
+      declare_unit = #{declareUnit,jdbcType=INTEGER},
+      legal_unit = #{legalUnit,jdbcType=INTEGER},
+      legal_translation_quantity = #{legalTranslationQuantity,jdbcType=REAL},
+      entry_unit = #{entryUnit,jdbcType=INTEGER},
+      entry_translation_quantity = #{entryTranslationQuantity,jdbcType=REAL},
+      manufacturer = #{manufacturer,jdbcType=VARCHAR},
+      provenance = #{provenance,jdbcType=VARCHAR},
+      ebec = #{ebec,jdbcType=VARCHAR},
+      eben = #{eben,jdbcType=VARCHAR},
+      hscode = #{hscode,jdbcType=VARCHAR},
+      post_tax_number = #{postTaxNumber,jdbcType=VARCHAR},
+      custom1 = #{custom1,jdbcType=VARCHAR},
+      custom2 = #{custom2,jdbcType=VARCHAR},
+      custom3 = #{custom3,jdbcType=VARCHAR},
+      item_no = #{itemNo,jdbcType=VARCHAR},
+      weight = #{weight,jdbcType=DECIMAL},
+      post_tax_rate = #{postTaxRate,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="createTable" parameterType="String">
+  	CREATE TABLE ${_parameter} ( 
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `material_no` varchar(20) NOT NULL,
+	  `material_name` varchar(50) NOT NULL,
+	  `foreign_name` varchar(100) DEFAULT NULL,
+	  `material_type` int(11) DEFAULT NULL,
+	  `brand` varchar(200) DEFAULT NULL,
+	  `specifications_model` varchar(300) DEFAULT NULL,
+	  `season` varchar(20) DEFAULT NULL,
+	  `is_purchase` bit(1) DEFAULT b'1',
+	  `is_sell` bit(1) DEFAULT b'0',
+	  `is_inventory` bit(1) DEFAULT b'1',
+	  `unit_id` int(11) NOT NULL,
+	  `barcode` varchar(20) DEFAULT NULL,
+	  PRIMARY KEY (`id`) 
+	) 
+  </update>
+  
+  <insert id="insertBatch" parameterType="java.util.Map" >
+    insert into ${tableName} (id, material_no, material_name, 
+      foreign_name, material_type, brand, 
+      specifications_model, season, is_purchase, 
+      is_sell, is_inventory, unit_id, 
+      barcode
+      )
+    values 
+    <foreach collection="list" item="item" index="index" separator="," >  
+        ( #{item.id,jdbcType=INTEGER}, #{item.materialNo,jdbcType=VARCHAR}, #{item.materialName,jdbcType=VARCHAR}, 
+	      #{item.foreignName,jdbcType=VARCHAR}, #{item.materialType,jdbcType=INTEGER}, #{item.brand,jdbcType=VARCHAR}, 
+	      #{item.specificationsModel,jdbcType=VARCHAR}, #{item.season,jdbcType=VARCHAR}, #{item.isPurchase,jdbcType=BIT}, 
+	      #{item.isSell,jdbcType=BIT}, #{item.isInventory,jdbcType=BIT}, #{item.unitId,jdbcType=INTEGER}, 
+	      #{item.barcode,jdbcType=VARCHAR}
+	      ) 
+    </foreach>
+  </insert>
+</mapper>
