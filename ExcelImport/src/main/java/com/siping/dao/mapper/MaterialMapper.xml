@@ -571,14 +571,14 @@
 	  `material_no` varchar(20) NOT NULL,
 	  `material_name` varchar(50) NOT NULL,
 	  `foreign_name` varchar(100) DEFAULT NULL,
-	  `material_type` int(11) DEFAULT NULL,
+	  `material_type` varchar(11) DEFAULT NULL,
 	  `brand` varchar(200) DEFAULT NULL,
 	  `specifications_model` varchar(300) DEFAULT NULL,
 	  `season` varchar(20) DEFAULT NULL,
-	  `is_purchase` bit(1) DEFAULT b'1',
-	  `is_sell` bit(1) DEFAULT b'0',
-	  `is_inventory` bit(1) DEFAULT b'1',
-	  `unit_id` int(11) NOT NULL,
+	  `is_purchase` varchar(1) DEFAULT '是',
+	  `is_sell` varchar(1) DEFAULT '否',
+	  `is_inventory` varchar(1) DEFAULT '是',
+	  `unit_id` varchar(11) NOT NULL,
 	  `barcode` varchar(20) DEFAULT NULL,
 	  PRIMARY KEY (`id`) 
 	) 
@@ -594,11 +594,103 @@
     values 
     <foreach collection="list" item="item" index="index" separator="," >  
         ( #{item.id,jdbcType=INTEGER}, #{item.materialNo,jdbcType=VARCHAR}, #{item.materialName,jdbcType=VARCHAR}, 
-	      #{item.foreignName,jdbcType=VARCHAR}, #{item.materialType,jdbcType=INTEGER}, #{item.brand,jdbcType=VARCHAR}, 
-	      #{item.specificationsModel,jdbcType=VARCHAR}, #{item.season,jdbcType=VARCHAR}, #{item.isPurchase,jdbcType=BIT}, 
-	      #{item.isSell,jdbcType=BIT}, #{item.isInventory,jdbcType=BIT}, #{item.unitId,jdbcType=INTEGER}, 
+	      #{item.foreignName,jdbcType=VARCHAR}, #{item.materialType,jdbcType=VARCHAR}, #{item.brand,jdbcType=VARCHAR}, 
+	      #{item.specificationsModel,jdbcType=VARCHAR}, #{item.season,jdbcType=VARCHAR}, #{item.isPurchase,jdbcType=VARCHAR}, 
+	      #{item.isSell,jdbcType=VARCHAR}, #{item.isInventory,jdbcType=VARCHAR}, #{item.unitId,jdbcType=VARCHAR}, 
 	      #{item.barcode,jdbcType=VARCHAR}
 	      ) 
     </foreach>
   </insert>
+  
+  
+  <select id="getListByPage" parameterType="java.util.Map" resultType="com.siping.bean.MaterialImportBean">
+    	SELECT
+			m.id,
+			m.material_no materialNo,
+			m.material_name materialName,
+			m.foreign_name foreignName,
+			m.material_type materialType,
+			m.brand,
+			m.specifications_model specificationsModel,
+			m.season,
+			m.is_purchase isPurchase,
+			m.is_sell isSell,
+			m.is_inventory isInvertory,
+			m.unit_id unitId,
+			m.barcode
+		FROM ${tableName} m
+    	<if test="startNo != null">
+            limit #{startNo},#{pageSize}
+        </if>
+    </select>
+    <select id="getTotal" parameterType="java.util.Map" resultType="int">
+    	select count(m.id) from ${tableName} m 
+    	<if test="keyword != null and keyword != ''">
+    		where m.material_name like CONCAT ('%', #{keyword},'%')
+    	</if>
+    </select>
+    
+    <insert id="insertBatchTwo" parameterType="java.util.Map">
+    	INSERT INTO material_temp (
+			material_no,
+			material_name,
+			foreign_name,
+			material_type,
+			brand,
+			specifications_model,
+			season,
+			is_purchase,
+			is_sell,
+			is_inventory,
+			unit_id,
+			barcode
+		) SELECT 
+			*
+		FROM
+			(
+				SELECT 
+					t2.material_no,
+					t2.material_name,
+					t2.foreign_name,
+					t3.id typeId,
+					t2.brand,
+					t2.specifications_model,
+					t2.season,
+					CASE t2.is_purchase
+					WHEN '是' THEN
+						1
+					ELSE
+						0
+					END is_purchase,
+						CASE t2.is_sell
+					WHEN '是' THEN
+						1
+					ELSE
+						0
+					END is_sell,
+					CASE t2.is_inventory
+					WHEN '是' THEN
+						1
+					ELSE
+						0
+					END is_inventory,
+					 t4.id unitId,
+					 t2.barcode
+					FROM
+						${tableName} t2
+					LEFT OUTER JOIN material_type t3 ON t3.type_name = t2.material_type
+					LEFT OUTER JOIN material_unit t4 ON t4.unit_name = t2.unit_id 
+					<if test="startNo != null">
+			            limit #{startNo},#{pageSize}
+			        </if>
+			) AS tb
+    </insert>
+    
+    <select id="getTypeId" parameterType="java.lang.String" resultType="Integer">
+    	select id from material_type where type_name = #{_parameter} limit 1
+    </select>
+    
+    <select id="getUnitId" parameterType="java.lang.String" resultType="Integer">
+    	select id from material_unit where unit_name = #{_parameter} limit 1
+    </select>
 </mapper>
