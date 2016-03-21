@@ -232,6 +232,12 @@
             <artifactId>mail</artifactId>
             <version>1.4.7</version>
         </dependency>
+        <!-- 导入java ee jar 包 -->  
+	    <dependency>  
+	        <groupId>javax</groupId>  
+	        <artifactId>javaee-api</artifactId>  
+	        <version>7.0</version>  
+	    </dependency> 
     </dependencies>
     <build>
         <finalName>sipingUI</finalName>
