@@ -16,6 +16,8 @@
 	<!-- 自动扫描 -->
 	<context:component-scan base-package="com.siping" />
 	
+	<mvc:annotation-driven/>
+	
 	<!-- 避免IE执行Ajax时，返回JSON出现下载文件 -->
 	<bean id="mappingJacksonHttpMessageConverter"
 		  class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
@@ -54,4 +56,5 @@
 		  <!-- 一个类似懒加载的属性.可以定义该属性.让解析文件的时候再抛异常,然后Controller中定义异常处理的方法 -->
           <property name="resolveLazily" value="true" />
 	</bean>
+	
 </beans>
