@@ -126,11 +126,20 @@ public class ExcelServiceImpl implements ExcelService {
 			map.put("startNo", pageRequest.getStartNo());
 			map.put("pageSize", pageRequest.getPageSize());
 			// 方案一(使用sql语句进行批量插入)：
-			materialMapper.insertBatchTwo(map);
+			// materialMapper.insertBatchTwo(map);
 			// 方案二(将临时表数据取出进行数据包装，再进行批量插入)：
 			List<MaterialImportBean> pros = materialMapper.getListByPage(map);
 			insertBatchT(pros, map);
 		}
+		materialMapper.dropTable(tableName);
+	}
+
+	public String createExcelTemplateFile() {
+		List<String> typeNames = materialMapper.getTypeList();
+		List<String> unitNames = materialMapper.getUnitList();
+		String[] typeStrings = typeNames.toArray(new String[typeNames.size()]);
+		String[] unitStrings = unitNames.toArray(new String[unitNames.size()]);
+		return null;
 	}
 
 	/**
@@ -150,22 +159,52 @@ public class ExcelServiceImpl implements ExcelService {
 		for (int i = 0; i < pros.size(); i++) {
 			bean = pros.get(i);
 			tempMaterial = new Material();
-			tempMaterial.setBarcode(bean.getBarcode());
-			tempMaterial.setBrand(bean.getBrand());
-			tempMaterial.setForeignName(bean.getForeignName());
-			tempMaterial
-					.setIsInventory(bean.getIsInventory().equals("是") ? true
-							: false);
-			tempMaterial.setIsPurchase(bean.getIsPurchase().equals("是") ? true
-					: false);
-			tempMaterial.setIsSell(bean.getIsSell().equals("是") ? true : false);
-			tempMaterial.setMaterialName(bean.getMaterialName());
-			tempMaterial.setMaterialNo(bean.getMaterialNo());
-			tempMaterial.setMaterialType(materialMapper.getTypeId(bean
-					.getMaterialType()));
-			tempMaterial.setSeason(bean.getSeason());
-			tempMaterial.setSpecificationsModel(bean.getSpecificationsModel());
-			tempMaterial.setUnitId(materialMapper.getUnitId(bean.getUnitId()));
+			if (null != bean.getBarcode()) {
+				tempMaterial.setBarcode(bean.getBarcode());
+			}
+			if (null != bean.getBrand()) {
+				tempMaterial.setBrand(bean.getBrand());
+			}
+			if (null != bean.getForeignName()) {
+				tempMaterial.setForeignName(bean.getForeignName());
+			}
+
+			if (null != bean.getIsInventory()) {
+				tempMaterial
+						.setIsInventory((bean.getIsInventory().equals("是")) ? true
+								: false);
+			}
+			if (null != bean.getIsPurchase()) {
+				tempMaterial
+						.setIsPurchase((bean.getIsPurchase().equals("是")) ? true
+								: false);
+			}
+			if (null != bean.getIsSell()) {
+				tempMaterial.setIsSell((bean.getIsSell().equals("是")) ? true
+						: false);
+			}
+			if (null != bean.getMaterialName()) {
+				tempMaterial.setMaterialName(bean.getMaterialName());
+			}
+			if (null != bean.getMaterialNo()) {
+				tempMaterial.setMaterialNo(bean.getMaterialNo());
+			}
+			if (null != bean.getMaterialType()) {
+				tempMaterial.setMaterialType(materialMapper.getTypeId(bean
+						.getMaterialType()));
+			}
+			if (null != bean.getSeason()) {
+				tempMaterial.setSeason(bean.getSeason());
+			}
+
+			if (null != bean.getSpecificationsModel()) {
+				tempMaterial.setSpecificationsModel(bean
+						.getSpecificationsModel());
+			}
+			if (null != bean.getUnitId()) {
+				tempMaterial.setUnitId(materialMapper.getUnitId(bean
+						.getUnitId()));
+			}
 			tempMaterials.add(tempMaterial);
 		}
 		materialMapper.insertBatchThree(tempMaterials);

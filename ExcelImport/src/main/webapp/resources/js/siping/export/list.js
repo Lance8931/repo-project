@@ -38,17 +38,13 @@ function check(){
         type : "POST",
         url : "/ExcelImport/check",
         async : false,
-        data : JSON.stringify({theme:$("#problem_theme").val(),content:$("#problem_content").val()}),
-        contentType : 'application/json',
-        dataType : "json",
+        data : {tableName:$("#product_name_key").val()},
         success : function(data) {
-            layer.alert(data.msg);
-            if(data.success){
-            	getProblemList(1,10);
-            }
-            /* var date = new Date();
-            date.setTime(data.addTime);
-            alert(date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate());*/
+            layer.alert(data.msg + "返回导入界面",function(index){
+            	window.location = "http://localhost:8080/ExcelImport/kkk";
+            });
+            
         }
     });
 }
+

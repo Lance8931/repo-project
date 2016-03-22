@@ -584,6 +584,10 @@
 	) 
   </update>
   
+  <update id="dropTable" parameterType="java.lang.String">
+  	drop table ${_parameter}
+  </update>
+  
   <insert id="insertBatch" parameterType="java.util.Map" >
     insert into ${tableName} (id, material_no, material_name, 
       foreign_name, material_type, brand, 
@@ -690,8 +694,16 @@
     	select id from material_type where type_name = #{_parameter} limit 1
     </select>
     
+    <select id="getTypeList" resultType="string">
+    	select distinct type_name value from material_type
+    </select>
+    
     <select id="getUnitId" parameterType="java.lang.String" resultType="Integer">
     	select id from material_unit where unit_name = #{_parameter} limit 1
+    </select>
+    
+    <select id="getUnitList" resultType="string">
+    	select distinct unit_name value from material_unit
     </select>
     
     <insert id="insertBatchThree" parameterType="java.util.List">
@@ -703,11 +715,11 @@
 	      )
 	    values 
 	    <foreach collection="list" item="item" index="index" separator="," >  
-	        ( #{id,jdbcType=INTEGER}, #{materialNo,jdbcType=VARCHAR}, #{materialName,jdbcType=VARCHAR}, 
-		      #{foreignName,jdbcType=VARCHAR}, #{materialType,jdbcType=INTEGER}, #{brand,jdbcType=VARCHAR}, 
-		      #{specificationsModel,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR}, #{isPurchase,jdbcType=BIT}, 
-		      #{isSell,jdbcType=BIT}, #{isInventory,jdbcType=BIT}, #{unitId,jdbcType=INTEGER}, 
-		      #{barcode,jdbcType=VARCHAR}
+	        ( #{item.id,jdbcType=INTEGER}, #{item.materialNo,jdbcType=VARCHAR}, #{item.materialName,jdbcType=VARCHAR}, 
+		      #{item.foreignName,jdbcType=VARCHAR}, #{item.materialType,jdbcType=INTEGER}, #{item.brand,jdbcType=VARCHAR}, 
+		      #{item.specificationsModel,jdbcType=VARCHAR}, #{item.season,jdbcType=VARCHAR}, #{item.isPurchase,jdbcType=BIT}, 
+		      #{item.isSell,jdbcType=BIT}, #{item.isInventory,jdbcType=BIT}, #{item.unitId,jdbcType=INTEGER}, 
+		      #{item.barcode,jdbcType=VARCHAR}
 		      ) 
 	    </foreach>
     </insert>

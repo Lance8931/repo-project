@@ -11,5 +11,15 @@
         </div>  
         <input type="submit" value="上传" >  
     </form>  
+    <button onclick="downloadExcel();">下载模板</button>
+    <button onclick="downloadExcel1();">下载模板1</button>
   </body>  
+  <script type="text/javascript">
+  	function downloadExcel(){
+		window.location="http://localhost:8080/ExcelImport/download";
+	}
+  	function downloadExcel1(){
+		window.location="http://localhost:8080/ExcelImport/downloadOne";
+	}
+  </script>
 </html>  

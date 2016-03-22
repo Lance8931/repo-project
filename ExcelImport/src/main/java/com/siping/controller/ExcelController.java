@@ -1,8 +1,23 @@
 package com.siping.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,8 +115,58 @@ public class ExcelController {
 			excelServiceImpl.insertFromTempTable(tableName);
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 			return new ResultMsg(false, 0, "审核失败");
 		}
 		return new ResultMsg(true, 1, "审核成功");
+	}
+
+	@RequestMapping(value = "/download")
+	public void downLoadExcelTemplate(HttpServletRequest request,
+			HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		session.setAttribute("state", null);
+		// 生成提示信息，
+		response.setContentType("application/vnd.ms-excel");
+		String codedFileName = null;
+		OutputStream fOut = null;
+		try {
+			// 进行转码，使其支持中文文件名
+			codedFileName = new File("D:\\MaterialExcelTemplate.xls").getName();
+			System.out.println(codedFileName);
+			response.setHeader("content-disposition", "attachment;filename="
+					+ codedFileName + ".xls");
+			// 产生工作簿对象
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			// 产生工作表对象
+			HSSFSheet sheet = workbook.createSheet();
+			for (int i = 1; i <= 30; i++) {
+				HSSFRow row = sheet.createRow((int) i);// 创建一行
+				HSSFCell cell = row.createCell((int) 0);// 创建一列
+				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+				cell.setCellValue("测试成功" + i);
+			}
+			fOut = response.getOutputStream();
+			workbook.write(fOut);
+		} catch (Exception e) {
+		} finally {
+			try {
+				fOut.flush();
+				fOut.close();
+			} catch (IOException e) {
+			}
+			session.setAttribute("state", "open");
+		}
+	}
+
+	@RequestMapping("/downloadOne")
+	public ResponseEntity<byte[]> download() throws IOException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		headers.setContentDispositionFormData("attachment", "dsdsds.xls");
+		return new ResponseEntity<byte[]>(
+				FileUtils.readFileToByteArray(new File(
+						"D:\\MaterialImportTemplate.xls")), headers,
+				HttpStatus.CREATED);
 	}
 }
