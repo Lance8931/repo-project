@@ -32,3 +32,23 @@ function getProductList(pageNo, pageSize){
         rowNum : true
     });
 }
+
+function check(){
+	$.ajax({
+        type : "POST",
+        url : "/ExcelImport/check",
+        async : false,
+        data : JSON.stringify({theme:$("#problem_theme").val(),content:$("#problem_content").val()}),
+        contentType : 'application/json',
+        dataType : "json",
+        success : function(data) {
+            layer.alert(data.msg);
+            if(data.success){
+            	getProblemList(1,10);
+            }
+            /* var date = new Date();
+            date.setTime(data.addTime);
+            alert(date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate());*/
+        }
+    });
+}

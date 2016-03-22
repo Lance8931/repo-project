@@ -693,4 +693,22 @@
     <select id="getUnitId" parameterType="java.lang.String" resultType="Integer">
     	select id from material_unit where unit_name = #{_parameter} limit 1
     </select>
+    
+    <insert id="insertBatchThree" parameterType="java.util.List">
+    	insert into material_temp (id, material_no, material_name, 
+	      foreign_name, material_type, brand, 
+	      specifications_model, season, is_purchase, 
+	      is_sell, is_inventory, unit_id, 
+	      barcode
+	      )
+	    values 
+	    <foreach collection="list" item="item" index="index" separator="," >  
+	        ( #{id,jdbcType=INTEGER}, #{materialNo,jdbcType=VARCHAR}, #{materialName,jdbcType=VARCHAR}, 
+		      #{foreignName,jdbcType=VARCHAR}, #{materialType,jdbcType=INTEGER}, #{brand,jdbcType=VARCHAR}, 
+		      #{specificationsModel,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR}, #{isPurchase,jdbcType=BIT}, 
+		      #{isSell,jdbcType=BIT}, #{isInventory,jdbcType=BIT}, #{unitId,jdbcType=INTEGER}, 
+		      #{barcode,jdbcType=VARCHAR}
+		      ) 
+	    </foreach>
+    </insert>
 </mapper>

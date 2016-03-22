@@ -93,9 +93,15 @@ public class ExcelController {
 	 * @date 2016年3月21日下午3:35:18
 	 * @author siping-L.J.H
 	 */
-	public ResultMsg check() {
-		ResultMsg msg = new ResultMsg();
-
-		return msg;
+	@RequestMapping(value = "/check", method = RequestMethod.POST)
+	@ResponseBody
+	public ResultMsg check(String tableName) {
+		try {
+			excelServiceImpl.insertFromTempTable(tableName);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return new ResultMsg(false, 0, "审核失败");
+		}
+		return new ResultMsg(true, 1, "审核成功");
 	}
 }

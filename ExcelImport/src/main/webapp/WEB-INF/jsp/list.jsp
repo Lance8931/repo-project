@@ -17,6 +17,7 @@
         <div class="partner_text_div common_text_div">
             <div class="common_text_val">
                 <input id="product_name_key" class="input_text_common my_radius" style="display:none" value="${tableName }" >
+                <button class="btn_common my_radius btn_search" onclick="check();">审核</button>
             </div>
         </div>
     </div>

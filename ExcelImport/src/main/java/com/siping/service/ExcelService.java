@@ -39,4 +39,14 @@ public interface ExcelService {
 	 */
 	public PageResponse<MaterialImportBean> getList(PageRequest pageRequest,
 			String tableName);
+
+	/**
+	 * 添加数据至正式表中
+	 * 
+	 * @param tableName
+	 *
+	 * @date 2016年3月22日上午10:10:45
+	 * @author siping-L.J.H
+	 */
+	public void insertFromTempTable(String tableName);
 }

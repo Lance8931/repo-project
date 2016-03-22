@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.siping.bean.Material;
 import com.siping.bean.MaterialImportBean;
 import com.siping.bean.PageRequest;
 import com.siping.bean.PageResponse;
@@ -111,6 +112,7 @@ public class ExcelServiceImpl implements ExcelService {
 		return tempTableName;
 	}
 
+	@Override
 	public void insertFromTempTable(String tableName) {
 		PageRequest pageRequest = new PageRequest();
 		pageRequest.setPageNo(1);
@@ -127,17 +129,46 @@ public class ExcelServiceImpl implements ExcelService {
 			materialMapper.insertBatchTwo(map);
 			// 方案二(将临时表数据取出进行数据包装，再进行批量插入)：
 			List<MaterialImportBean> pros = materialMapper.getListByPage(map);
-			for (MaterialImportBean materialImportBean : pros) {
-
-			}
+			insertBatchT(pros, map);
 		}
 	}
 
+	/**
+	 * 批量添加
+	 * 
+	 * @param pros
+	 * @param map
+	 *
+	 * @date 2016年3月22日上午10:10:13
+	 * @author siping-L.J.H
+	 */
 	private void insertBatchT(List<MaterialImportBean> pros,
 			Map<String, Object> map) {
+		List<Material> tempMaterials = new ArrayList<Material>();
+		Material tempMaterial = null;
+		MaterialImportBean bean = null;
 		for (int i = 0; i < pros.size(); i++) {
-
+			bean = pros.get(i);
+			tempMaterial = new Material();
+			tempMaterial.setBarcode(bean.getBarcode());
+			tempMaterial.setBrand(bean.getBrand());
+			tempMaterial.setForeignName(bean.getForeignName());
+			tempMaterial
+					.setIsInventory(bean.getIsInventory().equals("是") ? true
+							: false);
+			tempMaterial.setIsPurchase(bean.getIsPurchase().equals("是") ? true
+					: false);
+			tempMaterial.setIsSell(bean.getIsSell().equals("是") ? true : false);
+			tempMaterial.setMaterialName(bean.getMaterialName());
+			tempMaterial.setMaterialNo(bean.getMaterialNo());
+			tempMaterial.setMaterialType(materialMapper.getTypeId(bean
+					.getMaterialType()));
+			tempMaterial.setSeason(bean.getSeason());
+			tempMaterial.setSpecificationsModel(bean.getSpecificationsModel());
+			tempMaterial.setUnitId(materialMapper.getUnitId(bean.getUnitId()));
+			tempMaterials.add(tempMaterial);
 		}
+		materialMapper.insertBatchThree(tempMaterials);
 	}
 
 	/**

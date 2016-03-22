@@ -41,4 +41,6 @@ public interface MaterialMapper {
 	Integer getTypeId(String typeName);
 
 	Integer getUnitId(String unitName);
+
+	int insertBatchThree(List<Material> list);
 }
