@@ -24,7 +24,7 @@ public interface ExcelService {
 	 * @date 2016年3月21日下午3:32:13
 	 * @author siping-L.J.H
 	 */
-	public String excelImport(MultipartFile[] multipartFiles);
+	public String excelImport(MultipartFile[] multipartFiles) throws Exception;
 
 	/**
 	 * 获取临时表数据(分页)
@@ -49,4 +49,15 @@ public interface ExcelService {
 	 * @author siping-L.J.H
 	 */
 	public void insertFromTempTable(String tableName);
+
+	/**
+	 * 创建Excel导入模板
+	 * 
+	 * @return 文件路径
+	 * @throws Exception
+	 *
+	 * @date 2016年3月23日上午9:47:41
+	 * @author siping-L.J.H
+	 */
+	public String createExcelTemplateFile() throws Exception;
 }

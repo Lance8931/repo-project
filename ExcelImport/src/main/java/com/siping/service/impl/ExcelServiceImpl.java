@@ -1,31 +1,33 @@
 package com.siping.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellValue;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.siping.bean.ExcelProperties;
 import com.siping.bean.Material;
 import com.siping.bean.MaterialImportBean;
 import com.siping.bean.PageRequest;
 import com.siping.bean.PageResponse;
 import com.siping.dao.MaterialMapper;
 import com.siping.service.ExcelService;
+import com.siping.util.ExcelOperate;
 
 /**
  * 导入ExcelService层
@@ -55,61 +57,63 @@ public class ExcelServiceImpl implements ExcelService {
 		return pageResponse;
 	}
 
-	@SuppressWarnings("resource")
 	@Override
-	public String excelImport(MultipartFile[] multipartFiles) {
-		String fileSuffix = multipartFiles[0]
-				.getOriginalFilename()
-				.substring(
-						multipartFiles[0].getOriginalFilename()
-								.lastIndexOf(".")).toLowerCase();
-		boolean isE2007 = false; // 判断是否是excel2007格式
-
+	public String excelImport(MultipartFile[] multipartFiles) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		List<MaterialImportBean> list = new ArrayList<MaterialImportBean>();
-
+		ExcelProperties properties = null;
 		String tempTableName = "tempMaterial" + new Date().getTime();
 		map.put("tableName", tempTableName);
 		materialMapper.createTable(tempTableName);
-		if (fileSuffix.endsWith("xlsx"))
-			isE2007 = true;
 		try {
-			InputStream input = multipartFiles[0].getInputStream(); // 建立输入流
-			Workbook wb = null; // 根据文件格式(2003或者2007)来初始化
-			if (isE2007) {
-				wb = new XSSFWorkbook(input);
-			} else {
-				wb = new HSSFWorkbook(input);
-			}
-			// 解析公式结果
-			FormulaEvaluator evaluator = wb.getCreationHelper()
-					.createFormulaEvaluator();
-
-			Sheet sheet = wb.getSheetAt(0); // 获得第一个表单
-			int lastRowNum = sheet.getLastRowNum();// 获取lastRowNum，从0开始计数
-			for (int j = 1; j <= lastRowNum; j++) {
-				Row row = sheet.getRow(j);
+			properties = new ExcelProperties(
+					multipartFiles[0].getInputStream(),
+					multipartFiles[0].getOriginalFilename(), 0);
+			for (int j = 1, lastRowNum = properties.getLastRowNum(); j <= lastRowNum; j++) {
+				Row row = properties.getSheet().getRow(j);
 				if (null != row) {
 					MaterialImportBean importBean = new MaterialImportBean();
 					int totalCellNum = row.getLastCellNum();
 					for (int i = 0; i < totalCellNum; i++) {
 						Cell cell = row.getCell(i);
-						CellValue cellValue = evaluator.evaluate(cell);
+						CellValue cellValue = properties.getFormulaEvaluator()
+								.evaluate(cell);
 						if (null != cell && cellValue != null) {
 							setMaterialExportBean(importBean, i, cellValue);
 						}
 					}
 					list.add(importBean);
 				}
+				map.put("tableName", tempTableName);
+				if (list.size() == 1000) {
+					map.put("list", list);
+					materialMapper.insertBatch(map);
+					map.clear();
+					list.clear();
+				}
 			}
 			map.put("list", list);
 			materialMapper.insertBatch(map);
-
 		} catch (IOException ex) {
 			ex.printStackTrace();
+			materialMapper.dropTable(tempTableName);
 		}
 		return tempTableName;
+	}
+
+	public static void main(String[] args) {
+		int j = 10555;
+		System.out.println(10 / 3);// 取整
+		System.out.println(10 % 3);// 取余
+		for (int i = 0; i <= j; i++) {
+			if (i % 1000 == 0) {
+				System.out.println("每1000条：" + i);
+			}
+			if (i % 1000 > 0 && (i - (i % 1000) * 1000) % 100 == 0) {
+				System.out.println("每100条：" + i);
+			}
+		}
+
 	}
 
 	@Override
@@ -134,12 +138,31 @@ public class ExcelServiceImpl implements ExcelService {
 		materialMapper.dropTable(tableName);
 	}
 
-	public String createExcelTemplateFile() {
+	@SuppressWarnings("resource")
+	@Override
+	public String createExcelTemplateFile() throws Exception {
 		List<String> typeNames = materialMapper.getTypeList();
 		List<String> unitNames = materialMapper.getUnitList();
 		String[] typeStrings = typeNames.toArray(new String[typeNames.size()]);
 		String[] unitStrings = unitNames.toArray(new String[unitNames.size()]);
-		return null;
+
+		String templateFilePath = "d:\\MaterialImportTemplate.xls";
+		String outFilePath = "d:\\kkk.xls";
+
+		HSSFWorkbook wb = new HSSFWorkbook(new POIFSFileSystem(
+				new FileInputStream(new File(templateFilePath))));// excel文件对象
+		HSSFSheet sheetlist = wb.getSheetAt(0);// 工作表对象
+		HSSFSheet sheetHidden = wb.createSheet("hiddenddd");// 数据源工作表
+
+		wb = ExcelOperate.setHSSFCellDropDownList(wb, sheetlist, sheetHidden,
+				typeStrings, 1, 10000, 3, 3, "!$A1:$A", 0, "typeHidden");
+		wb.setSheetHidden(1, false);
+		wb = ExcelOperate.setHSSFCellDropDownList(wb, sheetlist, sheetHidden,
+				unitStrings, 1, 10000, 10, 10, "!$B1:$B", 1, "unitHidden");
+		FileOutputStream out = new FileOutputStream(outFilePath);
+		wb.write(out);
+		out.close();
+		return outFilePath;
 	}
 
 	/**

@@ -3,6 +3,7 @@ package com.siping.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,15 +57,22 @@ public class ExcelController {
 	 *
 	 * @date 2016年3月21日下午3:33:41
 	 * @author siping-L.J.H
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/uploadExcel", method = RequestMethod.POST)
 	public ModelAndView uploadExcel(
 			@RequestParam MultipartFile[] multipartFiles,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws Exception {
 		ModelAndView mav = new ModelAndView();
+		Long startTime = new Date().getTime();
+		System.out.println("开始导入：" + startTime);
 		String tableName = excelServiceImpl.excelImport(multipartFiles);
+		Long endTime = new Date().getTime();
+		System.out.println("结束导入：" + endTime);
+		System.out.println("间隔时间：" + (endTime - startTime) / 1000);
 		mav.setViewName("list");
 		mav.addObject("tableName", tableName);
+
 		return mav;
 	}
 
@@ -160,13 +168,15 @@ public class ExcelController {
 	}
 
 	@RequestMapping("/downloadOne")
-	public ResponseEntity<byte[]> download() throws IOException {
+	public ResponseEntity<byte[]> download() throws Exception {
 		HttpHeaders headers = new HttpHeaders();
+		String filePath = null;
+		filePath = excelServiceImpl.createExcelTemplateFile();
 		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		headers.setContentDispositionFormData("attachment", "dsdsds.xls");
+		headers.setContentDispositionFormData("attachment", new String(
+				"模板下载.xls".getBytes("UTF-8"), "iso-8859-1"));
 		return new ResponseEntity<byte[]>(
-				FileUtils.readFileToByteArray(new File(
-						"D:\\MaterialImportTemplate.xls")), headers,
+				FileUtils.readFileToByteArray(new File(filePath)), headers,
 				HttpStatus.CREATED);
 	}
 }

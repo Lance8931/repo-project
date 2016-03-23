@@ -695,7 +695,7 @@
     </select>
     
     <select id="getTypeList" resultType="string">
-    	select distinct type_name value from material_type
+    	select distinct type_name value from material_type 
     </select>
     
     <select id="getUnitId" parameterType="java.lang.String" resultType="Integer">

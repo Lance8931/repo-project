@@ -24,6 +24,8 @@
 		  <property name="supportedMediaTypes">
 		  	<list>
 		  		<value>text/html;charset=UTF-8</value>
+		  		<value>applicaton/json;charset=UTF-8</value>
+                <value>application/octet-stream;charset=UTF-8</value>
 		  	</list>
 		  </property>	  
 	</bean>
