@@ -153,7 +153,12 @@ public class ExcelOperate {
 		String hiddenSheetName = hiddenSheet.getSheetName();
 		for (int i = 0, length = textList.length; i < length; i++) {
 			String name = textList[i];
-			HSSFRow row = hiddenSheet.createRow(i);
+			HSSFRow row = null;
+			if (null != hiddenSheet.getRow(i)) {
+				row = hiddenSheet.getRow(i);
+			} else {
+				row = hiddenSheet.createRow(i);
+			}
 			HSSFCell cell = row.createCell(hiddenDatasCol);
 			cell.setCellValue(name);
 		}

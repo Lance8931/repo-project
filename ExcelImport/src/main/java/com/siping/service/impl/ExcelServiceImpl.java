@@ -152,13 +152,14 @@ public class ExcelServiceImpl implements ExcelService {
 		HSSFWorkbook wb = new HSSFWorkbook(new POIFSFileSystem(
 				new FileInputStream(new File(templateFilePath))));// excel文件对象
 		HSSFSheet sheetlist = wb.getSheetAt(0);// 工作表对象
-		HSSFSheet sheetHidden = wb.createSheet("hiddenddd");// 数据源工作表
+		HSSFSheet sheetHidden = wb.createSheet("hidden");// 数据源工作表
 
 		wb = ExcelOperate.setHSSFCellDropDownList(wb, sheetlist, sheetHidden,
 				typeStrings, 1, 10000, 3, 3, "!$A1:$A", 0, "typeHidden");
 		wb.setSheetHidden(1, false);
 		wb = ExcelOperate.setHSSFCellDropDownList(wb, sheetlist, sheetHidden,
 				unitStrings, 1, 10000, 10, 10, "!$B1:$B", 1, "unitHidden");
+		wb.setSheetHidden(wb.getSheetIndex("hidden"), false);
 		FileOutputStream out = new FileOutputStream(outFilePath);
 		wb.write(out);
 		out.close();
