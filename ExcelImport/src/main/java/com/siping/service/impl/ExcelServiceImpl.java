@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -17,6 +19,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +45,12 @@ public class ExcelServiceImpl implements ExcelService {
 	@Autowired
 	private MaterialMapper materialMapper;
 
+	@Autowired
+	private ApplicationContext context;
+
+	@Autowired
+	private HttpServletRequest request;
+
 	@Override
 	public PageResponse<MaterialImportBean> getList(PageRequest pageRequest,
 			String tableName) {
@@ -59,13 +68,13 @@ public class ExcelServiceImpl implements ExcelService {
 
 	@Override
 	public String excelImport(MultipartFile[] multipartFiles) throws Exception {
+		ExcelProperties properties = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<MaterialImportBean> list = new ArrayList<MaterialImportBean>();
-		ExcelProperties properties = null;
 		String tempTableName = "tempMaterial" + new Date().getTime();
 		map.put("tableName", tempTableName);
-		materialMapper.createTable(tempTableName);
 		try {
+			materialMapper.createTable(tempTableName);
 			properties = new ExcelProperties(
 					multipartFiles[0].getInputStream(),
 					multipartFiles[0].getOriginalFilename(), 0);
@@ -73,8 +82,7 @@ public class ExcelServiceImpl implements ExcelService {
 				Row row = properties.getSheet().getRow(j);
 				if (null != row) {
 					MaterialImportBean importBean = null;
-					int totalCellNum = row.getLastCellNum();
-					for (int i = 0; i < totalCellNum; i++) {
+					for (int i = 0, totalCellNum = row.getLastCellNum(); i < totalCellNum; i++) {
 						Cell cell = row.getCell(i, Row.RETURN_BLANK_AS_NULL);// 空白的单元格返回null
 						CellValue cellValue = properties.getFormulaEvaluator()
 								.evaluate(cell);
@@ -91,15 +99,14 @@ public class ExcelServiceImpl implements ExcelService {
 						list.add(importBean);
 					}
 				}
-				map.put("tableName", tempTableName);
 				if (list.size() == 1000) {
 					map.put("list", list);
 					materialMapper.insertBatch(map);
-					map.clear();
+					map.remove("list");
 					list.clear();
 				}
 			}
-			if (list.size() > 0) {
+			if (list.size() > 0) {// 有数据时才进行操作
 				map.put("list", list);
 				materialMapper.insertBatch(map);
 			}
@@ -127,14 +134,14 @@ public class ExcelServiceImpl implements ExcelService {
 
 	@Override
 	public void insertFromTempTable(String tableName) {
+		Integer total = 0;
 		PageRequest pageRequest = new PageRequest();
+		Map<String, Object> map = new HashMap<String, Object>();
 		pageRequest.setPageNo(1);
 		pageRequest.setPageSize(100);
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tableName", tableName);
-		Integer total = materialMapper.getTotal(map);
-		int pageNum = total / 100 + 1;
-		for (int i = 1; i <= pageNum; i++) {
+		total = materialMapper.getTotal(map);
+		for (int i = 1, pageNum = total / 100 + 1; i <= pageNum; i++) {
 			pageRequest.setPageNo(i);
 			map.put("startNo", pageRequest.getStartNo());
 			map.put("pageSize", pageRequest.getPageSize());
@@ -155,8 +162,12 @@ public class ExcelServiceImpl implements ExcelService {
 		String[] typeStrings = typeNames.toArray(new String[typeNames.size()]);
 		String[] unitStrings = unitNames.toArray(new String[unitNames.size()]);
 
-		String templateFilePath = "d:\\MaterialImportTemplate.xls";
-		String outFilePath = "d:\\kkk.xls";
+		String templateFilePath = request.getServletContext().getRealPath(
+				"/resources/ExcelTemplate/")
+				+ "MaterialImportTemplate.xls";
+		String outFilePath = request.getServletContext().getRealPath(
+				"/resources/ExcelTemplate/")
+				+ new Date().getTime() + ".xls";
 
 		HSSFWorkbook wb = new HSSFWorkbook(new POIFSFileSystem(
 				new FileInputStream(new File(templateFilePath))));// excel文件对象
@@ -297,6 +308,17 @@ public class ExcelServiceImpl implements ExcelService {
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void test() {
+		System.out.println("当前web名: " + context.getApplicationName());
+		System.out.println("当前web项目绝对路径: "
+				+ request.getServletContext().getRealPath("/"));
+		System.out.println("当前web项目ExcelTemplate绝对路径："
+				+ request.getServletContext().getRealPath(
+						"/resources/ExcelTemplate/"));
+		System.out.println("当前web名: " + request.getContextPath());
 	}
 
 }

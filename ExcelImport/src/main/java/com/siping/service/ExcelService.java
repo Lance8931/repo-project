@@ -60,4 +60,6 @@ public interface ExcelService {
 	 * @author siping-L.J.H
 	 */
 	public String createExcelTemplateFile() throws Exception;
+
+	public void test();
 }

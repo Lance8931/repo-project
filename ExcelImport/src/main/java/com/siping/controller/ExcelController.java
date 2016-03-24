@@ -179,4 +179,9 @@ public class ExcelController {
 				FileUtils.readFileToByteArray(new File(filePath)), headers,
 				HttpStatus.CREATED);
 	}
+
+	@RequestMapping("/test")
+	public void test() {
+		excelServiceImpl.test();
+	}
 }

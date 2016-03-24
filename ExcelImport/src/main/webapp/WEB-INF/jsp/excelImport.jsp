@@ -3,6 +3,7 @@
 <html>  
   <head>  
     <title>Excel文件导入</title>  
+    <script src="/ExcelImport/resources/js/jquery/jquery-1.10.2.js" type="text/javascript"></script>
   </head>  
   <body>  
     <form name="userForm1" action="/ExcelImport/uploadExcel" enctype="multipart/form-data" method="post">  
@@ -13,6 +14,7 @@
     </form>  
     <button onclick="downloadExcel();">下载模板</button>
     <button onclick="downloadExcel1();">下载模板1</button>
+    <button onclick="downloadExcel2();">测试</button>
   </body>  
   <script type="text/javascript">
   	function downloadExcel(){
@@ -21,5 +23,10 @@
   	function downloadExcel1(){
 		window.location="http://localhost:8080/ExcelImport/downloadOne";
 	}
+  	function downloadExcel2(){
+  		$.ajax({
+  			url:"/ExcelImport/test"
+  		});
+  	}
   </script>
 </html>  
