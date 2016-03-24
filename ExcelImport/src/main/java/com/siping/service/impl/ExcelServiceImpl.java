@@ -72,17 +72,24 @@ public class ExcelServiceImpl implements ExcelService {
 			for (int j = 1, lastRowNum = properties.getLastRowNum(); j <= lastRowNum; j++) {
 				Row row = properties.getSheet().getRow(j);
 				if (null != row) {
-					MaterialImportBean importBean = new MaterialImportBean();
+					MaterialImportBean importBean = null;
 					int totalCellNum = row.getLastCellNum();
 					for (int i = 0; i < totalCellNum; i++) {
-						Cell cell = row.getCell(i);
+						Cell cell = row.getCell(i, Row.RETURN_BLANK_AS_NULL);// 空白的单元格返回null
 						CellValue cellValue = properties.getFormulaEvaluator()
 								.evaluate(cell);
 						if (null != cell && cellValue != null) {
-							setMaterialExportBean(importBean, i, cellValue);
+							if (null != importBean) {
+								setMaterialExportBean(importBean, i, cellValue);
+							} else {
+								importBean = new MaterialImportBean();
+								setMaterialExportBean(importBean, i, cellValue);
+							}
 						}
 					}
-					list.add(importBean);
+					if (null != importBean) {
+						list.add(importBean);
+					}
 				}
 				map.put("tableName", tempTableName);
 				if (list.size() == 1000) {
@@ -92,8 +99,10 @@ public class ExcelServiceImpl implements ExcelService {
 					list.clear();
 				}
 			}
-			map.put("list", list);
-			materialMapper.insertBatch(map);
+			if (list.size() > 0) {
+				map.put("list", list);
+				materialMapper.insertBatch(map);
+			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
 			materialMapper.dropTable(tempTableName);
@@ -154,11 +163,13 @@ public class ExcelServiceImpl implements ExcelService {
 		HSSFSheet sheetlist = wb.getSheetAt(0);// 工作表对象
 		HSSFSheet sheetHidden = wb.createSheet("hidden");// 数据源工作表
 
-		wb = ExcelOperate.setHSSFCellDropDownList(wb, sheetlist, sheetHidden,
-				typeStrings, 1, 10000, 3, 3, "!$A1:$A", 0, "typeHidden");
+		wb = (HSSFWorkbook) ExcelOperate.setCellDropDownList(wb, sheetlist,
+				sheetHidden, typeStrings, 1, 10000, 3, 3, "!$A1:$A", 0,
+				"typeHidden");
 		wb.setSheetHidden(1, false);
-		wb = ExcelOperate.setHSSFCellDropDownList(wb, sheetlist, sheetHidden,
-				unitStrings, 1, 10000, 10, 10, "!$B1:$B", 1, "unitHidden");
+		wb = (HSSFWorkbook) ExcelOperate.setCellDropDownList(wb, sheetlist,
+				sheetHidden, unitStrings, 1, 10000, 10, 10, "!$B1:$B", 1,
+				"unitHidden");
 		wb.setSheetHidden(wb.getSheetIndex("hidden"), false);
 		FileOutputStream out = new FileOutputStream(outFilePath);
 		wb.write(out);

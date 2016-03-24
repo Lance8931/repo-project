@@ -120,6 +120,7 @@ public class ExcelOperate {
 	 * 设置Excel下拉菜单数据源(数据量大的情况下)
 	 * 
 	 * @param wb
+	 *            存在HSSF和XSSF两个版本
 	 * @param workSheet
 	 *            需要设置下拉菜单的sheet
 	 * @param hiddenSheet
@@ -145,7 +146,7 @@ public class ExcelOperate {
 	 * @date 2016年3月23日上午10:43:12
 	 * @author siping-L.J.H
 	 */
-	public static HSSFWorkbook setHSSFCellDropDownList(HSSFWorkbook wb,
+	public static Workbook setCellDropDownList(Workbook wb,
 			HSSFSheet workSheet, HSSFSheet hiddenSheet, String[] textList,
 			int firstRow, int endRow, int firstCol, int endCol,
 			String hiddenDatasFirstCell, int hiddenDatasCol,
@@ -189,8 +190,8 @@ public class ExcelOperate {
 				0, 500, 1, 1);// 第二列的前501行都设置提示.
 
 		HSSFSheet sheetHidden = wb.createSheet("hidden");
-		setHSSFCellDropDownList(wb, sheetlist, sheetHidden, typeStrings, 1,
-				10000, 3, 3, "!$A1:$A", 0, "typeHidden");
+		setCellDropDownList(wb, sheetlist, sheetHidden, typeStrings, 1, 10000,
+				3, 3, "!$A1:$A", 0, "typeHidden");
 		wb.write(out);
 		out.close();
 	}
