@@ -123,13 +123,14 @@ public abstract class XxlsAbstract extends DefaultHandler {
 				lastContents = new XSSFRichTextString(sst.getEntryAt(idx))
 						.toString();
 			} catch (Exception e) {
-				e.printStackTrace();
+				// e.printStackTrace();
 			}
 		}
 
 		// v => 单元格的值，如果单元格是字符串则v标签的值为该字符串在SST中的索引
 		// 将单元格内容加入rowlist中，在这之前先去掉字符串前后的空白符
 		if (name.equals("v")) {
+			paddingNullCell();
 			String value = lastContents.trim();
 			value = value.equals("") ? " " : value;
 			rowlist.add(curCol, value);

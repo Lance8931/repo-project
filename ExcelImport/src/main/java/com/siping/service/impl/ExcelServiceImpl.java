@@ -16,7 +16,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -418,27 +417,16 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 	private void optRows(int sheetIndex, int curRow, List<String> rowlist)
 			throws SQLException {
 		if (curRow > 0) {
-
-			int j = 0;
-			for (int i = 0; i < rowlist.size(); i++) {
-				if (StringUtils.isBlank(rowlist.get(i))) {
-					j++;
-				}
+			MaterialImportBean importBean = new MaterialImportBean();
+			for (int k = 0; k < rowlist.size(); k++) {
+				setMaterialExportBean(importBean, k, rowlist.get(k));
 			}
-			if (j == rowlist.size()) {
-				return;
-			} else {
-				MaterialImportBean importBean = new MaterialImportBean();
-				for (int k = 0; k < rowlist.size(); k++) {
-					setMaterialExportBean(importBean, k, rowlist.get(k));
-				}
-				beans.add(importBean);
-				if (beans.size() == 1000) {
-					map1.put("list", beans);
-					materialMapper.insertBatch(map1);
-					map1.remove("list");
-					beans.clear();
-				}
+			beans.add(importBean);
+			if (beans.size() == 1000) {
+				map1.put("list", beans);
+				materialMapper.insertBatch(map1);
+				map1.remove("list");
+				beans.clear();
 			}
 		}
 	}
@@ -451,6 +439,9 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 	private List<String> rowlist = new ArrayList<String>();
 	private int curRow = 0;
 	private int curCol = 0;
+
+	// 当前遍历的Excel单元格列索引
+	private int thisColumnIndex = -1;
 
 	// 只遍历一个sheet，其中sheetId为要遍历的sheet索引，从1开始，1-3
 	private void processOneSheet(String filename, int sheetId) throws Exception {
@@ -525,13 +516,14 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 				lastContents = new XSSFRichTextString(sst.getEntryAt(idx))
 						.toString();
 			} catch (Exception e) {
-
+				// e.printStackTrace();
 			}
 		}
 
 		// v => 单元格的值，如果单元格是字符串则v标签的值为该字符串在SST中的索引
 		// 将单元格内容加入rowlist中，在这之前先去掉字符串前后的空白符
 		if (name.equals("v")) {
+			paddingNullCell();
 			String value = lastContents.trim();
 			value = value.equals("") ? " " : value;
 			rowlist.add(curCol, value);
@@ -547,6 +539,7 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 				rowlist.clear();
 				curRow++;
 				curCol = 0;
+				thisColumnIndex = 0;
 			}
 		}
 	}
@@ -556,4 +549,33 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 		// 得到单元格内容的值
 		lastContents += new String(ch, start, length);
 	}
+
+	/**
+	 * 空的单元个填充
+	 */
+	private void paddingNullCell() {
+		int index = curCol;
+		if (thisColumnIndex > index) {
+			for (int i = index; i < thisColumnIndex; i++) {
+				rowlist.add(curCol, "");
+				curCol++;
+			}
+		}
+	}
+
+	/**
+	 * 从列名转换为列索引
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private static int nameToColumn(String name) {
+		int column = -1;
+		for (int i = 0; i < name.length(); ++i) {
+			int c = name.charAt(i);
+			column = (column + 1) * 26 + c - 'A';
+		}
+		return column;
+	}
+
 }

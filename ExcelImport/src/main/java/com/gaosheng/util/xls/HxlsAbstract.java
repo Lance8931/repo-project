@@ -217,6 +217,7 @@ public abstract class HxlsAbstract implements HSSFListener {
 				value = sstRecord.getString(lsrec.getSSTIndex()).toString()
 						.trim();
 				value = value.equals("") ? " " : value;
+
 				rowlist.add(thisColumn, value);
 			}
 			break;
