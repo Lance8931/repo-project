@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -30,23 +30,28 @@ public abstract class XxlsAbstract extends DefaultHandler {
 	private int curRow = 0;
 	private int curCol = 0;
 
-	//excel记录行操作方法，以行索引和行元素列表为参数，对一行元素进行操作，元素为String类型
-//	public abstract void optRows(int curRow, List<String> rowlist) throws SQLException ;
-	
-	//excel记录行操作方法，以sheet索引，行索引和行元素列表为参数，对sheet的一行元素进行操作，元素为String类型
-	public abstract void optRows(int sheetIndex,int curRow, List<String> rowlist) throws SQLException;
-	
-	//只遍历一个sheet，其中sheetId为要遍历的sheet索引，从1开始，1-3
-	public void processOneSheet(String filename,int sheetId) throws Exception {
+	// 当前遍历的Excel单元格列索引
+	private int thisColumnIndex = -1;
+
+	// excel记录行操作方法，以行索引和行元素列表为参数，对一行元素进行操作，元素为String类型
+	// public abstract void optRows(int curRow, List<String> rowlist) throws
+	// SQLException ;
+
+	// excel记录行操作方法，以sheet索引，行索引和行元素列表为参数，对sheet的一行元素进行操作，元素为String类型
+	public abstract void optRows(int sheetIndex, int curRow,
+			List<String> rowlist) throws SQLException;
+
+	// 只遍历一个sheet，其中sheetId为要遍历的sheet索引，从1开始，1-3
+	public void processOneSheet(String filename, int sheetId) throws Exception {
 		OPCPackage pkg = OPCPackage.open(filename);
 		XSSFReader r = new XSSFReader(pkg);
 		SharedStringsTable sst = r.getSharedStringsTable();
-		
+
 		XMLReader parser = fetchSheetParser(sst);
 
 		// rId2 found by processing the Workbook
 		// 根据 rId# 或 rSheet# 查找sheet
-		InputStream sheet2 = r.getSheet("rId"+sheetId);
+		InputStream sheet2 = r.getSheet("rId" + sheetId);
 		sheetIndex++;
 		InputSource sheetSource = new InputSource(sheet2);
 		parser.parse(sheetSource);
@@ -94,6 +99,15 @@ public abstract class XxlsAbstract extends DefaultHandler {
 			} else {
 				nextIsString = false;
 			}
+			String r = attributes.getValue("r");
+			int firstDigit = -1;
+			for (int c = 0; c < r.length(); ++c) {
+				if (Character.isDigit(r.charAt(c))) {
+					firstDigit = c;
+					break;
+				}
+			}
+			thisColumnIndex = nameToColumn(r.substring(0, firstDigit));
 		}
 		// 置空
 		lastContents = "";
@@ -109,7 +123,7 @@ public abstract class XxlsAbstract extends DefaultHandler {
 				lastContents = new XSSFRichTextString(sst.getEntryAt(idx))
 						.toString();
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 		}
 
@@ -117,27 +131,56 @@ public abstract class XxlsAbstract extends DefaultHandler {
 		// 将单元格内容加入rowlist中，在这之前先去掉字符串前后的空白符
 		if (name.equals("v")) {
 			String value = lastContents.trim();
-			value = value.equals("")?" ":value;
+			value = value.equals("") ? " " : value;
 			rowlist.add(curCol, value);
 			curCol++;
-		}else {
-			//如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
+		} else {
+			// 如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
 			if (name.equals("row")) {
 				try {
-					optRows(sheetIndex,curRow,rowlist);
+					optRows(sheetIndex, curRow, rowlist);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 				rowlist.clear();
 				curRow++;
 				curCol = 0;
+				thisColumnIndex = 0;
 			}
 		}
 	}
 
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
-		//得到单元格内容的值
+		// 得到单元格内容的值
 		lastContents += new String(ch, start, length);
+	}
+
+	/**
+	 * 空的单元个填充
+	 */
+	private void paddingNullCell() {
+		int index = curCol;
+		if (thisColumnIndex > index) {
+			for (int i = index; i < thisColumnIndex; i++) {
+				rowlist.add(curCol, "");
+				curCol++;
+			}
+		}
+	}
+
+	/**
+	 * 从列名转换为列索引
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private static int nameToColumn(String name) {
+		int column = -1;
+		for (int i = 0; i < name.length(); ++i) {
+			int c = name.charAt(i);
+			column = (column + 1) * 26 + c - 'A';
+		}
+		return column;
 	}
 }
