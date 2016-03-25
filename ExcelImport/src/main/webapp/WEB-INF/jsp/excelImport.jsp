@@ -10,8 +10,14 @@
         <div id="newUpload1">  
             <input type="file" name="multipartFiles">  
         </div>  
-        <input type="submit" value="上传" >  
+        <input type="submit" value="上传1" >  
     </form>  
+    <form name="userForm2" action="/ExcelImport/downTest" enctype="multipart/form-data" method="post">  
+        <div id="newUpload2">  
+            <input type="file" name="multipartFiles">  
+        </div>  
+        <input type="submit" value="上传2" >  
+    </form>
     <button onclick="downloadExcel();">下载模板</button>
     <button onclick="downloadExcel1();">下载模板1</button>
     <button onclick="downloadExcel2();">测试</button>

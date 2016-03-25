@@ -4,24 +4,39 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.eventusermodel.XSSFReader;
+import org.apache.poi.xssf.model.SharedStringsTable;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.siping.bean.ExcelProperties;
 import com.siping.bean.Material;
@@ -40,7 +55,7 @@ import com.siping.util.ExcelOperate;
  * @version 1.0
  */
 @Service
-public class ExcelServiceImpl implements ExcelService {
+public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 
 	@Autowired
 	private MaterialMapper materialMapper;
@@ -129,7 +144,6 @@ public class ExcelServiceImpl implements ExcelService {
 				System.out.println("每100条：" + i);
 			}
 		}
-
 	}
 
 	@Override
@@ -141,17 +155,27 @@ public class ExcelServiceImpl implements ExcelService {
 		pageRequest.setPageSize(100);
 		map.put("tableName", tableName);
 		total = materialMapper.getTotal(map);
-		for (int i = 1, pageNum = total / 100 + 1; i <= pageNum; i++) {
-			pageRequest.setPageNo(i);
-			map.put("startNo", pageRequest.getStartNo());
-			map.put("pageSize", pageRequest.getPageSize());
-			// 方案一(使用sql语句进行批量插入)：
-			// materialMapper.insertBatchTwo(map);
-			// 方案二(将临时表数据取出进行数据包装，再进行批量插入)：
-			List<MaterialImportBean> pros = materialMapper.getListByPage(map);
-			insertBatchT(pros, map);
+		try {
+			for (int i = 1, pageNum = total / 100 + 1; i <= pageNum; i++) {
+				pageRequest.setPageNo(i);
+				map.put("startNo", pageRequest.getStartNo());
+				map.put("pageSize", pageRequest.getPageSize());
+				// 方案一(使用sql语句进行批量插入)：
+				// materialMapper.insertBatchTwo(map);
+				// 方案二(将临时表数据取出进行数据包装，再进行批量插入)：
+				List<MaterialImportBean> pros = materialMapper
+						.getListByPage(map);
+				insertBatchT(pros, map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		materialMapper.dropTable(tableName);
+		try {
+			materialMapper.dropTable(tableName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@SuppressWarnings("resource")
@@ -181,7 +205,7 @@ public class ExcelServiceImpl implements ExcelService {
 		wb = (HSSFWorkbook) ExcelOperate.setCellDropDownList(wb, sheetlist,
 				sheetHidden, unitStrings, 1, 10000, 10, 10, "!$B1:$B", 1,
 				"unitHidden");
-		wb.setSheetHidden(wb.getSheetIndex("hidden"), false);
+		wb.setSheetHidden(wb.getSheetIndex("hidden"), true);
 		FileOutputStream out = new FileOutputStream(outFilePath);
 		wb.write(out);
 		out.close();
@@ -310,6 +334,50 @@ public class ExcelServiceImpl implements ExcelService {
 		}
 	}
 
+	private void setMaterialExportBean(MaterialImportBean importBean, int i,
+			String value) {
+		switch (i) {
+		case 0:
+			importBean.setMaterialNo(value);
+			break;
+		case 1:
+			importBean.setMaterialName(value);
+			break;
+		case 2:
+			importBean.setForeignName(value);
+			break;
+		case 3:
+			importBean.setMaterialType(value);
+			break;
+		case 4:
+			importBean.setBrand(value);
+			break;
+		case 5:
+			importBean.setSpecificationsModel(value);
+			break;
+		case 6:
+			importBean.setSeason(value);
+			break;
+		case 7:
+			importBean.setIsPurchase(value);
+			break;
+		case 8:
+			importBean.setIsSell(value);
+			break;
+		case 9:
+			importBean.setIsInventory(value);
+			break;
+		case 10:
+			importBean.setUnitId(value);
+			break;
+		case 11:
+			importBean.setBarcode(value);
+			break;
+		default:
+			break;
+		}
+	}
+
 	@Override
 	public void test() {
 		System.out.println("当前web名: " + context.getApplicationName());
@@ -321,4 +389,171 @@ public class ExcelServiceImpl implements ExcelService {
 		System.out.println("当前web名: " + request.getContextPath());
 	}
 
+	private List<MaterialImportBean> beans = new ArrayList<MaterialImportBean>();
+
+	private Map<String, Object> map1 = new HashMap<String, Object>();
+
+	@Override
+	public String readExcelBySAX(MultipartFile[] multipartFiles)
+			throws Exception {
+		String copyFileName = request.getServletContext().getRealPath(
+				"/resources/ExcelTemplate/")
+				+ new Date().getTime() + ".xlsx";
+		File file = new File(copyFileName);
+		OutputStream out = new FileOutputStream(file);
+		out.write(multipartFiles[0].getBytes());
+		out.flush();
+		out.close();
+		String tempTableName = "tempMaterial" + new Date().getTime();
+		map1.put("tableName", tempTableName);
+		materialMapper.createTable(tempTableName);
+		processOneSheet(copyFileName, 1);
+		if (beans.size() > 0) {
+			map1.put("list", beans);
+			materialMapper.insertBatch(map1);
+		}
+		return tempTableName;
+	}
+
+	private void optRows(int sheetIndex, int curRow, List<String> rowlist)
+			throws SQLException {
+		if (curRow > 0) {
+
+			int j = 0;
+			for (int i = 0; i < rowlist.size(); i++) {
+				if (StringUtils.isBlank(rowlist.get(i))) {
+					j++;
+				}
+			}
+			if (j == rowlist.size()) {
+				return;
+			} else {
+				MaterialImportBean importBean = new MaterialImportBean();
+				for (int k = 0; k < rowlist.size(); k++) {
+					setMaterialExportBean(importBean, k, rowlist.get(k));
+				}
+				beans.add(importBean);
+				if (beans.size() == 1000) {
+					map1.put("list", beans);
+					materialMapper.insertBatch(map1);
+					map1.remove("list");
+					beans.clear();
+				}
+			}
+		}
+	}
+
+	private SharedStringsTable sst;
+	private String lastContents;
+	private boolean nextIsString;
+
+	private int sheetIndex = -1;
+	private List<String> rowlist = new ArrayList<String>();
+	private int curRow = 0;
+	private int curCol = 0;
+
+	// 只遍历一个sheet，其中sheetId为要遍历的sheet索引，从1开始，1-3
+	private void processOneSheet(String filename, int sheetId) throws Exception {
+		OPCPackage pkg = OPCPackage.open(filename);
+		XSSFReader r = new XSSFReader(pkg);
+		SharedStringsTable sst = r.getSharedStringsTable();
+
+		XMLReader parser = fetchSheetParser(sst);
+
+		// rId2 found by processing the Workbook
+		// 根据 rId# 或 rSheet# 查找sheet
+		InputStream sheet2 = r.getSheet("rId" + sheetId);
+		sheetIndex++;
+		InputSource sheetSource = new InputSource(sheet2);
+		parser.parse(sheetSource);
+		sheet2.close();
+	}
+
+	/**
+	 * 遍历 excel 文件
+	 */
+	private void process(String filename) throws Exception {
+		OPCPackage pkg = OPCPackage.open(filename);
+		XSSFReader r = new XSSFReader(pkg);
+		SharedStringsTable sst = r.getSharedStringsTable();
+
+		XMLReader parser = fetchSheetParser(sst);
+
+		Iterator<InputStream> sheets = r.getSheetsData();
+		while (sheets.hasNext()) {
+			curRow = 0;
+			sheetIndex++;
+			InputStream sheet = sheets.next();
+			InputSource sheetSource = new InputSource(sheet);
+			parser.parse(sheetSource);
+			sheet.close();
+		}
+	}
+
+	private XMLReader fetchSheetParser(SharedStringsTable sst)
+			throws SAXException {
+		XMLReader parser = XMLReaderFactory
+				.createXMLReader("org.apache.xerces.parsers.SAXParser");
+		this.sst = sst;
+		parser.setContentHandler(this);
+		return parser;
+	}
+
+	public void startElement(String uri, String localName, String name,
+			Attributes attributes) throws SAXException {
+		// c => 单元格
+		if (name.equals("c")) {
+			// 如果下一个元素是 SST 的索引，则将nextIsString标记为true
+			String cellType = attributes.getValue("t");
+			if (cellType != null && cellType.equals("s")) {
+				nextIsString = true;
+			} else {
+				nextIsString = false;
+			}
+		}
+		// 置空
+		lastContents = "";
+	}
+
+	public void endElement(String uri, String localName, String name)
+			throws SAXException {
+		// 根据SST的索引值的到单元格的真正要存储的字符串
+		// 这时characters()方法可能会被调用多次
+		if (nextIsString) {
+			try {
+				int idx = Integer.parseInt(lastContents);
+				lastContents = new XSSFRichTextString(sst.getEntryAt(idx))
+						.toString();
+			} catch (Exception e) {
+
+			}
+		}
+
+		// v => 单元格的值，如果单元格是字符串则v标签的值为该字符串在SST中的索引
+		// 将单元格内容加入rowlist中，在这之前先去掉字符串前后的空白符
+		if (name.equals("v")) {
+			String value = lastContents.trim();
+			value = value.equals("") ? " " : value;
+			rowlist.add(curCol, value);
+			curCol++;
+		} else {
+			// 如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
+			if (name.equals("row")) {
+				try {
+					optRows(sheetIndex, curRow, rowlist);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				rowlist.clear();
+				curRow++;
+				curCol = 0;
+			}
+		}
+	}
+
+	public void characters(char[] ch, int start, int length)
+			throws SAXException {
+		// 得到单元格内容的值
+		lastContents += new String(ch, start, length);
+	}
 }

@@ -184,4 +184,20 @@ public class ExcelController {
 	public void test() {
 		excelServiceImpl.test();
 	}
+
+	@RequestMapping(value = "/downTest", method = RequestMethod.POST)
+	public ModelAndView downTest(@RequestParam MultipartFile[] multipartFiles)
+			throws Exception {
+		ModelAndView mav = new ModelAndView();
+		Long startTime = new Date().getTime();
+		System.out.println("开始导入：" + startTime);
+		String tableName = excelServiceImpl.readExcelBySAX(multipartFiles);
+		Long endTime = new Date().getTime();
+		System.out.println("结束导入：" + endTime);
+		System.out.println("间隔时间：" + (endTime - startTime) / 1000);
+		mav.setViewName("list");
+		mav.addObject("tableName", tableName);
+
+		return mav;
+	}
 }

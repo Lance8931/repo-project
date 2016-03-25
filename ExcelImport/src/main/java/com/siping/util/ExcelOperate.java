@@ -13,6 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -24,8 +25,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class ExcelOperate {
 
-	public static Workbook initExcel(InputStream input, String originalFileName)
-			throws Exception {
+	public static SXSSFWorkbook initExcel(InputStream input,
+			String originalFileName) throws Exception {
 		Workbook wb = null;
 		String fileSuffix = originalFileName.substring(
 				originalFileName.lastIndexOf(".")).toLowerCase();
@@ -37,8 +38,9 @@ public class ExcelOperate {
 		} else {
 			wb = new HSSFWorkbook(input);
 		}
+		SXSSFWorkbook swb = (SXSSFWorkbook) wb;
 
-		return wb;
+		return swb;
 	}
 
 	/**

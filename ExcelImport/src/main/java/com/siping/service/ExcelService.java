@@ -62,4 +62,7 @@ public interface ExcelService {
 	public String createExcelTemplateFile() throws Exception;
 
 	public void test();
+
+	public String readExcelBySAX(MultipartFile[] multipartFiles)
+			throws Exception;
 }
