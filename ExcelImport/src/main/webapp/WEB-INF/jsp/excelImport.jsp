@@ -20,7 +20,8 @@
     </form>
     <button onclick="downloadExcel();">下载模板</button>
     <button onclick="downloadExcel1();">下载模板1</button>
-    <button onclick="downloadExcel2();">测试</button>
+    <button onclick="downloadExcel2();">下载模板2</button>
+    <button onclick="downloadExcel3();">测试</button>
   </body>  
   <script type="text/javascript">
   	function downloadExcel(){
@@ -30,6 +31,9 @@
 		window.location="http://localhost:8080/ExcelImport/downloadOne";
 	}
   	function downloadExcel2(){
+		window.location="http://localhost:8080/ExcelImport/downloadTwo";
+	}
+  	function downloadExcel3(){
   		$.ajax({
   			url:"/ExcelImport/test"
   		});

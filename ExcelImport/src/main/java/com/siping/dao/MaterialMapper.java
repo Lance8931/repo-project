@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.siping.bean.Material;
 import com.siping.bean.MaterialImportBean;
+import com.siping.bean.ResultBean;
 
 public interface MaterialMapper {
 	int deleteByPrimaryKey(Integer id);
@@ -70,4 +71,8 @@ public interface MaterialMapper {
 	Integer getUnitId(String unitName);
 
 	int insertBatchThree(List<Material> list);
+
+	List<ResultBean> getTypes();
+
+	List<ResultBean> getUnits();
 }

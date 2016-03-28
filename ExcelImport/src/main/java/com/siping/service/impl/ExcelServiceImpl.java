@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -23,6 +24,8 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
@@ -42,6 +45,7 @@ import com.siping.bean.Material;
 import com.siping.bean.MaterialImportBean;
 import com.siping.bean.PageRequest;
 import com.siping.bean.PageResponse;
+import com.siping.bean.ResultBean;
 import com.siping.dao.MaterialMapper;
 import com.siping.service.ExcelService;
 import com.siping.util.ExcelOperate;
@@ -93,6 +97,7 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 					multipartFiles[0].getInputStream(),
 					multipartFiles[0].getOriginalFilename(), 0);
 			for (int j = 1, lastRowNum = properties.getLastRowNum(); j <= lastRowNum; j++) {
+				System.out.println(j);
 				Row row = properties.getSheet().getRow(j);
 				if (null != row) {
 					MaterialImportBean importBean = null;
@@ -102,10 +107,12 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 								.evaluate(cell);
 						if (null != cell && cellValue != null) {
 							if (null != importBean) {
-								setMaterialExportBean(importBean, i, cellValue);
+								importBean = setMaterialExportBean(importBean,
+										i, cellValue);
 							} else {
 								importBean = new MaterialImportBean();
-								setMaterialExportBean(importBean, i, cellValue);
+								importBean = setMaterialExportBean(importBean,
+										i, cellValue);
 							}
 						}
 					}
@@ -200,10 +207,64 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 		wb = (HSSFWorkbook) ExcelOperate.setCellDropDownList(wb, sheetlist,
 				sheetHidden, typeStrings, 1, 10000, 3, 3, "!$A1:$A", 0,
 				"typeHidden");
-		wb.setSheetHidden(1, false);
 		wb = (HSSFWorkbook) ExcelOperate.setCellDropDownList(wb, sheetlist,
 				sheetHidden, unitStrings, 1, 10000, 10, 10, "!$B1:$B", 1,
 				"unitHidden");
+		wb.setSheetHidden(wb.getSheetIndex("hidden"), true);
+		Iterator<Row> rows = sheetlist.rowIterator();
+		while (rows.hasNext()) {
+			Row row = rows.next();
+			Cell cell = row.createCell(15);
+			cell.setCellValue(23);
+			cell.setCellFormula("VLOOKUP(A4,hidden!$A:$B,2,0)");
+		}
+		FileOutputStream out = new FileOutputStream(outFilePath);
+		wb.write(out);
+		out.close();
+		return outFilePath;
+	}
+
+	@SuppressWarnings("resource")
+	@Override
+	public String createExcelTemplateFileOne() throws Exception {
+		List<ResultBean> types = materialMapper.getTypes();
+		List<ResultBean> units = materialMapper.getUnits();
+
+		String templateFilePath = request.getServletContext().getRealPath(
+				"/resources/ExcelTemplate/")
+				+ "MaterialImportTemplate.xls";
+		String outFilePath = request.getServletContext().getRealPath(
+				"/resources/ExcelTemplate/")
+				+ new Date().getTime() + ".xls";
+
+		Workbook wb = new HSSFWorkbook(new POIFSFileSystem(new FileInputStream(
+				new File(templateFilePath))));// excel文件对象
+		Sheet sheetlist = wb.getSheetAt(0);// 工作表对象
+		Sheet sheetHidden = wb.createSheet("hidden");// 数据源工作表
+
+		for (int i = 1; i < 10000; i++) {
+			Row row = sheetlist.getRow(i);
+			if (null == row) {
+				row = sheetlist.createRow(i);
+			}
+			Cell cell = row.createCell(sheetlist.getRow(0).getLastCellNum());
+			cell.setCellFormula("IF(ISNA(VLOOKUP(D" + (i + 1)
+					+ ",hidden!$A:$B,2,FALSE)),\"\",VLOOKUP(D" + (i + 1)
+					+ ",hidden!$A:$B,2,FALSE))");
+			Cell cell1 = row
+					.createCell(sheetlist.getRow(0).getLastCellNum() + 1);
+			cell1.setCellFormula("VLOOKUP(K" + (i + 1) + ",hidden!$C:$D,2,0)");
+			cell1.setCellFormula("IF(ISNA(VLOOKUP(K" + (i + 1)
+					+ ",hidden!$C:$D,2,FALSE)),\"\",VLOOKUP(K" + (i + 1)
+					+ ",hidden!$C:$D,2,FALSE))");
+		}
+		wb = ExcelOperate.setCellDropDownList(wb, sheetlist, sheetHidden,
+				types, 1, 10000, 3, 3, "!$A1:$A", 0, 1, "typesHidden");
+		wb = ExcelOperate.setCellDropDownList(wb, sheetlist, sheetHidden,
+				units, 1, 10000, 10, 10, "!$C1:$C", 2, 3, "unitsHidden");
+		sheetlist.setColumnHidden(sheetlist.getRow(0).getLastCellNum(), true);
+		sheetlist.setColumnHidden(sheetlist.getRow(0).getLastCellNum() + 1,
+				true);
 		wb.setSheetHidden(wb.getSheetIndex("hidden"), true);
 		FileOutputStream out = new FileOutputStream(outFilePath);
 		wb.write(out);
@@ -259,8 +320,7 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 				tempMaterial.setMaterialNo(bean.getMaterialNo());
 			}
 			if (null != bean.getMaterialType()) {
-				tempMaterial.setMaterialType(materialMapper.getTypeId(bean
-						.getMaterialType()));
+				tempMaterial.setMaterialType(bean.getTypeId());
 			}
 			if (null != bean.getSeason()) {
 				tempMaterial.setSeason(bean.getSeason());
@@ -270,9 +330,8 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 				tempMaterial.setSpecificationsModel(bean
 						.getSpecificationsModel());
 			}
-			if (null != bean.getUnitId()) {
-				tempMaterial.setUnitId(materialMapper.getUnitId(bean
-						.getUnitId()));
+			if (null != bean.getUnit()) {
+				tempMaterial.setUnitId(bean.getUnitId());
 			}
 			tempMaterials.add(tempMaterial);
 		}
@@ -289,8 +348,8 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 	 * @date 2016年3月21日上午11:48:53
 	 * @author siping-L.J.H
 	 */
-	private void setMaterialExportBean(MaterialImportBean importBean, int i,
-			CellValue cellValue) {
+	private MaterialImportBean setMaterialExportBean(
+			MaterialImportBean importBean, int i, CellValue cellValue) {
 		switch (i) {
 		case 0:
 			importBean.setMaterialNo(cellValue.getStringValue());
@@ -323,14 +382,31 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 			importBean.setIsInventory(cellValue.getStringValue());
 			break;
 		case 10:
-			importBean.setUnitId(cellValue.getStringValue());
+			importBean.setUnit(cellValue.getStringValue());
 			break;
 		case 11:
 			importBean.setBarcode(cellValue.getStringValue());
 			break;
+		case 12:
+			if (StringUtils.isNoneBlank(cellValue.getStringValue())) {
+				importBean
+						.setUnitId(Integer.valueOf(cellValue.getStringValue()));
+			} else {
+				importBean = null;
+			}
+			break;
+		case 13:
+			if (StringUtils.isNoneBlank(cellValue.getStringValue())) {
+				importBean
+						.setTypeId(Integer.valueOf(cellValue.getStringValue()));
+			} else {
+				importBean = null;
+			}
+			break;
 		default:
 			break;
 		}
+		return importBean;
 	}
 
 	private void setMaterialExportBean(MaterialImportBean importBean, int i,
@@ -367,7 +443,7 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 			importBean.setIsInventory(value);
 			break;
 		case 10:
-			importBean.setUnitId(value);
+			importBean.setUnit(value);
 			break;
 		case 11:
 			importBean.setBarcode(value);

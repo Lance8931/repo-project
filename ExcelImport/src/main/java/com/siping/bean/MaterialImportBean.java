@@ -30,9 +30,13 @@ public class MaterialImportBean {
 
 	private String isInventory;
 
-	private String unitId;
+	private String unit;
 
 	private String barcode;
+
+	private Integer typeId;
+
+	private Integer unitId;
 
 	public Integer getId() {
 		return id;
@@ -122,12 +126,12 @@ public class MaterialImportBean {
 		this.isInventory = isInventory;
 	}
 
-	public String getUnitId() {
-		return unitId;
+	public String getUnit() {
+		return unit;
 	}
 
-	public void setUnitId(String unitId) {
-		this.unitId = unitId;
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	public String getBarcode() {
@@ -138,4 +142,19 @@ public class MaterialImportBean {
 		this.barcode = barcode;
 	}
 
+	public Integer getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+
+	public Integer getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(Integer unitId) {
+		this.unitId = unitId;
+	}
 }

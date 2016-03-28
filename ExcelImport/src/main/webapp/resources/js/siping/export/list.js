@@ -27,7 +27,7 @@ function getProductList(pageNo, pageSize){
               {width : "10%",name : "国际编码"}
         ],
         column : ["materialNo","materialName","foreignName","materialType","brand","specificationsModel",
-                  "season","isPurchase","isSell","isInventory","unitId","barcode"],
+                  "season","isPurchase","isSell","isInvertory","unit","barcode"],
         page : {options : [10,20,30,50,80], fn : "getProductList"},
         rowNum : true
     });

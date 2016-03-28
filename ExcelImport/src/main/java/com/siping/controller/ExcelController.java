@@ -180,6 +180,19 @@ public class ExcelController {
 				HttpStatus.CREATED);
 	}
 
+	@RequestMapping("/downloadTwo")
+	public ResponseEntity<byte[]> downloadTwo() throws Exception {
+		HttpHeaders headers = new HttpHeaders();
+		String filePath = null;
+		filePath = excelServiceImpl.createExcelTemplateFileOne();
+		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		headers.setContentDispositionFormData("attachment", new String(
+				"模板下载.xls".getBytes("UTF-8"), "iso-8859-1"));
+		return new ResponseEntity<byte[]>(
+				FileUtils.readFileToByteArray(new File(filePath)), headers,
+				HttpStatus.CREATED);
+	}
+
 	@RequestMapping("/test")
 	public void test() {
 		excelServiceImpl.test();

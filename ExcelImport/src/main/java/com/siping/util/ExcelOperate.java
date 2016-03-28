@@ -3,6 +3,7 @@ package com.siping.util;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -10,11 +11,16 @@ import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Name;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.siping.bean.ResultBean;
 
 /**
  *
@@ -175,7 +181,70 @@ public class ExcelOperate {
 				endRow, firstCol, endCol);
 		HSSFDataValidation validation = new HSSFDataValidation(addressList,
 				constraint);
+		workSheet.addValidationData(validation);
+		return wb;
+	}
 
+	/**
+	 * 设置Excel下拉菜单数据源(数据量大的情况下),设置text/value值
+	 * 
+	 * @param wb
+	 *            工作的workbook
+	 * @param workSheet
+	 *            需要设置下拉菜单的sheet
+	 * @param hiddenSheet
+	 *            设置text/value的sheet
+	 * @param beans
+	 *            text/value的list
+	 * @param firstRow
+	 *            下拉菜单的起始行
+	 * @param endRow
+	 *            下拉菜单的终止行
+	 * @param firstCol
+	 *            下拉菜单的起始列
+	 * @param endCol
+	 *            下拉菜单的终止列
+	 * @param hiddenDatasFirstCell
+	 *            隐藏sheet中隐藏数据的起始单元格 !$A1:$A
+	 * @param hiddenTextDatasCol
+	 *            隐藏sheet中隐藏数据Text所在列
+	 * @param hiddenValueDatasCol
+	 *            隐藏sheet中隐藏数据Value所在列
+	 * @param referencsName
+	 *            数据引用单元格名称
+	 * @return
+	 *
+	 * @date 2016年3月28日下午3:00:09
+	 * @author siping-L.J.H
+	 */
+	public static Workbook setCellDropDownList(Workbook wb, Sheet workSheet,
+			Sheet hiddenSheet, List<ResultBean> beans, int firstRow,
+			int endRow, int firstCol, int endCol, String hiddenDatasFirstCell,
+			int hiddenTextDatasCol, int hiddenValueDatasCol,
+			String referencsName) {
+		String hiddenSheetName = hiddenSheet.getSheetName();
+		for (int i = 0, length = beans.size(); i < length; i++) {
+			Row row = null;
+			if (null != hiddenSheet.getRow(i)) {
+				row = hiddenSheet.getRow(i);
+			} else {
+				row = hiddenSheet.createRow(i);
+			}
+			Cell textCell = row.createCell(hiddenTextDatasCol);
+			textCell.setCellValue(beans.get(i).getValue());
+			Cell valueCell = row.createCell(hiddenValueDatasCol);
+			valueCell.setCellValue(beans.get(i).getKey());
+		}
+		Name namedCell = wb.createName();
+		namedCell.setNameName(referencsName);
+		namedCell.setRefersToFormula(hiddenSheetName + hiddenDatasFirstCell
+				+ +beans.size());
+		DVConstraint constraint = DVConstraint
+				.createFormulaListConstraint(referencsName);
+		CellRangeAddressList addressList = new CellRangeAddressList(firstRow,
+				endRow, firstCol, endCol);
+		HSSFDataValidation validation = new HSSFDataValidation(addressList,
+				constraint);
 		workSheet.addValidationData(validation);
 		return wb;
 	}

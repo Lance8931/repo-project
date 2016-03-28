@@ -578,7 +578,9 @@
 	  `is_purchase` varchar(1) DEFAULT '是',
 	  `is_sell` varchar(1) DEFAULT '否',
 	  `is_inventory` varchar(1) DEFAULT '是',
-	  `unit_id` varchar(11) NOT NULL,
+	  `unit` varchar(11) NOT NULL,
+	  `type_id` int(11) NOT NULL,
+	  `unit_id` int(11) NOT NULL,
 	  `barcode` varchar(20) DEFAULT NULL,
 	  PRIMARY KEY (`id`) 
 	) 
@@ -592,7 +594,7 @@
     insert into ${tableName} (id, material_no, material_name, 
       foreign_name, material_type, brand, 
       specifications_model, season, is_purchase, 
-      is_sell, is_inventory, unit_id, 
+      is_sell, is_inventory, unit, type_id,unit_id,
       barcode
       )
     values 
@@ -600,8 +602,8 @@
         ( #{item.id,jdbcType=INTEGER}, #{item.materialNo,jdbcType=VARCHAR}, #{item.materialName,jdbcType=VARCHAR}, 
 	      #{item.foreignName,jdbcType=VARCHAR}, #{item.materialType,jdbcType=VARCHAR}, #{item.brand,jdbcType=VARCHAR}, 
 	      #{item.specificationsModel,jdbcType=VARCHAR}, #{item.season,jdbcType=VARCHAR}, #{item.isPurchase,jdbcType=VARCHAR}, 
-	      #{item.isSell,jdbcType=VARCHAR}, #{item.isInventory,jdbcType=VARCHAR}, #{item.unitId,jdbcType=VARCHAR}, 
-	      #{item.barcode,jdbcType=VARCHAR}
+	      #{item.isSell,jdbcType=VARCHAR}, #{item.isInventory,jdbcType=VARCHAR}, #{item.unit,jdbcType=VARCHAR}, 
+	      #{item.typeId,jdbcType=INTEGER}, #{item.unitId,jdbcType=INTEGER}, #{item.barcode,jdbcType=VARCHAR}
 	      ) 
     </foreach>
   </insert>
@@ -656,7 +658,7 @@
 					t2.material_no,
 					t2.material_name,
 					t2.foreign_name,
-					t3.id typeId,
+					t2.type_id ,
 					t2.brand,
 					t2.specifications_model,
 					t2.season,
@@ -678,12 +680,10 @@
 					ELSE
 						0
 					END is_inventory,
-					 t4.id unitId,
+					 t2.unit_id,
 					 t2.barcode
 					FROM
 						${tableName} t2
-					LEFT OUTER JOIN material_type t3 ON t3.type_name = t2.material_type
-					LEFT OUTER JOIN material_unit t4 ON t4.unit_name = t2.unit_id 
 					<if test="startNo != null">
 			            limit #{startNo},#{pageSize}
 			        </if>
@@ -704,6 +704,14 @@
     
     <select id="getUnitList" resultType="string">
     	select distinct unit_name value from material_unit
+    </select>
+    
+    <select id="getTypes" resultType="com.siping.bean.ResultBean">
+    	select id 'key',type_name 'value' from material_type WHERE	is_leafnode = 0
+    </select>
+    
+    <select id="getUnits" resultType="com.siping.bean.ResultBean">
+    	select id 'key',unit_name 'value' from material_unit WHERE	is_delete = 0
     </select>
     
     <insert id="insertBatchThree" parameterType="java.util.List">

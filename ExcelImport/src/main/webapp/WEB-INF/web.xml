@@ -26,7 +26,8 @@
   	<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
   </listener>
   
-  <!-- Spring监听器开始，初始化ApplicationContext，默认查找applicationContext.xml文件 -->
+  <!-- Spring监听器开始，初始化ApplicationContext，没有设置<context-param/>则默认查找applicationContext.xml文件;
+  <context-param/>中<param-name>必须为contextConfigLocation -->
   <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
