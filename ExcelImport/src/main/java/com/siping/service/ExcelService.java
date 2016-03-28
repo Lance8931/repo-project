@@ -63,8 +63,27 @@ public interface ExcelService {
 
 	public void test();
 
+	/**
+	 * 使用SAX方式读取Excel数据(适用于大数据量)
+	 * 
+	 * @param multipartFiles
+	 * @return
+	 * @throws Exception
+	 *
+	 * @date 2016年3月28日下午5:15:18
+	 * @author siping-L.J.H
+	 */
 	public String readExcelBySAX(MultipartFile[] multipartFiles)
 			throws Exception;
 
+	/**
+	 * 设置下拉框的key/value值，使用vlookup函数
+	 * 
+	 * @return
+	 * @throws Exception
+	 *
+	 * @date 2016年3月28日下午5:15:44
+	 * @author siping-L.J.H
+	 */
 	public String createExcelTemplateFileOne() throws Exception;
 }

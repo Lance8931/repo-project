@@ -250,7 +250,7 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 			Cell cell = row.createCell(sheetlist.getRow(0).getLastCellNum());
 			cell.setCellFormula("IF(ISNA(VLOOKUP(D" + (i + 1)
 					+ ",hidden!$A:$B,2,FALSE)),\"\",VLOOKUP(D" + (i + 1)
-					+ ",hidden!$A:$B,2,FALSE))");
+					+ ",hidden!$A:$B,2,FALSE))");// 为每一行设置vlookup函数
 			Cell cell1 = row
 					.createCell(sheetlist.getRow(0).getLastCellNum() + 1);
 			cell1.setCellFormula("VLOOKUP(K" + (i + 1) + ",hidden!$C:$D,2,0)");
@@ -262,10 +262,10 @@ public class ExcelServiceImpl extends DefaultHandler implements ExcelService {
 				types, 1, 10000, 3, 3, "!$A1:$A", 0, 1, "typesHidden");
 		wb = ExcelOperate.setCellDropDownList(wb, sheetlist, sheetHidden,
 				units, 1, 10000, 10, 10, "!$C1:$C", 2, 3, "unitsHidden");
-		sheetlist.setColumnHidden(sheetlist.getRow(0).getLastCellNum(), true);
+		sheetlist.setColumnHidden(sheetlist.getRow(0).getLastCellNum(), true);// 隐藏列
 		sheetlist.setColumnHidden(sheetlist.getRow(0).getLastCellNum() + 1,
-				true);
-		wb.setSheetHidden(wb.getSheetIndex("hidden"), true);
+				true);// 隐藏列
+		wb.setSheetHidden(wb.getSheetIndex("hidden"), true);// 隐藏sheet
 		FileOutputStream out = new FileOutputStream(outFilePath);
 		wb.write(out);
 		out.close();
