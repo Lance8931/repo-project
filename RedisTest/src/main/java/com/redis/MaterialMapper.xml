@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.redis.MaterialMapper" >
+  <cache eviction="LRU" type="com.redis.MybatisRedisCache" />	
+  <resultMap id="BaseResultMap" type="com.redis.Material" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="material_no" property="materialNo" jdbcType="VARCHAR" />
+    <result column="material_name" property="materialName" jdbcType="VARCHAR" />
+    <result column="foreign_name" property="foreignName" jdbcType="VARCHAR" />
+    <result column="material_type" property="materialType" jdbcType="INTEGER" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="specifications_model" property="specificationsModel" jdbcType="VARCHAR" />
+    <result column="season" property="season" jdbcType="VARCHAR" />
+    <result column="is_purchase" property="isPurchase" jdbcType="BIT" />
+    <result column="is_sell" property="isSell" jdbcType="BIT" />
+    <result column="is_inventory" property="isInventory" jdbcType="BIT" />
+    <result column="unit_id" property="unitId" jdbcType="INTEGER" />
+    <result column="barcode" property="barcode" jdbcType="VARCHAR" />
+    <result column="shops" property="shops" jdbcType="VARCHAR" />
+    <result column="is_batch" property="isBatch" jdbcType="BIT" />
+    <result column="expiration_date" property="expirationDate" jdbcType="INTEGER" />
+    <result column="partner_id" property="partnerId" jdbcType="INTEGER" />
+    <result column="min_order" property="minOrder" jdbcType="INTEGER" />
+    <result column="min_inventory" property="minInventory" jdbcType="INTEGER" />
+    <result column="max_inventory" property="maxInventory" jdbcType="INTEGER" />
+    <result column="is_enable" property="isEnable" jdbcType="BIT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="BIT" />
+    <result column="transaction_id" property="transactionId" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="INTEGER" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="declare_unit" property="declareUnit" jdbcType="INTEGER" />
+    <result column="legal_unit" property="legalUnit" jdbcType="INTEGER" />
+    <result column="legal_translation_quantity" property="legalTranslationQuantity" jdbcType="REAL" />
+    <result column="entry_unit" property="entryUnit" jdbcType="INTEGER" />
+    <result column="entry_translation_quantity" property="entryTranslationQuantity" jdbcType="REAL" />
+    <result column="manufacturer" property="manufacturer" jdbcType="VARCHAR" />
+    <result column="provenance" property="provenance" jdbcType="VARCHAR" />
+    <result column="ebec" property="ebec" jdbcType="VARCHAR" />
+    <result column="eben" property="eben" jdbcType="VARCHAR" />
+    <result column="hscode" property="hscode" jdbcType="VARCHAR" />
+    <result column="post_tax_number" property="postTaxNumber" jdbcType="VARCHAR" />
+    <result column="custom1" property="custom1" jdbcType="VARCHAR" />
+    <result column="custom2" property="custom2" jdbcType="VARCHAR" />
+    <result column="custom3" property="custom3" jdbcType="VARCHAR" />
+    <result column="item_no" property="itemNo" jdbcType="VARCHAR" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="post_tax_rate" property="postTaxRate" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, material_no, material_name, foreign_name, material_type, brand, specifications_model, 
+    season, is_purchase, is_sell, is_inventory, unit_id, barcode, shops, is_batch, expiration_date, 
+    partner_id, min_order, min_inventory, max_inventory, is_enable, description, is_delete, 
+    transaction_id, create_date, create_by, update_date, update_by, declare_unit, legal_unit, 
+    legal_translation_quantity, entry_unit, entry_translation_quantity, manufacturer, 
+    provenance, ebec, eben, hscode, post_tax_number, custom1, custom2, custom3, item_no, 
+    weight, post_tax_rate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from material limit 0,10
+  </select>
+</mapper>
