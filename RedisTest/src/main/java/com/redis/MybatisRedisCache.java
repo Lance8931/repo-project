@@ -4,6 +4,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
+import org.springframework.stereotype.Component;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -16,6 +17,7 @@ import redis.clients.jedis.JedisPoolConfig;
  * @date 2016年3月30日下午3:30:17
  * @version 1.0
  */
+@Component
 public class MybatisRedisCache implements Cache {
 
 	private Jedis redisClient = createReids();
@@ -23,6 +25,9 @@ public class MybatisRedisCache implements Cache {
 	private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
 	private String id;
+
+	public MybatisRedisCache() {// 配合@Component，必须有一个显式的无参构造函数
+	}
 
 	public MybatisRedisCache(final String id) {
 		if (id == null) {
@@ -56,7 +61,8 @@ public class MybatisRedisCache implements Cache {
 	public Object getObject(Object key) {
 		Object value = SerializeUtil.unserialize(redisClient.get(SerializeUtil
 				.serialize(key.toString())));
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>getObject: " + key);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>getObject: " + key + "="
+				+ value);
 		return value;
 	}
 

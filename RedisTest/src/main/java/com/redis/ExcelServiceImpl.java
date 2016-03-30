@@ -1,5 +1,7 @@
 package com.redis;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,10 @@ public class ExcelServiceImpl implements ExcelService {
 
 	@Override
 	public void test() {
-		System.out.println(materialMapper.selectByPrimaryKey());
+		List<Material> materials = materialMapper.selectByPrimaryKey();
+		for (Material material : materials) {
+			System.out.println(material.getMaterialNo());
+		}
 	}
+
 }

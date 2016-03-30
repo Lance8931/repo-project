@@ -17,6 +17,9 @@ public class ExcelController {
 	@Autowired
 	private ExcelService excelServiceImpl;
 
+	@Autowired
+	private MybatisRedisCache mybatisRedisCache;
+
 	@RequestMapping(value = "/kkk")
 	public String kkk() {
 		return "excelImport";
@@ -25,5 +28,10 @@ public class ExcelController {
 	@RequestMapping("/test")
 	public void test() {
 		excelServiceImpl.test();
+	}
+
+	@RequestMapping("/clear")
+	public void flushDB() {
+		mybatisRedisCache.clear();
 	}
 }

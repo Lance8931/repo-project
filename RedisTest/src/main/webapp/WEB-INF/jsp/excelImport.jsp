@@ -7,11 +7,17 @@
   </head>  
   <body>  
     <button onclick="downloadExcel3();">测试</button>
+    <button onclick="downloadExcel4();">清除Keys</button>
   </body>  
   <script type="text/javascript">
   	function downloadExcel3(){
   		$.ajax({
   			url:"/RedisTest/test"
+  		});
+  	}
+  	function downloadExcel4(){
+  		$.ajax({
+  			url:"/RedisTest/clear"
   		});
   	}
   </script>

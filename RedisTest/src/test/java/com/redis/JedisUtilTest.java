@@ -158,12 +158,7 @@ public class JedisUtilTest {
 
 	@Test
 	public void delddd() {
-		String kkString = "-995531568:1973171309:com.redis.MaterialMapper.selectByPrimaryKey:0:2147483647:select \n     \n    id, material_no, mate"
-				+ "rial_name, foreign_name, material_type, brand, specifications_model, \n    season, is_purchase, is_sell, is_inventory, unit_id, barcode, shops, is_bat"
-				+ "ch, expiration_date, \n    partner_id, min_order, min_inventory, max_inventory, is_enable, description, is_delete, \n    transaction_id, create_date,"
-				+ "create_by, update_date, update_by, declare_unit, legal_unit, \n    legal_translation_quantity, entry_unit, entry_translation_quantity, manufacturer, \\"
-				+ "n    provenance, ebec, eben, hscode, post_tax_number, custom1, custom2, custom3, item_no, \n    weight, post_tax_rate\n   \n    from material limit 0,"
-				+ "10";
-		jedis.del(kkString);
+		jedis.flushDB();// 删除当前数据库所有的key
+		jedis.flushAll();// 删除所有数据库所有的key
 	}
 }
