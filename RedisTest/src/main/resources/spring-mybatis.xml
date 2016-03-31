@@ -10,11 +10,24 @@
 	   					   http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	   					   http://www.springframework.org/schema/mvc
 	   					   http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
-	<!-- 引入配置文件 -->
+	<!-- 引入单个配置文件 
 	<bean id="propertyConfigurer" 
 		  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:jdbc.properties" />
 	</bean>
+	-->
+	
+	<!-- 引入多个配置文件 -->
+	 <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="properties" ref="configProperties" />
+    </bean>
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
 		  destroy-method="close">
@@ -38,7 +51,7 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		  <property name="dataSource" ref="dataSource" />
 		  <!-- 自动扫描mapper.xml文件 -->
-		  <property name="mapperLocations" value="classpath:com/redis/*.xml"></property>
+		  <property name="mapperLocations" value="classpath:com/redis/*.xml" />
 		  <property name="configLocation" value="classpath:mybatis-config.xml" />
 	</bean>
 	
@@ -54,5 +67,4 @@
 		  <property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
-	<mvc:resources mapping="/resources/**" location="/resources/" />
 </beans>
