@@ -17,7 +17,7 @@ public class Main {
 		System.out.println("加载Spring容器,并初始化RMI客户端");
 		MessageProvider client = (MessageProvider) ctx
 				.getBean("messageService");
-		String temp = client.queryForMessage("LvSantorini");
+		String temp = client.queryForMessage("L.J.H");
 
 		System.out.println("返回结果: " + temp);
 	}
