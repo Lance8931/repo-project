@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<s:ButtonBar>
+		<s:ArrayList>
+			<fx:String>保存</fx:String>
+		</s:ArrayList>
+	</s:ButtonBar>
+	<mx:HDividedBox>
+		<mx:VDividedBox>
+			<s:Panel>
+				<s:List>
+					<s:ArrayCollection>
+						<fx:Object title="选项1" des="这个是选项1的描述文字!"/>
+						<fx:Object title="选项2" des="这个是选项2的描述文字!"/>
+						<fx:Object title="选项3" des="这个是选项3的描述文字!"/>
+						<fx:Object title="选项4" des="这个是选项4的描述文字!"/>
+						<fx:Object title="选项5" des="这个是选项5的描述文字!"/>
+						<fx:Object title="开始" path="@Embed('../asserts/6.png')" />
+					</s:ArrayCollection>
+					<s:itemRenderer>
+						<fx:Component>
+							<s:ItemRenderer>
+								<s:states>
+									<s:State name="normal"/>
+									<s:State name="hovered"/>
+									<s:State name="selected"/>
+								</s:states>
+								<s:layout>
+									<s:VerticalLayout paddingTop="5" paddingBottom="5" paddingLeft="5"/>
+								</s:layout>
+								<s:Rect left="0" right="0" top="0" bottom="0">
+									<s:fill>
+										<s:SolidColor color="0x999999" alpha="0"
+													  alpha.hovered="0.2"
+													  alpha.selected="0.4"/>
+									</s:fill>
+								</s:Rect>
+								<s:Label text="{data.title}"/>
+								<s:Label text="{data.des}" includeIn="selected"/>
+								<s:Image source="{data.path}"/>
+							</s:ItemRenderer>
+						</fx:Component>
+					</s:itemRenderer>
+				</s:List>
+			</s:Panel>
+		</mx:VDividedBox>
+	</mx:HDividedBox>
+</s:Application>
