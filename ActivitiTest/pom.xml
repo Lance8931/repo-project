@@ -10,7 +10,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- spring版本号 -->  
-    <spring.version>4.0.2.RELEASE</spring.version>  
+    <spring.version>4.0.2.RELEASE</spring.version>
+    <activiti.version>5.19.0.2</activiti.version>  
   </properties>
   <dependencies>
     <dependency>
@@ -114,7 +115,134 @@
         <groupId>commons-dbcp</groupId>  
         <artifactId>commons-dbcp</artifactId>  
         <version>1.2.2</version>  
-    </dependency>  	
+    </dependency>
+    <!-- Activiti包开始 -->
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-bpmn-converter</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-bpmn-layout</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-bpmn-model</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-camel</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-cdi</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-common-rest</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-crystalball</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-cxf</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-diagram-rest</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-engine</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-explorer</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-image-generator</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-jmx</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-json-converter</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-ldap</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-modeler</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<!-- <dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-mule</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency> -->
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-osgi</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-process-validation</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-rest</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-simple-workflow</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-spring</artifactId>
+  		<version>${activiti.version}</version>
+  	</dependency>
+  	<!-- log start -->  
+    <dependency>  
+        <groupId>log4j</groupId>  
+        <artifactId>log4j</artifactId>  
+        <version>1.2.17</version>  
+    </dependency>
+    <dependency>
+		<groupId>org.apache.logging.log4j</groupId>
+		<artifactId>log4j-core</artifactId>
+		<version>2.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.logging.log4j</groupId>
+		<artifactId>log4j-api</artifactId>
+		<version>2.1</version>
+	</dependency>  	
   </dependencies>
   <build>
     <finalName>ActivitiTest</finalName>
