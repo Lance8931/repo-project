@@ -9,6 +9,7 @@ import java.util.List;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.Deployment;
@@ -326,7 +327,9 @@ public class ActivitiTest {
 		}
 	}
 
-	/** 查询历史流程实例,查找按照某个流程定义的规则一共执行了多少次流程 */
+	/**
+	 * 查询历史流程实例,查找按照某个流程定义的规则一共执行了多少次流程，对应的数据库表：act_hi_procinst
+	 */
 	@Test
 	public void findHisProcessInstance() {
 		List<HistoricProcessInstance> list = processEngine.getHistoryService()
@@ -338,6 +341,41 @@ public class ActivitiTest {
 			for (HistoricProcessInstance hi : list) {
 				System.out.println(hi.getId() + "   " + hi.getStartTime()
 						+ "   " + hi.getEndTime());
+			}
+		}
+	}
+
+	/**
+	 * 查询历史活动 问题：HistoricActivityInstance对应哪个表
+	 * 问题：HistoricActivityInstance和HistoricTaskInstance有什么区别
+	 * 查询历史活动，就是查询某一次流程的执行一共经历了多少个活动，这里我们使用流程定义ID来查询，对应的数据库表为:act_hi_actinst
+	 */
+	@Test
+	public void findHisActivitiList() {
+		String processInstanceId = "2501";
+		List<HistoricActivityInstance> list = processEngine.getHistoryService()
+				.createHistoricActivityInstanceQuery()
+				.processInstanceId(processInstanceId).list();
+		if (list != null && list.size() > 0) {
+			for (HistoricActivityInstance hai : list) {
+				System.out.println(hai.getId() + "  " + hai.getActivityName());
+			}
+		}
+	}
+
+	/**
+	 * 查询历史流程变量，就是查询某一次流程的执行一共设置的流程变量，对应表：act_hi_varinst
+	 */
+	@Test
+	public void findHisVariablesList() {
+		String processInstanceId = "2501";
+		List<HistoricVariableInstance> list = processEngine.getHistoryService()
+				.createHistoricVariableInstanceQuery()
+				.processInstanceId(processInstanceId).list();
+		if (list != null && list.size() > 0) {
+			for (HistoricVariableInstance hvi : list) {
+				System.out.println(hvi.getId() + "    " + hvi.getVariableName()
+						+ "   " + hvi.getValue());
 			}
 		}
 	}
