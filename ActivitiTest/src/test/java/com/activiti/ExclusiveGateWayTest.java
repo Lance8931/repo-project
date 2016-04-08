@@ -13,13 +13,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 流程连线测试
+ * 流程排他网关测试
  *
  * @author siping-L.J.H
- * @date 2016年4月7日上午10:06:21
+ * @date 2016年4月8日上午10:21:53
  * @version 1.0
  */
-public class SequenceFlowTest {
+public class ExclusiveGateWayTest {
 	private ProcessEngine processEngine;
 
 	@Before
@@ -37,10 +37,10 @@ public class SequenceFlowTest {
 
 		Deployment deployment = processEngine.getRepositoryService()// 与流程定义和部署对象相关的service
 				.createDeployment()// 创建一个部署对象
-				.name("流程连线测试")// 添加部署的名称
-				.addClasspathResource("bpm/SequenceFlowTest.bpmn")// classpath的资源中加载，一次只能加载
+				.name("流程排他网关测试")// 添加部署的名称
+				.addClasspathResource("bpm/ExclusiveGateWayTest.bpmn")// classpath的资源中加载，一次只能加载
 				// 一个文件
-				.addClasspathResource("bpm/SequenceFlowTest.png")// classpath的资源中加载，一次只能加载一个文件
+				.addClasspathResource("bpm/ExclusiveGateWayTest.png")// classpath的资源中加载，一次只能加载一个文件
 				.deploy();// 完成部署
 		System.out.println("部署ID:" + deployment.getId());
 		System.out.println("部署名称：" + deployment.getName());
@@ -51,7 +51,7 @@ public class SequenceFlowTest {
 	public void startProcessInstance() {
 		// 启动流程实例
 		ProcessInstance pi = processEngine.getRuntimeService()//
-				.startProcessInstanceByKey("sequenceFlowTest");// 使用流程定义的key的最新版本启动流程
+				.startProcessInstanceByKey("exclusiveGateWayTest");// 使用流程定义的key的最新版本启动流程
 		System.out.println("流程实例ID：" + pi.getId());
 		System.out.println("流程定义的ID：" + pi.getProcessDefinitionId());
 	}
@@ -60,8 +60,10 @@ public class SequenceFlowTest {
 	@Test
 	public void findPersonalTaskList() {
 		// 任务办理人
-		// String assignee = "DepartLeader";
-		String assignee = "ManageLeader";
+		// String assignee = "FeeApply";
+		// String assignee = "DepartCheck";
+		String assignee = "FinanceCheck";
+		// String assignee = "ManagerCheck";
 		List<Task> list = processEngine.getTaskService()//
 				.createTaskQuery()//
 				.taskAssignee(assignee)// 个人任务的查询
@@ -82,15 +84,15 @@ public class SequenceFlowTest {
 	@Test
 	public void completeTask() {
 		// 任务ID
-		String taskId = "17503";
+		String taskId = "22504";
 		// 完成任务的同时，设置流程变量，让流程变量判断连线该如何执行
 		Map<String, Object> variables = new HashMap<String, Object>();
-		// 其中message对应sequenceFlow.bpmn中的${message=='不重要'}，不重要对应流程变量的值
-		variables.put("message", "重要");
-		// TaskService taskService = processEngine.getTaskService();
-		// taskService.setVariable(taskId, "message", "不重要");
+		variables.put("money", 499);
 		processEngine.getTaskService().complete(taskId, variables);
 		System.out.println("完成任务：" + taskId);
+
+		// TaskService taskService = processEngine.getTaskService();
+		// taskService.setVariable(taskId, "message", "不重要");
 	}
 
 	@Test

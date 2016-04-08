@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="exclusiveGateWayTest" name="ExclusiveGateWay Test" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <userTask id="FeeApply" name="费用报销申请" activiti:assignee="FeeApply"></userTask>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <userTask id="DepartCheck" name="【部门经理】审核" activiti:assignee="DepartCheck"></userTask>
+    <userTask id="FinanceCheck" name="【财务】审核" activiti:assignee="FinanceCheck"></userTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="FeeApply"></sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="FeeApply" targetRef="exclusivegateway1"></sequenceFlow>
+    <sequenceFlow id="flow3" name="500≤费用金额≤1000" sourceRef="exclusivegateway1" targetRef="DepartCheck">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${money >= 500 && money <=1000}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow4" name="费用金额＜500" sourceRef="exclusivegateway1" targetRef="FinanceCheck">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${money < 500}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="ManagerCheck" name="【总经理】审核" activiti:assignee="ManagerCheck"></userTask>
+    <sequenceFlow id="flow6" name="费用金额＞1000" sourceRef="exclusivegateway1" targetRef="ManagerCheck">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${money > 1000}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="DepartCheck" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="FinanceCheck" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="flow9" sourceRef="ManagerCheck" targetRef="endevent1"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_exclusiveGateWayTest">
+    <bpmndi:BPMNPlane bpmnElement="exclusiveGateWayTest" id="BPMNPlane_exclusiveGateWayTest">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="530.0" y="60.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="530.0" y="540.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="FeeApply" id="BPMNShape_FeeApply">
+        <omgdc:Bounds height="55.0" width="105.0" x="495.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="527.0" y="240.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="DepartCheck" id="BPMNShape_DepartCheck">
+        <omgdc:Bounds height="55.0" width="105.0" x="300.0" y="370.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="FinanceCheck" id="BPMNShape_FinanceCheck">
+        <omgdc:Bounds height="55.0" width="105.0" x="495.0" y="370.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ManagerCheck" id="BPMNShape_ManagerCheck">
+        <omgdc:Bounds height="55.0" width="105.0" x="680.0" y="370.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="547.0" y="95.0"></omgdi:waypoint>
+        <omgdi:waypoint x="547.0" y="150.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="547.0" y="205.0"></omgdi:waypoint>
+        <omgdi:waypoint x="547.0" y="240.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="547.0" y="280.0"></omgdi:waypoint>
+        <omgdi:waypoint x="352.0" y="370.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="42.0" width="100.0" x="407.0" y="312.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="547.0" y="280.0"></omgdi:waypoint>
+        <omgdi:waypoint x="547.0" y="370.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="498.0" y="319.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="547.0" y="280.0"></omgdi:waypoint>
+        <omgdi:waypoint x="732.0" y="370.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="590.0" y="325.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="352.0" y="425.0"></omgdi:waypoint>
+        <omgdi:waypoint x="547.0" y="540.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="547.0" y="425.0"></omgdi:waypoint>
+        <omgdi:waypoint x="547.0" y="540.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="732.0" y="425.0"></omgdi:waypoint>
+        <omgdi:waypoint x="547.0" y="540.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
