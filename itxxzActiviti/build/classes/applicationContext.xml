@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+	http://www.springframework.org/schema/context   
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+	http://www.springframework.org/schema/aop   
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd  
+	http://www.springframework.org/schema/tx   
+	http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+	
+  <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+    <property name="driverClass" value="com.mysql.jdbc.Driver" />
+    <property name="url" value="jdbc:mysql://127.0.0.1:3306/activiti?useUnicode=true&amp;characterEncoding=utf-8" />
+    <property name="username" value="root" />
+    <property name="password" value="password" />
+  </bean>
+	
+	<!-- 配置sqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- <property name="configLocation" value="classpath:mybatis-config.xml"></property> -->
+	</bean>
+	
+	<!-- 配置事务 -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!--使用基于注解方式配置事务 -->
+	<tx:annotation-driven transaction-manager="txManager" />
+	
+	<!-- 开启自动扫描 -->
+	<context:annotation-config/> 
+	<context:component-scan base-package="com.itxxz.module.**" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component" />
+	</context:component-scan>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.itxxz.module" />
+	</bean>
+	
+	<bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.itxxz.module.flow.*.dao" />
+	</bean>
+	
+	<!-- 扫描业务层service实现类 -->
+	<context:component-scan base-package="com.itxxz.module.flow.*.service.impl" />
+	
+	<!-- activiti流程引擎 -->
+	
+ <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource" />
+  </bean>
+
+  <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+    <property name="dataSource" ref="dataSource" />
+    <property name="transactionManager" ref="transactionManager" />
+    <property name="databaseSchemaUpdate" value="true" />
+    <property name="jobExecutorActivate" value="false" />
+    <property name="activityFontName" value="宋体"/>
+	<property name="labelFontName" value="宋体"/>
+  </bean>
+
+  <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+    <property name="processEngineConfiguration" ref="processEngineConfiguration" />
+  </bean>
+
+  <bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService" />
+  <bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService" />
+  <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService" />
+  <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />
+  <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService" />
+  
+</beans>
