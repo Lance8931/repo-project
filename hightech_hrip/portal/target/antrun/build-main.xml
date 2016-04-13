@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <fail message="env was not set, use -Denv=value">
+    <condition>
+      <not>
+        <isset property="env"/>
+      </not>
+    </condition>
+  </fail>
+</target>
+</project>

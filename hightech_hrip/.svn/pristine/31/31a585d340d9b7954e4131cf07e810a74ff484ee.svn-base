@@ -1,0 +1,20 @@
+package com.siping.hrip.portal.user.service;
+
+import java.math.BigInteger;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.siping.domain.portal.entity.User;
+import com.siping.hrip.portal.user.mapper.LoginMapper;
+
+@Service
+public class LoginService {
+    @Autowired
+    private LoginMapper loginMapper;
+
+    public User get(BigInteger id) {
+        return loginMapper.get(id);
+    }
+
+}

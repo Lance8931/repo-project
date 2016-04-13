@@ -1,0 +1,12 @@
+jdbc.driver.name=com.mysql.jdbc.Driver
+jdbc.readdb.proxy.url=jdbc:mysql://192.168.10.68:3306/hrip?allowMultiQueries=true
+jdbc.writedb.proxy.url=jdbc:mysql://192.168.10.68:3306/hrip?allowMultiQueries=true
+jdbc.username=dev
+jdbc.password=siping
+
+
+#jdbc.driver.name=com.mysql.jdbc.Driver
+#jdbc.readdb.proxy.url=jdbc:mysql://127.0.0.1:3306/hrip?allowMultiQueries=true
+#jdbc.writedb.proxy.url=jdbc:mysql://127.0.0.1:3306/hrip?allowMultiQueries=true
+#jdbc.username=root
+#jdbc.password=root
