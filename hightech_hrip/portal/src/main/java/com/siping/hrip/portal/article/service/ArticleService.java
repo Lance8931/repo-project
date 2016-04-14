@@ -1,5 +1,7 @@
 package com.siping.hrip.portal.article.service;
 
+import java.util.List;
+
 import com.siping.domain.portal.entity.Article;
 
 /**
@@ -12,4 +14,8 @@ import com.siping.domain.portal.entity.Article;
 public interface ArticleService {
 
 	public void addArticle(Article article);
+
+	public List<Article> listArticles();
+
+	public void updateArticle(Article article);
 }

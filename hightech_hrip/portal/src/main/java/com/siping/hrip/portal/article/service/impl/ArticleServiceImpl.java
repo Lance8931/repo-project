@@ -1,5 +1,7 @@
 package com.siping.hrip.portal.article.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +25,15 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public void addArticle(Article article) {
 		articleMapper.insert(article);
+	}
+
+	@Override
+	public List<Article> listArticles() {
+		return articleMapper.getList(null);
+	}
+
+	@Override
+	public void updateArticle(Article article) {
+		articleMapper.updateByPrimaryKeySelective(article);
 	}
 }

@@ -1,10 +1,12 @@
 package com.siping.hrip.portal.article.controller;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.siping.domain.common.PagePath;
 import com.siping.domain.common.ResultMsg;
@@ -26,7 +28,7 @@ public class ArticleController {
 
 	@RequestMapping(value = "article/redict")
 	public String redirect() {
-		return PagePath.ADD_ARTICLE;
+		return PagePath.ARTICLE_ADD;
 	}
 
 	@RequestMapping(value = "article/add")
@@ -45,5 +47,30 @@ public class ArticleController {
 		article.setPublishTime(new Date());
 		articleService.addArticle(article);
 		return new ResultMsg(true, "添加成功！");
+	}
+
+	@RequestMapping(value = "article/list")
+	public String list(Map<String, Object> model) {
+		model.put("list", articleService.listArticles());
+		return PagePath.ARTICLE_LIST;
+	}
+
+	@RequestMapping(value = "article/preview")
+	@ResponseBody
+	public ResultMsg preview(Map<String, Object> model) {
+		Article article = articleService.listArticles().get(0);
+		return new ResultMsg(true, article.getContent(), article.getId()
+				.toString());
+	}
+
+	@RequestMapping(value = "article/edit")
+	@ResponseBody
+	public ResultMsg edit(String id, String content) {
+		Article article = new Article();
+		article.setId(Long.valueOf(id));
+		article.setContent(content);
+		article.setUpdateDate(new Date());
+		articleService.updateArticle(article);
+		return new ResultMsg(true, "成功！");
 	}
 }

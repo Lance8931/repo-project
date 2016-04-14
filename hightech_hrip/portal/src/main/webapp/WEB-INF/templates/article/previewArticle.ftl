@@ -5,6 +5,8 @@
 <title></title>
 </head>
 <body>
-
+    <div id="previewDiv">
+    ${content}
+    </div>
 </body>
 </html>

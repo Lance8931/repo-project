@@ -193,4 +193,8 @@
       update_by = #{updateBy,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <select id="getList" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select *  from article t
+  </select>
 </mapper>

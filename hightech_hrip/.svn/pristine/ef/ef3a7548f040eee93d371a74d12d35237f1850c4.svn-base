@@ -1,0 +1,15 @@
+package com.siping.domain.common;
+
+import java.io.Serializable;
+
+public final class PagePath implements Serializable {
+
+    private static final long serialVersionUID = 8957070956245738627L;
+
+    /** 登录界面 */
+    public static final String LOGIN_INDEX = "user/admin/login";
+    /** 后台首页 **/
+    public static final String ADMIN_INDEX = "user/admin/index";
+    /** 前台首页 */
+    public static final String WELCOME = "front/index";
+}
