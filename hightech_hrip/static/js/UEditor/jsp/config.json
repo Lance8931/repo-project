@@ -43,7 +43,7 @@
     "catcherFieldName": "source", /* 提交的图片列表表单名称 */
     "catcherPathFormat": "/img/ueditor/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}", /* 上传保存路径,可以自定义保存路径和文件名格式 */
     "catcherUrlPrefix": "", /* 图片访问路径前缀 */
-    "catcherMaxSize": 2048000, /* 上传大小限制，单位B */
+    "catcherMaxSize": 2097152, /* 上传大小限制，单位B，默认2MB*/
     "catcherAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"], /* 抓取图片格式显示 */
 
     /* 上传视频配置 */
@@ -51,11 +51,18 @@
     "videoFieldName": "upfile", /* 提交的视频表单名称 */
     "videoPathFormat": "/img/ueditor/upload/video/{yyyy}{mm}{dd}/{time}{rand:6}", /* 上传保存路径,可以自定义保存路径和文件名格式 */
     "videoUrlPrefix": "", /* 视频访问路径前缀 */
-    "videoMaxSize": 102400000, /* 上传大小限制，单位B，默认100MB */
+    "videoMaxSize": 104857600, /* 上传大小限制，单位B，默认100MB */
     "videoAllowFiles": [
         ".flv", ".swf", ".mkv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg",
-        ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid"], /* 上传视频格式显示 */
+        ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid"], /* 上传视频格式限制 */
 
+    /* 上传音频配置*/
+    "musicSelfActionName": "uploadAudio",/* 执行上传视频的action名称 */
+    "musicSelfFieldName": "upfile", /*提交的音频表单名称*/
+    "musicSelfPathFormat": "/img/ueditor/upload/audio/yyyy}{mm}{dd}/{time}{rand:6}",/* 上传保存路径,可以自定义保存路径和文件名格式 */
+    "musicSelfMaxSize": 5242880, /* 上传大小限制，单位B，默认5MB*/
+    "musicSelfAllowFiles": ["mp3"], /*上传音频格式限制*/    
+    
     /* 上传文件配置 */
     "fileActionName": "uploadfile", /* controller里,执行上传视频的action名称 */
     "fileFieldName": "upfile", /* 提交的文件表单名称 */
@@ -90,5 +97,5 @@
         ".rar", ".zip", ".tar", ".gz", ".7z", ".bz2", ".cab", ".iso",
         ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".txt", ".md", ".xml"
     ] /* 列出的文件类型 */
-
+    
 }
