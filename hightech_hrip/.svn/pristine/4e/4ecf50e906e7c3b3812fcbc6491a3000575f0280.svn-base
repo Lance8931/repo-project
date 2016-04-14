@@ -1,0 +1,11 @@
+#jdbc.driver.name=com.mysql.jdbc.Driver
+#jdbc.readdb.proxy.url=jdbc:mysql://192.168.10.103:3306/mingluo_dm
+#jdbc.writedb.proxy.url=jdbc:mysql://192.168.10.103:3306/mingluo_dm
+#jdbc.username=root
+#jdbc.password=root
+
+jdbc.driver.name=com.mysql.jdbc.Driver
+jdbc.readdb.proxy.url=jdbc:mysql://192.168.10.68:3306/mingluo_dm?allowMultiQueries=true
+jdbc.writedb.proxy.url=jdbc:mysql://192.168.10.68:3306/mingluo_dm?allowMultiQueries=true
+jdbc.username=dev
+jdbc.password=siping
