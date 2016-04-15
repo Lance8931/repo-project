@@ -666,7 +666,7 @@ UE.I18N['zh-cn'] = {
         'saving':'保存中...',
         'success':'本地保存成功'
     },
-    'musicSelf':{
+    'musicself':{
         'static':{
             'lang_tab_upload': '上传音频',
             'lang_tab_online': '在线音频',

@@ -646,7 +646,9 @@
 
             function updateStatus() {
                 var text = '', stats;
-
+                //初始化fileCount与fileSize,去除负数
+                fileCount = fileCount < 0 ? 0 : fileCount;
+                fileSize = fileSize < 0 ? 0 : fileSize;
                 if (state === 'ready') {
                     text = lang.updateStatusReady.replace('_', fileCount).replace('_KB', WebUploader.formatSize(fileSize));
                 } else if (state === 'confirm') {

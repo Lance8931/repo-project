@@ -1461,6 +1461,12 @@ div.edui-box {
     height: 360px;
 }
 
+/*musicSelf-dialog
+.edui-default .edui-for-musicSelf .edui-dialog-content {
+    width:680px;
+    height:400px;
+}*/
+
 /*段落弹出菜单*/
 .edui-default .edui-for-paragraph .edui-listitem-label {
     font-family: Tahoma, Verdana, Arial, Helvetica;
