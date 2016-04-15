@@ -79,6 +79,7 @@
             }
 
             editor.execCommand('insertfile', list);
+            editor.execCommand('insertMusicSelf',list);
         };
     }
 

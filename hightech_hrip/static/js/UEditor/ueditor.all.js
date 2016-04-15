@@ -29447,6 +29447,7 @@ UE.registerUI('musicSelf',function(editor,uiName){
                 className:'edui-okbutton',
                 label:'确定',
                 onclick:function () {
+                	
                     dialog.close(true);
                 }
             },
@@ -29475,12 +29476,18 @@ UE.registerUI('musicSelf',function(editor,uiName){
     return btn;
 }/*index 指定添加到工具栏上的那个位置，默认时追加到最后,editorId 指定这个UI是那个编辑器实例上的，默认是页面上所有的编辑器都会添加这个按钮*/);
 
-
-
-
-
-
-
-
+UE.commands['insertmusicself'] = {
+		execCommand:function (command,list){
+			var me = this,
+				html ="";
+			for(var temp in list){
+				html += "</ br>";
+				html += "<audio src='"+list[temp].url+"' controls='controls'>"
+					+"Your browser does not support the audio element."
+					+"</audio>";
+			}
+			me.execCommand("inserthtml",html);
+		}
+};/* 添加音频插件到编辑器中*/
 
 })();
