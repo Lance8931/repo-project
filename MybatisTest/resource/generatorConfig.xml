@@ -7,8 +7,8 @@
 	<classPathEntry	location="D:\\code\\maven\\repo\\mysql\\mysql-connector-java\\5.1.6\\mysql-connector-java-5.1.6.jar"/>
 	<context id="DB2Tables"	targetRuntime="MyBatis3">
 		<property name="javaFileEncoding" value="UTF-8"/>
-		<!-- 扩展插件代码 
-		<plugin type="com.util.MyBatisPlugin"></plugin>-->
+		<!-- 扩展插件代码 -->
+		<plugin type="com.util.MyBatisPlugin"></plugin>
 		<commentGenerator>
 			<property name="suppressDate" value="true"/>
 			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
@@ -22,20 +22,20 @@
 			<property name="forceBigDecimals" value="false"/>
 		</javaTypeResolver>
 		<!-- 生成模型的包名和位置，目标项目-->
-		<javaModelGenerator targetPackage="com.siping.domain.portal.entity" targetProject="D:\\code\\workspace-work\\hightech_hrip\\client\\src\\main\\java">
+		<javaModelGenerator targetPackage="com.generator.bean" targetProject="MybatisTest">
 			<property name="enableSubPackages" value="true"/>
 			<property name="trimStrings" value="true"/>
 		</javaModelGenerator>
 		<!-- 生成映射文件的包名和位置，目标项目-->
-		<sqlMapGenerator targetPackage="com.siping.hrip.portal.article.mapper" targetProject="D:\\code\\workspace-work\\hightech_hrip\\portal\\src\\main\\java">
+		<sqlMapGenerator targetPackage="com.generator.mapper.sql" targetProject="MybatisTest">
 			<property name="enableSubPackages" value="true"/>
 		</sqlMapGenerator>
 		<!-- 生成DAO的包名和位置，目标项目-->
-		<javaClientGenerator type="XMLMAPPER" targetPackage="com" targetProject="D:\\code\\workspace-work\\hightech_hrip\\portal\\src\\main\\resources\\config\\mybatis\\portal">
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.generator.mapper" targetProject="MybatisTest">
 			<property name="enableSubPackages" value="true"/>
 		</javaClientGenerator>
 		<!-- 要生成哪些表-->
-		<table tableName="article" domainObjectName="Article" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+		<table tableName="article" domainObjectName="Article1" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
 		<!--<table tableName="knowledge_type" domainObjectName="KnowledgeType" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
 		 <table tableName="syslogs" domainObjectName="SyslogsDto" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
 	</context>
