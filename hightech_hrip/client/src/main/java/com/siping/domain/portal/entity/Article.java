@@ -1,39 +1,46 @@
 package com.siping.domain.portal.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Article {
-    private Long id;
+import com.siping.domain.common.Common;
 
+public class Article extends Common implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4970330069799080198L;
+
+	/**
+     * 标题
+     */
     private String title;
 
+    /**
+     * 作者
+     */
     private String author;
 
+    /**
+     * 类型
+     */
     private String type;
 
+    /**
+     * 是否启用，0不启用，1启用
+     */
     private Boolean enabled;
 
-    private Boolean isDelete;
 
+    /**
+     * 发布时间
+     */
     private Date publishTime;
 
-    private Date createDate;
-
-    private Long createBy;
-
-    private Date updateDate;
-
-    private Long updateBy;
-
+    /**
+     * 内容详情
+     */
     private String content;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -67,52 +74,12 @@ public class Article {
         this.enabled = enabled;
     }
 
-    public Boolean getIsDelete() {
-        return isDelete;
-    }
-
-    public void setIsDelete(Boolean isDelete) {
-        this.isDelete = isDelete;
-    }
-
     public Date getPublishTime() {
         return publishTime;
     }
 
     public void setPublishTime(Date publishTime) {
         this.publishTime = publishTime;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
     }
 
     public String getContent() {

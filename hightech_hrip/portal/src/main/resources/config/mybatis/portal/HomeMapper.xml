@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.siping.hrip.portal.user.mapper.HomeMapper">
+
+    <resultMap id="menuMap" type="com.siping.domain.portal.entity.Menu">
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="menu_name" property="menuName" jdbcType="INTEGER" />
+        <result column="menu_url" property="menuUrl" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="DATE" />
+        <result column="create_by" property="createBy" jdbcType="INTEGER" />
+        <result column="update_date" property="updateDate" jdbcType="DATE" />
+        <result column="update_by" property="updateBy" jdbcType="INTEGER" />  
+        <result column="order_no" property="orderNo" jdbcType="INTEGER" />  
+    </resultMap>
+    <sql id="menu_Column_List">
+        id, menu_name, menu_url, DATE_FORMAT(create_date,"%Y-%m-%d %H:%i:%s") create_date,
+        create_by ,DATE_FORMAT(update_date,"%Y-%m-%d") update_date, update_by, order_no
+    </sql>
+    <select id="getMenuList" resultMap="menuMap">
+        select 
+        <include refid="menu_Column_List" />slidePicList
+        from `menu` ORDER BY order_no DESC;
+    </select>
+    
+    <!-- 批量插入幻灯片图片 -->
+    <insert id="saveSlidePicInfo" parameterType="java.util.List">    
+        INSERT INTO slide_pic (pic_path,url,hover_tips,create_date,order_no,create_by) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.picPath},#{item.url},#{item.hoverTips},now(),#{item.orderNo},#{item.orderNo})
+        </foreach>
+    </insert> 
+    
+</mapper>

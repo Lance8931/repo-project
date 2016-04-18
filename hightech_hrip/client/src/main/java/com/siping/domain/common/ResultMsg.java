@@ -54,4 +54,5 @@ public class ResultMsg implements Serializable {
     public void setBillNumber(String billNumber) {
         this.billNumber = billNumber;
     }
+
 }

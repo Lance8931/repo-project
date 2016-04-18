@@ -35,7 +35,17 @@
         function submit1(){
             $.ajax({
                 url:'add',
-                data:{content:UE.getEditor('editor').getContent()}
+                data:{content:UE.getEditor('editor').getContent()},
+                success:function(result){
+                    if(result.success){
+                        alert(result.msg);
+                    }else{
+                        alert(result.msg);
+                    }
+                },
+                error:function(result){
+                    alert(result.msg);
+                }
             });
         }
         

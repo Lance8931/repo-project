@@ -1,9 +1,0 @@
-package com.siping.hrip.portal.user.mapper;
-
-import java.math.BigInteger;
-
-import com.siping.domain.portal.entity.User;
-
-public interface LoginMapper {
-    User get(BigInteger id);
-}

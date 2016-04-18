@@ -14,7 +14,7 @@ public class User extends Common implements Serializable {
     private Integer pwdIterator;
     private String pwdSalt;
     private Integer userType; // 用户类型：1，平台管理员用户；2，平台普通用户；3，企业用户；4，普通用户（求职者）
-
+    private Integer enabled;
     public String getUsername() {
         return username;
     }
@@ -53,5 +53,13 @@ public class User extends Common implements Serializable {
 
     public void setUserType(Integer userType) {
         this.userType = userType;
+    }
+
+    public Integer getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Integer enabled) {
+        this.enabled = enabled;
     }
 }

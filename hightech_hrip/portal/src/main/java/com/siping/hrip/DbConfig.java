@@ -89,7 +89,7 @@ public abstract class DbConfig extends DefaultAppConfig {
     @Qualifier(Trans.JDBC)
     public DataSourceTransactionManager transactionManager() throws IOException {
         DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
-        transactionManager.setDataSource(dynamicDataSource());
+        transactionManager.setDataSource(writeDataSource());
         // transactionManager.setDataSource(writeDataSource());//如果使用jdbc的方式，可改为一下
         return transactionManager;
     }
@@ -103,7 +103,7 @@ public abstract class DbConfig extends DefaultAppConfig {
     @Bean
     public DynamicDataSource dynamicDataSource() throws IOException {
         DynamicDataSource dynamicDataSource = new DynamicDataSource();
-        dynamicDataSource.setDefaultTargetDataSource(readDataSource());
+        dynamicDataSource.setDefaultTargetDataSource(writeDataSource());
         Map<Object, Object> targetDataSources = new ConcurrentHashMap<Object, Object>();
         targetDataSources.put(DynamicDataSourceHolder.DATA_SOURCE_READ, readDataSource());
         targetDataSources.put(DynamicDataSourceHolder.DATA_SOURCE_WRITE, writeDataSource());

@@ -3,7 +3,7 @@
 <mapper namespace="com.siping.hrip.portal.user.mapper.LoginMapper">
 
     <resultMap id="userMap" type="com.siping.domain.portal.entity.User">
-        <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+        <id column="id" property="id" jdbcType="VARCHAR" />
         <result column="username" property="username" jdbcType="VARCHAR" />
         <result column="pwd_hash" property="pwdHash" jdbcType="VARCHAR" />
         <result column="pwd_iterator" property="pwdIterator" jdbcType="INTEGER" />
@@ -16,9 +16,11 @@
         <result column="update_by" property="updateBy" jdbcType="BIGINT" />   
     </resultMap>
     <sql id="user_Column_List">
-		username, pwd_hash, pwd_iterator, pwd_salt, user_type, enabled,  DATE_FORMAT(create_date,"%Y-%m-%d %H:%i:%s") create_date,
+		id, username, pwd_hash, pwd_iterator, pwd_salt, user_type, enabled,  DATE_FORMAT(create_date,"%Y-%m-%d %H:%i:%s") create_date,
 		create_by ,DATE_FORMAT(update_date,"%Y-%m-%d") update_date, update_by
 	</sql>
+    
+    <!-- 根据username查询账号信息 -->
 	<select id="login" parameterType="com.siping.domain.portal.entity.UserLoginRequest" resultMap="userMap">
 		select
 		<include refid="user_Column_List" />
@@ -27,5 +29,17 @@
 			and username =#{username} 
 		</if>
 	</select>
+    
+    <!-- 重置密码 -->
+    <update id="resetPwd">
+        UPDATE users SET 
+        <if test="pwdHash !=''">
+            pwd_hash=#{pwdHash},
+        </if>
+        <if test="id !=''">
+            update_by=#{id} , update_date=now()
+        </if>
+        where 1=1 and username=#{username};
+    </update>
     
 </mapper>

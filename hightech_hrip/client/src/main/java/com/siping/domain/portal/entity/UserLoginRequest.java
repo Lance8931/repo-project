@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import com.siping.domain.common.Common;
 
+/**
+ * @author yangxu
+ */
 public class UserLoginRequest extends Common implements Serializable {
 
     private static final long serialVersionUID = 7030148862255256173L;

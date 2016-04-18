@@ -13,9 +13,11 @@ import com.siping.domain.portal.entity.Article;
  */
 public interface ArticleService {
 
-	public void addArticle(Article article);
+	public void addArticle(String content) throws Exception;
 
 	public List<Article> listArticles();
 
 	public void updateArticle(Article article);
+	
+	public void updateArticleStatus(String id, String action) throws Exception;
 }

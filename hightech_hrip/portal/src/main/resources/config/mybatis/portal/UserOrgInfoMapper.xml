@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.siping.hrip.portal.user.mapper.UserOrgInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.siping.domain.portal.entity.UserOrgInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="org_code" property="orgCode" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="psd_question" property="psdQuestion" jdbcType="VARCHAR" />
+    <result column="psd_answer" property="psdAnswer" jdbcType="VARCHAR" />
+    <result column="registered_no" property="registeredNo" jdbcType="VARCHAR" />
+    <result column="license_pic" property="licensePic" jdbcType="VARCHAR" />
+    <result column="org_name" property="orgName" jdbcType="VARCHAR" />
+    <result column="is_hightech" property="isHightech" jdbcType="BIT" />
+    <result column="org_type_id" property="orgTypeId" jdbcType="INTEGER" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="turnover" property="turnover" jdbcType="DOUBLE" />
+    <result column="employees" property="employees" jdbcType="INTEGER" />
+    <result column="legal_person" property="legalPerson" jdbcType="VARCHAR" />
+    <result column="found_date" property="foundDate" jdbcType="DATE" />
+    <result column="province" property="province" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+    <result column="county" property="county" jdbcType="INTEGER" />
+    <result column="street" property="street" jdbcType="VARCHAR" />
+    <result column="org_profile" property="orgProfile" jdbcType="VARCHAR" />
+    <result column="product" property="product" jdbcType="VARCHAR" />
+    <result column="business_scope" property="businessScope" jdbcType="VARCHAR" />
+    <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="fax" property="fax" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="postcode" property="postcode" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="website" property="website" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectOrg" resultMap="BaseResultMap" parameterType="com.siping.domain.portal.entity.UserOrgInfo" >
+    select * from user_org_info where org_code = #{orgCode,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectUserName" parameterType="com.siping.domain.portal.entity.User"
+        resultType="java.lang.Integer">
+        select count(t.username) from users t where t.username =
+        #{username,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="verifyAnswer" parameterType="com.siping.domain.portal.entity.UserOrgInfo" resultType="java.lang.Integer">
+    select COUNT(*)  from user_org_info
+    where org_code = #{orgCode,jdbcType=VARCHAR} and psd_answer = #{psdAnswer,jdbcType=VARCHAR}
+  </select>
+    
+    <update id="updateUser" parameterType="com.siping.domain.portal.entity.User">
+        update users
+        <set>
+            <if test="pwdHash != null">
+                pwd_hash = #{pwdHash,jdbcType=VARCHAR},
+            </if>
+            <if test="pwdIterator != null">
+                pwd_iterator = #{pwdIterator,jdbcType=INTEGER},
+            </if>
+            <if test="pwdSalt != null">
+                pwd_salt= #{pwdSalt,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null">
+                user_type= #{userType,jdbcType=INTEGER},
+            </if>
+            <if test="createDate != null">
+                create_date=
+                STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+                %H:%i:%s'),
+            </if>
+            <if test="updateDate != null">
+                update_date=
+                STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+                %H:%i:%s'),
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=TINYINT},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=TINYINT},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=TINYINT},
+            </if>
+        </set>
+        where username = #{username,jdbcType=VARCHAR}
+    </update>
+  
+  <insert id="addUser" parameterType="com.siping.domain.portal.entity.User">
+        INSERT INTO users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">
+                username,
+            </if>
+            <if test="pwdHash != null">
+                pwd_hash,
+            </if>
+            <if test="pwdIterator != null">
+                pwd_iterator,
+            </if>
+            <if test="pwdSalt != null">
+                pwd_salt,
+            </if>
+            <if test="userType != null">
+                user_type,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="pwdHash != null">
+                #{pwdHash,jdbcType=VARCHAR},
+            </if>
+            <if test="pwdIterator != null">
+                #{pwdIterator,jdbcType=INTEGER},
+            </if>
+            <if test="pwdSalt != null">
+                #{pwdSalt,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null">
+                #{userType,jdbcType=INTEGER},
+            </if>
+            <if test="createDate != null">
+                STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+                %H:%i:%s'),
+            </if>
+            <if test="updateDate != null">
+                STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+                %H:%i:%s'),
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=TINYINT},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=TINYINT},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+  
+  <insert id="addOrg" parameterType="com.siping.domain.portal.entity.UserOrgInfo" >
+    insert into user_org_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orgCode != null" >
+        org_code,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="psdQuestion != null" >
+        psd_question,
+      </if>
+      <if test="psdAnswer != null" >
+        psd_answer,
+      </if>
+      <if test="registeredNo != null" >
+        registered_no,
+      </if>
+      <if test="licensePic != null" >
+        license_pic,
+      </if>
+      <if test="orgName != null" >
+        org_name,
+      </if>
+      <if test="isHightech != null" >
+        is_hightech,
+      </if>
+      <if test="orgTypeId != null" >
+        org_type_id,
+      </if>
+      <if test="industry != null" >
+        industry,
+      </if>
+      <if test="turnover != null" >
+        turnover,
+      </if>
+      <if test="employees != null" >
+        employees,
+      </if>
+      <if test="legalPerson != null" >
+        legal_person,
+      </if>
+      <if test="foundDate != null" >
+        found_date,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="county != null" >
+        county,
+      </if>
+      <if test="street != null" >
+        street,
+      </if>
+      <if test="orgProfile != null" >
+        org_profile,
+      </if>
+      <if test="product != null" >
+        product,
+      </if>
+      <if test="businessScope != null" >
+        business_scope,
+      </if>
+      <if test="contacts != null" >
+        contacts,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="fax != null" >
+        fax,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="postcode != null" >
+        postcode,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="website != null" >
+        website,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+      STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+                %H:%i:%s'),
+      </if>
+      <if test="updateDate != null" >
+      STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+                %H:%i:%s'),
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="psdQuestion != null" >
+        #{psdQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="psdAnswer != null" >
+        #{psdAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredNo != null" >
+        #{registeredNo,jdbcType=VARCHAR},
+      </if>
+      <if test="licensePic != null" >
+        #{licensePic,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="isHightech != null" >
+        #{isHightech,jdbcType=BIT},
+      </if>
+      <if test="orgTypeId != null" >
+        #{orgTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="industry != null" >
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="turnover != null" >
+        #{turnover,jdbcType=DOUBLE},
+      </if>
+      <if test="employees != null" >
+        #{employees,jdbcType=INTEGER},
+      </if>
+      <if test="legalPerson != null" >
+        #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="foundDate != null" >
+      STR_TO_DATE(#{foundDate,jdbcType=TIMESTAMP},'%Y-%m-%d'),
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=INTEGER},
+      </if>
+      <if test="county != null" >
+        #{county,jdbcType=INTEGER},
+      </if>
+      <if test="street != null" >
+        #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="orgProfile != null" >
+        #{orgProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="product != null" >
+        #{product,jdbcType=VARCHAR},
+      </if>
+      <if test="businessScope != null" >
+        #{businessScope,jdbcType=VARCHAR},
+      </if>
+      <if test="contacts != null" >
+        #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        #{fax,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="postcode != null" >
+        #{postcode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        #{website,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateOrg" parameterType="com.siping.domain.portal.entity.UserOrgInfo" >
+    update user_org_info
+    <set >
+      <if test="createDate != null" >
+        create_date=
+                STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+                %H:%i:%s'),
+      </if>
+      <if test="updateDate != null" >
+        update_date=
+                STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+                %H:%i:%s'),
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="psdQuestion != null" >
+        psd_question = #{psdQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="psdAnswer != null" >
+        psd_answer = #{psdAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="licensePic != null" >
+        license_pic = #{licensePic,jdbcType=VARCHAR},
+      </if>
+      <if test="isHightech != null" >
+        is_hightech = #{isHightech,jdbcType=BIT},
+      </if>
+      <if test="orgTypeId != null" >
+        org_type_id = #{orgTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="industry != null" >
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="turnover != null" >
+        turnover = #{turnover,jdbcType=DOUBLE},
+      </if>
+      <if test="employees != null" >
+        employees = #{employees,jdbcType=INTEGER},
+      </if>
+      <if test="legalPerson != null" >
+        legal_person = #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=INTEGER},
+      </if>
+      <if test="county != null" >
+        county = #{county,jdbcType=INTEGER},
+      </if>
+      <if test="street != null" >
+        street = #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="orgProfile != null" >
+        org_profile = #{orgProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="product != null" >
+        product = #{product,jdbcType=VARCHAR},
+      </if>
+      <if test="businessScope != null" >
+        business_scope = #{businessScope,jdbcType=VARCHAR},
+      </if>
+      <if test="contacts != null" >
+        contacts = #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        fax = #{fax,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="postcode != null" >
+        postcode = #{postcode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        website = #{website,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where org_code = #{orgCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

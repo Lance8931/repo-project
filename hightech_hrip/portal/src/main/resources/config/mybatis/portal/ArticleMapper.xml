@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.siping.hrip.portal.article.mapper.ArticleMapper" >
+<mapper namespace="com.generator.mapper.Article1Mapper" >
   <resultMap id="BaseResultMap" type="com.siping.domain.portal.entity.Article" >
-    <id column="id" property="id" jdbcType="BIGINT" />
+    <id column="id" property="id" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="author" property="author" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
@@ -10,9 +10,9 @@
     <result column="is_delete" property="isDelete" jdbcType="BIT" />
     <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
-    <result column="create_by" property="createBy" jdbcType="BIGINT" />
+    <result column="create_by" property="createBy" jdbcType="INTEGER" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
-    <result column="update_by" property="updateBy" jdbcType="BIGINT" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.siping.domain.portal.entity.Article" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
@@ -24,28 +24,18 @@
   <sql id="Blob_Column_List" >
     content
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from article
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from article
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.siping.domain.portal.entity.Article" >
-    insert into article (id, title, author, 
-      type, enabled, is_delete, publish_time, 
-      create_date, create_by, update_date, 
-      update_by, content)
-    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
-      #{type,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{isDelete,jdbcType=BIT}, #{publishTime,jdbcType=TIMESTAMP}, 
-      #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, #{updateDate,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR})
-  </insert>
   <insert id="insertSelective" parameterType="com.siping.domain.portal.entity.Article" >
     insert into article
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -88,7 +78,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=BIGINT},
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="title != null" >
         #{title,jdbcType=VARCHAR},
@@ -112,13 +102,13 @@
         #{createDate,jdbcType=TIMESTAMP},
       </if>
       <if test="createBy != null" >
-        #{createBy,jdbcType=BIGINT},
+        #{createBy,jdbcType=INTEGER},
       </if>
       <if test="updateDate != null" >
         #{updateDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updateBy != null" >
-        #{updateBy,jdbcType=BIGINT},
+        #{updateBy,jdbcType=INTEGER},
       </if>
       <if test="content != null" >
         #{content,jdbcType=LONGVARCHAR},
@@ -138,7 +128,7 @@
         type = #{type,jdbcType=VARCHAR},
       </if>
       <if test="enabled != null" >
-        enabled = #{enabled,jdbcType=BIT},
+        enabled = NOT enabled,
       </if>
       <if test="isDelete != null" >
         is_delete = #{isDelete,jdbcType=BIT},
@@ -150,51 +140,83 @@
         create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
       <if test="createBy != null" >
-        create_by = #{createBy,jdbcType=BIGINT},
+        create_by = #{createBy,jdbcType=INTEGER},
       </if>
       <if test="updateDate != null" >
         update_date = #{updateDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updateBy != null" >
-        update_by = #{updateBy,jdbcType=BIGINT},
+        update_by = #{updateBy,jdbcType=INTEGER},
       </if>
       <if test="content != null" >
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.siping.domain.portal.entity.Article" >
-    update article
-    set title = #{title,jdbcType=VARCHAR},
-      author = #{author,jdbcType=VARCHAR},
-      type = #{type,jdbcType=VARCHAR},
-      enabled = #{enabled,jdbcType=BIT},
-      is_delete = #{isDelete,jdbcType=BIT},
-      publish_time = #{publishTime,jdbcType=TIMESTAMP},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      create_by = #{createBy,jdbcType=BIGINT},
-      update_date = #{updateDate,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=BIGINT},
-      content = #{content,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.siping.domain.portal.entity.Article" >
-    update article
-    set title = #{title,jdbcType=VARCHAR},
-      author = #{author,jdbcType=VARCHAR},
-      type = #{type,jdbcType=VARCHAR},
-      enabled = #{enabled,jdbcType=BIT},
-      is_delete = #{isDelete,jdbcType=BIT},
-      publish_time = #{publishTime,jdbcType=TIMESTAMP},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      create_by = #{createBy,jdbcType=BIGINT},
-      update_date = #{updateDate,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=BIGINT}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  
-  <select id="getList" parameterType="java.util.Map" resultMap="BaseResultMap" >
+  <sql id="conditions" >
+    <trim prefix="where" prefixOverrides="and|or" >
+       1 = 1
+      <if test="id != null" >
+        and t.id = #{id}
+      </if>
+      <if test="title != null" >
+        and t.title = #{title}
+      </if>
+      <if test="author != null" >
+        and t.author = #{author}
+      </if>
+      <if test="type != null" >
+        and t.type = #{type}
+      </if>
+      <if test="enabled != null" >
+        and t.enabled = #{enabled}
+      </if>
+      <if test="isDelete != null" >
+        and t.is_delete = #{isDelete}
+      </if>
+      <if test="publishTime != null" >
+        and t.publish_time = #{publishTime}
+      </if>
+      <if test="createDate != null" >
+        and t.create_date = #{createDate}
+      </if>
+      <if test="createBy != null" >
+        and t.create_by = #{createBy}
+      </if>
+      <if test="updateDate != null" >
+        and t.update_date = #{updateDate}
+      </if>
+      <if test="updateBy != null" >
+        and t.update_by = #{updateBy}
+      </if>
+      <if test="content != null" >
+        and t.content = #{content}
+      </if>
+    </trim>
+  </sql>
+  <select id="getAll" resultMap="BaseResultMap" >
+    select * from article
+  </select>
+  <delete id="deleteByIds" >
+     delete from article where id in 
+    <foreach collection="list" item="item" index="index" separator="," open="(" close=")" >
+      #{item}
+    </foreach>
+  </delete>
+  <select id="getByConditions" parameterType="java.util.Map" resultMap="BaseResultMap" >
     select *  from article t
+    <include refid="conditions"/>
+  </select>
+  <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long" >
+     select count(*) from article t
+    <include refid="conditions"/>
+  </select>
+  <select id="getByPage" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select * from article t
+    <include refid="conditions"/>
+    <if test="startNo != null" >
+      LIMIT #{startNo},#{pageSize}
+    </if>
   </select>
 </mapper>

@@ -20,7 +20,7 @@
 
         <!--Restricts the number of executable statements to a specified limit-->
         <module name="ExecutableStatementCount">
-            <property name="max" value="40"/>
+            <property name="max" value="60"/>
         </module>
 
         <!--Checks for long anonymous inner classes.-->
@@ -31,7 +31,7 @@
         <!--Checks for long methods.-->
         <module name="MethodLength">
             <property name="countEmpty" value="false"/>
-            <property name="max" value="50"/>
+            <property name="max" value="150"/>
         </module>
 
         <!--Checks for unused import statements.-->

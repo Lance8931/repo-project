@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.siping.hrip.portal.user.mapper.AdminStratorMapper">
+
+
+	<insert id="addUser" parameterType="com.siping.domain.portal.entity.User">
+		INSERT INTO users
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="username != null">
+				username,
+			</if>
+			<if test="pwdHash != null">
+				pwd_hash,
+			</if>
+			<if test="pwdIterator != null">
+				pwd_iterator,
+			</if>
+			<if test="pwdSalt != null">
+				pwd_salt,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="enabled != null">
+				enabled,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="pwdHash != null">
+				#{pwdHash,jdbcType=VARCHAR},
+			</if>
+			<if test="pwdIterator != null">
+				#{pwdIterator,jdbcType=INTEGER},
+			</if>
+			<if test="pwdSalt != null">
+				#{pwdSalt,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+				%H:%i:%s'),
+			</if>
+			<if test="updateDate != null">
+				STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+				%H:%i:%s'),
+			</if>
+			<if test="enabled != null">
+				#{enabled,jdbcType=TINYINT},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=TINYINT},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=TINYINT},
+			</if>
+		</trim>
+	</insert>
+
+
+	<insert id="addHrEmployee" parameterType="com.siping.domain.portal.entity.HrEmployee">
+		INSERT INTO hr_employee
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userName != null">
+				username,
+			</if>
+			<if test="empNo != null">
+				emp_no,
+			</if>
+			<if test="empName != null">
+				emp_name,
+			</if>
+			<if test="age != null">
+				age,
+			</if>
+			<if test="position != null">
+				position,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="isDelete != null">
+				is_delete,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="empNo != null">
+				#{empNo,jdbcType=INTEGER},
+			</if>
+			<if test="empName != null">
+				#{empName,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null">
+				#{age,jdbcType=INTEGER},
+			</if>
+			<if test="position != null">
+				#{position,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+				%H:%i:%s'),
+			</if>
+			<if test="updateDate != null">
+				STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+				%H:%i:%s'),
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=Boolean},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=TINYINT},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=TINYINT},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=Boolean},
+			</if>
+		</trim>
+	</insert>
+
+
+	<select id="selectUserName" parameterType="com.siping.domain.portal.entity.User"
+		resultType="java.lang.Integer">
+		select count(t.username) from users t where t.username =
+		#{username,jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="selectHrEmployee" parameterType="com.siping.domain.portal.entity.HrEmployee"
+		resultType="java.lang.Integer">
+		select count(t.emp_no) from hr_employee t where t.emp_no =
+		#{empNo,jdbcType=INTEGER}
+	</select>
+
+
+	<update id="updateUser" parameterType="com.siping.domain.portal.entity.User">
+		update users
+		<set>
+			<if test="pwdHash != null">
+				pwd_hash = #{pwdHash,jdbcType=VARCHAR},
+			</if>
+			<if test="pwdIterator != null">
+				pwd_iterator = #{pwdIterator,jdbcType=INTEGER},
+			</if>
+			<if test="pwdSalt != null">
+				pwd_salt= #{pwdSalt,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				user_type= #{userType,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				create_date=
+				STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+				%H:%i:%s'),
+			</if>
+			<if test="updateDate != null">
+				update_date=
+				STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+				%H:%i:%s'),
+			</if>
+			<if test="enabled != null">
+				enabled = #{enabled,jdbcType=TINYINT},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=TINYINT},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=TINYINT},
+			</if>
+		</set>
+		where username = #{username,jdbcType=VARCHAR}
+	</update>
+
+
+	<update id="updateHrEmployee" parameterType="com.siping.domain.portal.entity.HrEmployee">
+		update hr_employee
+		<set>
+			<if test="empNo != null">
+				emp_no = #{empNo,jdbcType=INTEGER},
+			</if>
+			<if test="empName != null">
+				emp_name = #{empName,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null">
+				age = #{age,jdbcType=INTEGER},
+			</if>
+			<if test="position != null">
+				position = #{position,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				create_date =
+				STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+				%H:%i:%s'),
+			</if>
+			<if test="updateDate != null">
+				update_date =
+				STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
+				%H:%i:%s'),
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=Boolean},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=TINYINT},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=TINYINT},
+			</if>
+			<if test="isDelete != null">
+				is_delete = #{isDelete,jdbcType=Boolean},
+			</if>
+		</set>
+		where username = #{userName,jdbcType=VARCHAR}
+	</update>
+
+
+	<select id="getAllEmployee" parameterType="java.util.Map"
+		resultType="com.siping.domain.portal.entity.HrEmployee">
+		select * from hr_employee t
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="hrEmployee.userName != null">
+				and t.username LIKE CONCAT(CONCAT('%',
+				#{hrEmployee.userName}), '%')
+			</if>
+			<if test="hrEmployee.empNo != null">
+				and t.emp_no LIKE CONCAT(CONCAT('%',
+				#{hrEmployee.empNo}), '%')
+			</if>
+			<if test="hrEmployee.empName != null">
+				and t.emp_name LIKE CONCAT(CONCAT('%',
+				#{hrEmployee.empName}), '%')
+			</if>
+			<if test="hrEmployee.isDelete != null">
+				and t.is_delete = #{hrEmployee.isDelete,jdbcType=BIT}
+			</if>
+		</trim>
+		<if test="pageRequest.startNo != null">
+			LIMIT #{pageRequest.startNo},#{pageRequest.pageSize}
+		</if>
+	</select>
+	<select id="getTotalEmployee" parameterType="com.siping.domain.portal.entity.HrEmployee"
+		resultType="java.lang.Integer">
+		select count(*) from hr_employee t
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="userName != null">
+				and t.username LIKE CONCAT(CONCAT('%',
+				#{userName}), '%')
+			</if>
+			<if test="empNo != null">
+				and t.emp_no LIKE CONCAT(CONCAT('%',
+				#{empNo}), '%')
+			</if>
+			<if test="empName != null">
+				and t.emp_name LIKE CONCAT(CONCAT('%',
+				#{empName}), '%')
+			</if>
+			<if test="isDelete != null">
+				and t.is_delete = #{isDelete,jdbcType=BIT}
+			</if>
+		</trim>
+	</select>
+
+	<select id="getAllPersonal" parameterType="java.util.Map"
+		resultType="com.siping.domain.portal.entity.UserPersonalInfo">
+		select * from user_personal_info t
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="personal.idCode != null">
+				and t.id_code LIKE CONCAT(CONCAT('%',
+				#{personal.idCode}), '%')
+			</if>
+			<if test="personal.nickname != null">
+				and t.nickname LIKE CONCAT(CONCAT('%',
+				#{personal.nickname}), '%')
+			</if>
+			<if test="personal.realname != null">
+				and t.realname LIKE CONCAT(CONCAT('%',
+				#{personal.realname}), '%')
+			</if>
+		</trim>
+		<if test="pageRequest.startNo != null">
+			LIMIT #{pageRequest.startNo},#{pageRequest.pageSize}
+		</if>
+	</select>
+	
+	<select id="getTotalPersonal" parameterType="com.siping.domain.portal.entity.UserPersonalInfo"
+        resultType="java.lang.Integer">
+        select count(*) from user_personal_info t
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="idCode != null">
+                and t.id_code LIKE CONCAT(CONCAT('%',
+                #{idCode}), '%')
+            </if>
+            <if test="nickname != null">
+                and t.nickname LIKE CONCAT(CONCAT('%',
+                #{nickname}), '%')
+            </if>
+            <if test="realname != null">
+                and t.realname LIKE CONCAT(CONCAT('%',
+                #{realname}), '%')
+            </if>
+        </trim>
+    </select>
+	
+	
+	<select id="getAllOrg" parameterType="java.util.Map"
+		resultType="com.siping.domain.portal.entity.UserOrgInfo">
+		select * from user_org_info t
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="org.orgCode != null">
+				and t.org_code LIKE CONCAT(CONCAT('%',
+				#{org.orgCode}), '%')
+			</if>
+			<if test="org.registeredNo != null">
+				and t.registered_no LIKE CONCAT(CONCAT('%',
+				#{org.registeredNo}), '%')
+			</if>
+			<if test="org.orgName != null">
+				and t.org_name LIKE CONCAT(CONCAT('%',
+				#{org.orgName}), '%')
+			</if>
+			<if test="org.orgTypeId != null">
+				and t.org_type_id = #{org.orgTypeId}
+			</if>
+			<if test="org.city != null">
+				and t.city = #{org.city}
+			</if>
+		</trim>
+		<if test="pageRequest.startNo != null">
+			LIMIT #{pageRequest.startNo},#{pageRequest.pageSize}
+		</if>
+	</select>
+
+    <select id="getTotalOrg" parameterType="com.siping.domain.portal.entity.UserOrgInfo"
+        resultType="java.lang.Integer">
+        select count(*) from user_org_info t
+            <trim prefix="where" prefixOverrides="and|or">
+            <if test="orgCode != null">
+                and t.org_code LIKE CONCAT(CONCAT('%',
+                #{orgCode}), '%')
+            </if>
+            <if test="registeredNo != null">
+                and t.registered_no LIKE CONCAT(CONCAT('%',
+                #{registeredNo}), '%')
+            </if>
+            <if test="orgName != null">
+                and t.org_name LIKE CONCAT(CONCAT('%',
+                #{orgName}), '%')
+            </if>
+            <if test="orgTypeId != null">
+                and t.org_type_id = #{orgTypeId}
+            </if>
+            <if test="city != null">
+                and t.city = #{city}
+            </if>
+        </trim>
+    </select>
+	
+
+
+	<update id="deleteUserHrEmployee" parameterType="com.siping.domain.portal.entity.HrEmployee">
+		update
+		hr_employee h,users u set h.is_delete = 1 ,u.enabled = 0 where
+		u.username = #{userName} AND h.username = #{userName}
+	</update>
+
+	<select id="getUserpersonal" resultType="com.siping.domain.portal.entity.HrEmployee"
+		parameterType="java.lang.String">
+		select * from hr_employee where username =
+		#{username,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

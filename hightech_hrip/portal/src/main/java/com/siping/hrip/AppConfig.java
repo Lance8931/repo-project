@@ -6,13 +6,14 @@ import java.net.InetAddress;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.stroma.framework.core.database.manager.SqlMappingRegistry;
 import org.stroma.framework.core.database.redis.RedisAccess;
 import org.stroma.framework.core.log.LogSettings;
@@ -24,9 +25,8 @@ import redis.clients.jedis.JedisPoolConfig;
 import com.siping.hrip.common.log.ServiceLogMessageFilter;
 
 @Configuration
-@ComponentScan(basePackageClasses = AppConfig.class, scopeResolver = StromaScopeResolver.class)
+@ComponentScan(basePackageClasses = AppConfig.class, scopeResolver = StromaScopeResolver.class, includeFilters = { @Filter(type = FilterType.ANNOTATION, value = org.springframework.stereotype.Controller.class) }, excludeFilters = @Filter(type = FilterType.ANNOTATION, value = org.springframework.stereotype.Service.class))
 @EnableAspectJAutoProxy
-@EnableWebMvc
 @EnableTransactionManagement
 @PropertySource({ "classpath:/site-master.properties", "classpath:/site-jdbc.properties", "classpath:/site-redis.properties", "classpath:/site-version.properties", "classpath:/site-social.properties" })
 public class AppConfig extends DbConfig {
