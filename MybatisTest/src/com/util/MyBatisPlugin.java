@@ -133,22 +133,22 @@ public class MyBatisPlugin extends PluginAdapter {
 		page.addElement(ifXml);
 
 		// updateBatchByIdSelective
-		XmlElement updateBaByIdSel = new XmlElement("update");
-		updateBaByIdSel.addAttribute(new Attribute("id",
-				"updateBatchByIdSelective"));
-		updateBaByIdSel.addAttribute(new Attribute("parameterType",
-				"java.util.List"));
-		XmlElement updateBaSelForeach = new XmlElement("foreach");
-		updateBaSelForeach.addAttribute(new Attribute("collection", "list"));
-		updateBaSelForeach.addAttribute(new Attribute("item", "t"));
-		updateBaSelForeach.addAttribute(new Attribute("index", "index"));
-		updateBaSelForeach.addAttribute(new Attribute("separator", ";"));
-		updateBaSelForeach.addAttribute(new Attribute("open", ""));
-		updateBaSelForeach.addAttribute(new Attribute("close", ""));
-		updateBaSelForeach.addElement(new TextElement("update "
-				+ introspectedTable.getFullyQualifiedTableNameAtRuntime()
-				+ " t " + " <include refid=\"sets\" /> where t.id"));
-		updateBaByIdSel.addElement(updateBaSelForeach);
+		// XmlElement updateBaByIdSel = new XmlElement("update");
+		// updateBaByIdSel.addAttribute(new Attribute("id",
+		// "updateBatchByIdSelective"));
+		// updateBaByIdSel.addAttribute(new Attribute("parameterType",
+		// "java.util.List"));
+		// XmlElement updateBaSelForeach = new XmlElement("foreach");
+		// updateBaSelForeach.addAttribute(new Attribute("collection", "list"));
+		// updateBaSelForeach.addAttribute(new Attribute("item", "t"));
+		// updateBaSelForeach.addAttribute(new Attribute("index", "index"));
+		// updateBaSelForeach.addAttribute(new Attribute("separator", ";"));
+		// updateBaSelForeach.addAttribute(new Attribute("open", ""));
+		// updateBaSelForeach.addAttribute(new Attribute("close", ""));
+		// updateBaSelForeach.addElement(new TextElement("update "
+		// + introspectedTable.getFullyQualifiedTableNameAtRuntime()
+		// + " t " + " <include refid=\"sets\" /> where t.id="));
+		// updateBaByIdSel.addElement(updateBaSelForeach);
 
 		parentElement.addElement(conditionSql);
 		parentElement.addElement(setSql);
@@ -157,7 +157,7 @@ public class MyBatisPlugin extends PluginAdapter {
 		parentElement.addElement(get);
 		parentElement.addElement(getCount);
 		parentElement.addElement(page);
-		parentElement.addElement(updateBaByIdSel);
+		// parentElement.addElement(updateBaByIdSel);
 
 		return super.sqlMapDocumentGenerated(document, introspectedTable);
 	}
