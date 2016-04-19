@@ -15,7 +15,8 @@ public interface ArticleMapper {
 	int updateByPrimaryKeySelective(Article record);
 
 	List<Article> getByConditions(Map<?, ?> map);
-	
-	int deleteByPrimaryKey(Integer id);
 
+	Long getCount(Map<?, ?> map);
+
+	List<Article> getByPage(Map<?, ?> map);
 }

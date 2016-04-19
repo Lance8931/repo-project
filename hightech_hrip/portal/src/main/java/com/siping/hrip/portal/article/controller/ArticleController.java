@@ -1,8 +1,5 @@
 package com.siping.hrip.portal.article.controller;
 
-import java.math.BigInteger;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.siping.domain.common.PagePath;
 import com.siping.domain.common.ResultMsg;
 import com.siping.domain.portal.entity.Article;
+import com.siping.domain.portal.entity.PageRequest;
+import com.siping.domain.portal.entity.PageResponse;
 import com.siping.hrip.portal.article.service.ArticleService;
 
 /**
@@ -50,19 +49,19 @@ public class ArticleController {
 	 * @author siping-L.J.H
 	 */
 	@RequestMapping(value = "article/add")
-	public ResultMsg add(String content) {
-		if (StringUtils.isNotBlank(content)) {
+	public ResultMsg add(Article article) {
+		String checkInfo = checkArticle(article, "add");
+		if (null != checkInfo) {
+			return new ResultMsg(false, "添加失败，" + checkInfo);
+		} else {
 			try {
-				articleService.addArticle(content);
+				articleService.addArticle(article);
 				return new ResultMsg(true, "添加成功！");
 			} catch (Exception e) {
 				e.printStackTrace();
+				return new ResultMsg(false, "添加失败，" + e.getMessage());
 			}
-		}else {
-			return new ResultMsg(false, "内容为空！");
 		}
-		
-		return new ResultMsg(false, "添加失败！");
 	}
 
 	/**
@@ -75,15 +74,20 @@ public class ArticleController {
 	 * @author siping-L.J.H
 	 */
 	@RequestMapping(value = "article/list")
-	public String list(Map<String, Object> model) {
-		model.put("list", articleService.listArticles());
-		return PagePath.ARTICLE_LIST;
+	@ResponseBody
+	public PageResponse<Article> list(Article article, PageRequest pageRequest) {
+		try {
+			return articleService.getListByPage(article, pageRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
 	 * 文章预览
 	 * 
-	 * @param model
+	 * @param id
 	 * @return
 	 *
 	 * @date 2016年4月18日上午9:50:58
@@ -91,22 +95,25 @@ public class ArticleController {
 	 */
 	@RequestMapping(value = "article/preview")
 	@ResponseBody
-	public ResultMsg preview(Map<String, Object> model) {
-		try {
-			Article article = articleService.listArticles().get(0);
-			return new ResultMsg(true, article.getContent(), article.getId()
-					.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
+	public ResultMsg preview(String id) {
+		if (StringUtils.isNotBlank(id) && StringUtils.isNumeric(id)) {
+			try {
+				Article article = articleService.getForPreview(id);
+				return new ResultMsg(true, article.getContent(), article
+						.getId().toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResultMsg(false, "获取文章内容失败，" + e.getMessage());
+			}
+		} else {
+			return new ResultMsg(false, "获取文章内容失败，id非法");
 		}
-		return new ResultMsg(false, "获取文章内容失败！");
 	}
 
 	/**
 	 * 编辑文章内容
 	 * 
-	 * @param id
-	 * @param content
+	 * @param article
 	 * @return
 	 *
 	 * @date 2016年4月18日下午1:38:53
@@ -114,21 +121,19 @@ public class ArticleController {
 	 */
 	@RequestMapping(value = "article/edit")
 	@ResponseBody
-	public ResultMsg edit(String id, String content) {
-		Article article = new Article();
-		if (StringUtils.isNotBlank(id) && StringUtils.isNumeric(id)) {
-			article.setId(new BigInteger(id));
-			article.setContent(content);
+	public ResultMsg edit(Article article) {
+		String checkInfo = checkArticle(article, "edit");
+		if (null != checkInfo) {
+			return new ResultMsg(false, "编辑失败，" + checkInfo);
 		} else {
-			return new ResultMsg(false, "非法id！");
+			try {
+				articleService.updateArticle(article);
+				return new ResultMsg(true, "编辑成功！");
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResultMsg(false, "编辑失败，" + e.getMessage());
+			}
 		}
-		try {
-			articleService.updateArticle(article);
-			return new ResultMsg(true, "成功！");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new ResultMsg(false, "失败！");
 	}
 
 	/**
@@ -141,21 +146,69 @@ public class ArticleController {
 	 * @date 2016年4月18日下午1:56:56
 	 * @author siping-L.J.H
 	 */
+	@RequestMapping(value = "article/updateStatus")
+	@ResponseBody
 	public ResultMsg updateStatus(String id, String action) {
 		if (StringUtils.isNotBlank(id) && StringUtils.isNumeric(id)) {
 			if (action.equals("enable") || action.equals("delete")) {
 				try {
 					articleService.updateArticleStatus(id, action);
-					return new ResultMsg(true, "操作成功！");
+					return new ResultMsg(true, "修改状态成功！");
 				} catch (Exception e) {
 					e.printStackTrace();
+					return new ResultMsg(false, "修改状态失败，" + e.getMessage());
 				}
 			} else {
-				return new ResultMsg(false, "不正常操作指令");
+				return new ResultMsg(false, "修改状态失败，不正常操作指令。");
 			}
 		} else {
-			return new ResultMsg(false, "非法id");
+			return new ResultMsg(false, "修改状态失败，非法id");
 		}
-		return new ResultMsg(false, "操作失败！");
+	}
+
+	/**
+	 * 检查输入Article数据
+	 * 
+	 * @param article
+	 * @param action
+	 *            操作(add/edit)
+	 * @return
+	 *
+	 * @date 2016年4月19日下午4:13:00
+	 * @author siping-L.J.H
+	 */
+	private String checkArticle(Article article, String action) {
+		if (null != article) {
+			if (action.equals("add") || action.equals("edit")) {
+				if (StringUtils.isBlank(article.getContent())) {
+					return "内容为空！";
+				} else if (!StringUtils.isNotBlank(article.getType())
+						|| !StringUtils.isNumeric(article.getType())) {
+					return "信息类别为空！";
+				} else if (!StringUtils.isNotBlank(article.getTitle())) {
+					return "文章标题为空！";
+				}
+			}
+			if (action.equals("edit")) {
+				if (null != article.getId() && article.getId().intValue() <= 0) {
+					return "id非法";
+				}
+			}
+		} else {
+			return "article为null！";
+		}
+		return null;
+	}
+
+	@RequestMapping(value = "article/exceptionTest")
+	@ResponseBody
+	public ResultMsg test() {
+		try {
+			articleService.exceptionTest();
+			return new ResultMsg(true, "成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "失败");
+		}
 	}
 }

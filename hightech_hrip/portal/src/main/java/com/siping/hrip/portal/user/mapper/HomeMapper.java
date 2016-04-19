@@ -14,9 +14,30 @@ public interface HomeMapper {
     List<Menu> getMenuList();
     
     /**
+     * 获取菜单列表
+     * @return
+     */
+    List<SlidePic> getSlidePicList();
+    
+    /**
      * 保存幻灯片图片相关信息
      * @param slidePicList
      * @return
      */
     Integer saveSlidePicInfo(List<SlidePic> list);
+    
+    /**
+     * 修改幻灯片
+     * @param slidePic
+     * @return
+     */
+    Integer updateSlidePic(List<SlidePic> list);
+    
+    /**
+     * 根据id删除幻灯片
+     * @param slidePic
+     * @return
+     */
+    Integer deleteSlidePic(String id);
+ 
 }

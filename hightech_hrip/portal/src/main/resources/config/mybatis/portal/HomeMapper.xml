@@ -12,22 +12,67 @@
         <result column="update_by" property="updateBy" jdbcType="INTEGER" />  
         <result column="order_no" property="orderNo" jdbcType="INTEGER" />  
     </resultMap>
+    
+    <resultMap id="slidePicMap" type="com.siping.domain.portal.entity.SlidePic">
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="hover_tips" property="hoverTips" jdbcType="VARCHAR" />  
+        <result column="order_no" property="orderNo" jdbcType="INTEGER" /> 
+        <result column="create_date" property="createDate" jdbcType="DATE" />
+        <result column="create_by" property="createBy" jdbcType="INTEGER" />
+        <result column="update_date" property="updateDate" jdbcType="DATE" />
+        <result column="update_by" property="updateBy" jdbcType="INTEGER" />   
+    </resultMap>
+    <!-- 菜单列表 -->
     <sql id="menu_Column_List">
         id, menu_name, menu_url, DATE_FORMAT(create_date,"%Y-%m-%d %H:%i:%s") create_date,
         create_by ,DATE_FORMAT(update_date,"%Y-%m-%d") update_date, update_by, order_no
     </sql>
+    <!-- 幻灯片图片 -->
+    <sql id="slidePic_Column_List">
+        id, pic_path, url, hover_tips, order_no, DATE_FORMAT(create_date,"%Y-%m-%d %H:%i:%s") create_date,
+        create_by ,DATE_FORMAT(update_date,"%Y-%m-%d") update_date, update_by
+    </sql>
+    <!-- 查询菜单列表 -->
     <select id="getMenuList" resultMap="menuMap">
         select 
         <include refid="menu_Column_List" />slidePicList
-        from `menu` ORDER BY order_no DESC;
+        from `menu` ORDER BY order_no DESC
+    </select>
+    
+    <!-- 查询幻灯片图片列表 -->
+    <select id="getSlidePicList" resultMap="slidePicMap">
+        select 
+        <include refid="slidePic_Column_List" />
+        from `slide_pic` 
+        <if test="startNo != null">
+            LIMIT #{startNo},#{pageSize}
+        </if>
     </select>
     
     <!-- 批量插入幻灯片图片 -->
     <insert id="saveSlidePicInfo" parameterType="java.util.List">    
         INSERT INTO slide_pic (pic_path,url,hover_tips,create_date,order_no,create_by) values
         <foreach collection="list" item="item" index="index" separator="," >
-            (#{item.picPath},#{item.url},#{item.hoverTips},now(),#{item.orderNo},#{item.orderNo})
+            (#{item.picPath},#{item.url},#{item.hoverTips},now(),#{item.orderNo},#{item.createBy})
         </foreach>
     </insert> 
+    
+        <!-- 批量修改幻灯片图片 -->
+        <update id="updateSlidePic"  parameterType="java.util.List">
+           <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+                    UPDATE slide_pic
+                    <set>
+                            url=#{item.url}, update_date=now(), update_by=#{item.id}
+                    </set>
+                    where 1=1 and id = #{item.id}
+           </foreach>
+        </update>
+       <!-- 删除幻灯片图片 -->
+       <delete id="deleteSlidePic" parameterType="java.lang.String">
+            DELETE FROM slide_pic where id=#{id}
+        </delete>
+          
     
 </mapper>

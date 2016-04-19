@@ -1,5 +1,12 @@
 package com.siping.hrip.portal.user.service;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.siping.domain.portal.entity.User;
 import com.siping.domain.portal.entity.UserOrgInfo;
 
@@ -11,7 +18,7 @@ public interface UserOrgService {
      * @return
      * @throws Exception
      */
-    public String addOrg(User user, UserOrgInfo org) throws Exception;
+    public String addOrg(User user, UserOrgInfo org, HttpServletRequest request, @RequestParam("uploadImage") List<MultipartFile> files) throws Exception;
 
     /**
      * 修改企业用户

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.generator.mapper.Article1Mapper" >
+<mapper namespace="com.siping.hrip.portal.article.mapper.ArticleMapper" >
   <resultMap id="BaseResultMap" type="com.siping.domain.portal.entity.Article" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
@@ -32,10 +32,6 @@
     from article
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from article
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
   <insert id="insertSelective" parameterType="com.siping.domain.portal.entity.Article" >
     insert into article
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -195,19 +191,6 @@
       </if>
     </trim>
   </sql>
-  <select id="getAll" resultMap="BaseResultMap" >
-    select * from article
-  </select>
-  <delete id="deleteByIds" >
-     delete from article where id in 
-    <foreach collection="list" item="item" index="index" separator="," open="(" close=")" >
-      #{item}
-    </foreach>
-  </delete>
-  <select id="getByConditions" parameterType="java.util.Map" resultMap="BaseResultMap" >
-    select *  from article t
-    <include refid="conditions"/>
-  </select>
   <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long" >
      select count(*) from article t
     <include refid="conditions"/>

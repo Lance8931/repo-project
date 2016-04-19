@@ -1,10 +1,16 @@
 package com.siping.hrip.portal.user.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.stroma.framework.core.platform.web.StromaController;
 
 import com.siping.domain.common.ResultMsg;
@@ -27,10 +33,10 @@ public class UserOrgController extends StromaController {
      */
     @RequestMapping(value = "/addOrg", method = RequestMethod.GET)
     @ResponseBody
-    public ResultMsg addOrg() {
+    public ResultMsg addOrg(@RequestParam("HttpServletRequest") HttpServletRequest request, @RequestParam("uploadImage") List<MultipartFile> files) {
         msg = new ResultMsg();
         try {
-            msg.setMsg(orgService.addOrg(user, org));
+            msg.setMsg(orgService.addOrg(user, org, request, files));
         } catch (Exception e) {
             e.printStackTrace();
         }

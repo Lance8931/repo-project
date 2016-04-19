@@ -17,6 +17,7 @@
     <button onclick="preview()">预览</button>
     <button onclick="getEdit()">获取编辑</button>
     <button onclick="saveEdit()">保存编辑</button>
+    <button onclick="testException()">测试异常信息抛出</button>
 	<script type="text/javascript">
 	    var ue = UE.getEditor('editor');
 	    function getContent() {
@@ -35,7 +36,7 @@
         function submit1(){
             $.ajax({
                 url:'add',
-                data:{content:UE.getEditor('editor').getContent()},
+                data:{article:{content:UE.getEditor('editor').getContent()}},
                 success:function(result){
                     if(result.success){
                         alert(result.msg);
@@ -52,6 +53,7 @@
         function preview(){
             $.ajax({
                 url:'preview',
+                data:{id:1},
                 success:function(result){
                     $("#previewdddddddd").html(result.msg);
                 }
@@ -61,6 +63,7 @@
         function getEdit(){
             $.ajax({
                 url:'preview',
+                data:{id:1},
                 success:function(result){
                     $("#articleId").val(result.billNumber);
                     UE.getEditor('editor').setContent(result.msg);
@@ -71,7 +74,16 @@
         function saveEdit(){
             $.ajax({
                 url:'edit',
-                data:{id:$("#articleId").val(),content:UE.getEditor('editor').getContent()},
+                data:{article:{id:$("#articleId").val(),content:UE.getEditor('editor').getContent()}},
+                success:function(result){
+                    alert(result.msg);
+                }
+            });
+        }
+        
+        function testException(){
+            $.ajax({
+                url:'exceptionTest',
                 success:function(result){
                     alert(result.msg);
                 }

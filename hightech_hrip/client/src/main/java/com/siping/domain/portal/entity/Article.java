@@ -5,13 +5,11 @@ import java.util.Date;
 
 import com.siping.domain.common.Common;
 
-public class Article extends Common implements Serializable{
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -4970330069799080198L;
+public class Article extends Common implements Serializable {
+    
+    private static final long serialVersionUID = -4970330069799080198L;
 
-	/**
+    /**
      * 标题
      */
     private String title;

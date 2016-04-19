@@ -42,6 +42,19 @@ public class HomeServiceImpl implements HomeService {
     }
     
     /**
+     * 获取幻灯片图片列表
+     * @return
+     */
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+    public String getSlidePicList() throws Exception{
+        List<SlidePic> slidePicList = homeMapper.getSlidePicList();
+        Gson gson = new Gson();
+        String json = gson.toJson(slidePicList);
+        return json;
+    }
+    
+    
+    /**
      * 上传幻灯片图片，并将图片相关信息保存到数据库
      * @param request
      * @return
@@ -62,13 +75,8 @@ public class HomeServiceImpl implements HomeService {
             String imgName = file.getOriginalFilename();
             String fileSuffix = imgName.substring(imgName.lastIndexOf(".")).toLowerCase();
             String imgFilePath = filePath + fileName + fileSuffix;
-            try{//如果文件未完全保存成功则删除
-                file.transferTo(new File(imgFilePath));
-            }catch(Exception e){
-                e.printStackTrace();
-                removeImage();
-            }
-            
+            file.transferTo(new File(imgFilePath));
+          
             slidePic.setPicPath(fileName + fileSuffix);
             slidePic.setUrl("test");
             //slidePic.setCreateBy(user.getId());
@@ -79,13 +87,34 @@ public class HomeServiceImpl implements HomeService {
         resultMsg = new ResultMsg(true, "上传成功");
         return resultMsg;
     }
-    
-    
-    private Boolean removeImage(){
-        
-        
-        return false;
+
+    /**
+     * 修改幻灯片
+     */
+    public ResultMsg updateSlidePic(List<SlidePic> slidePics) throws Exception{
+        Integer isUpdate = homeMapper.updateSlidePic(slidePics);
+        return new ResultMsg(true, isUpdate + "张图片修改成功");
     }
+    
+    /**
+     * 通过id删除幻灯片
+     * @param id
+     * @return
+     */
+    @Transactional(rollbackFor=Exception.class) 
+    public ResultMsg deleteSlidePic(String id, String picPath) throws Exception{
+        File file = new File(filePath + picPath);
+        if(!file.exists())
+            return new ResultMsg(false, "文件不存在");
+        if(file.delete()){
+            homeMapper.deleteSlidePic(id);
+        }else{
+            return new ResultMsg(false, "删除失败");
+        }
+        
+        return new ResultMsg(true, "删除成功");
+    }
+
 
 }
 
