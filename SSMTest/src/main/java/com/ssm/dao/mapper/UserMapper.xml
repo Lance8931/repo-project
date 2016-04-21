@@ -79,4 +79,59 @@
       age = #{age,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="getCountByProvince" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(*) from hat_province where province = #{_parameter}
+  </select>
+  <select id="getCountByCity" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(*) from hat_city where city = #{_parameter}
+  </select>
+  <select id="getCountByArea" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(*) from hat_area where area = #{_parameter}
+  </select>
+  
+  <update id="updateCity" parameterType="java.lang.String">
+  	update hat_city set is_exist = true where city = #{_parameter}
+  </update>
+  
+  <update id="updateArea" parameterType="java.lang.String">
+  	update hat_area set is_exist = true where area = #{_parameter}
+  </update>
+  
+  <select id="getProvinceListByCity" parameterType="java.lang.String" resultType="com.ssm.bean.User">
+  	select province as username,provinceID as password from hat_city a left join hat_province b on a.father = b.provinceID where a.city = #{_parameter}
+  </select>
+  <select id="getCityListByArea" parameterType="java.lang.String" resultType="com.ssm.bean.User">
+  	select city as username,cityID as password from hat_area a left join hat_city b on a.father = b.cityID where a.area = #{_parameter}
+  </select>
+  
+  <insert id="insertArea" parameterType="java.util.Map">
+  	insert into hat_area (areaID,area,father,is_exist) values (#{areaID},#{area},#{father},true)
+  </insert>
+  
+  <insert id="insertCity" parameterType="java.util.Map">
+  	insert into hat_city (cityID,city,father,is_exist) values (#{cityID},#{city},#{father},true)
+  </insert>
+  
+  <update id="updateCityIsExist" parameterType="java.util.Map">
+  	update hat_city set is_exist = true where city=#{city} and father = #{father}
+  </update>
+  
+  <update id="updateAreaIsExist" parameterType="java.util.Map">
+  	update hat_area set is_exist = true where area=#{area} and father = #{father}
+  </update>
+  
+  <insert id="insertProvince1" parameterType="java.util.Map">
+  	insert siping_province (province_id,province) values (#{provinceId},#{province})
+  </insert>
+  
+  <insert id="insertCity1" parameterType="java.util.Map">
+  	insert siping_city (city_id,city,parent_id) values (#{cityId},#{city},#{parentId})
+  </insert>
+  
+  <insert id="insertArea1" parameterType="java.util.Map">
+  	insert siping_area (area_id,area,parent_id) values (#{areaId},#{area},#{parentId})
+  </insert>
+  
+  
 </mapper>
