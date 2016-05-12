@@ -41,8 +41,7 @@
             </div>
             <div class="fitem">
                 <label>手机牌子:</label>
-                <input id="cc" class="easyui-combobox" name="dept"
-    				data-options="valueField:'id',textField:'text',url:'/brand.json'">
+                <input id="cc" class="easyui-combobox" name="dept">
             </div>
             <div class="fitem">
                 <label>手机颜色:</label>
@@ -67,6 +66,12 @@
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
     </div>
     <script type="text/javascript">
+	    $('#cc').combobox({    
+	        url:'../resources/json/brand.json',    
+	        valueField:'id',    
+	        textField:'text',
+	        method:"GET"
+	    }); 
         var url;
         function newUser(){
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','添加手机');
