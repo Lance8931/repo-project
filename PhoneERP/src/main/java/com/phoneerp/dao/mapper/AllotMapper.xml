@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.phoneerp.dao.AllotMapper" >
+  <resultMap id="BaseResultMap" type="com.phoneerp.bean.Allot" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="in_shopId" property="inShopid" jdbcType="INTEGER" />
+    <result column="out_shopId" property="outShopid" jdbcType="INTEGER" />
+    <result column="phone_id" property="phoneId" jdbcType="INTEGER" />
+    <result column="operat_time" property="operatTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, in_shopId, out_shopId, phone_id, operat_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from allot
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from allot
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.phoneerp.bean.Allot" >
+    insert into allot (id, in_shopId, out_shopId, 
+      phone_id, operat_time)
+    values (#{id,jdbcType=INTEGER}, #{inShopid,jdbcType=INTEGER}, #{outShopid,jdbcType=INTEGER}, 
+      #{phoneId,jdbcType=INTEGER}, #{operatTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.phoneerp.bean.Allot" >
+    insert into allot
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="inShopid != null" >
+        in_shopId,
+      </if>
+      <if test="outShopid != null" >
+        out_shopId,
+      </if>
+      <if test="phoneId != null" >
+        phone_id,
+      </if>
+      <if test="operatTime != null" >
+        operat_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="inShopid != null" >
+        #{inShopid,jdbcType=INTEGER},
+      </if>
+      <if test="outShopid != null" >
+        #{outShopid,jdbcType=INTEGER},
+      </if>
+      <if test="phoneId != null" >
+        #{phoneId,jdbcType=INTEGER},
+      </if>
+      <if test="operatTime != null" >
+        #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.phoneerp.bean.Allot" >
+    update allot
+    <set >
+      <if test="inShopid != null" >
+        in_shopId = #{inShopid,jdbcType=INTEGER},
+      </if>
+      <if test="outShopid != null" >
+        out_shopId = #{outShopid,jdbcType=INTEGER},
+      </if>
+      <if test="phoneId != null" >
+        phone_id = #{phoneId,jdbcType=INTEGER},
+      </if>
+      <if test="operatTime != null" >
+        operat_time = #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Allot" >
+    update allot
+    set in_shopId = #{inShopid,jdbcType=INTEGER},
+      out_shopId = #{outShopid,jdbcType=INTEGER},
+      phone_id = #{phoneId,jdbcType=INTEGER},
+      operat_time = #{operatTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

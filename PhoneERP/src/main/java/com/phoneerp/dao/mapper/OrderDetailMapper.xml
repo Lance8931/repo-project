@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.phoneerp.dao.OrderDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.phoneerp.bean.OrderDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="phone_imeiNo" property="phoneImeino" jdbcType="VARCHAR" />
+    <result column="sale_price" property="salePrice" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, phone_imeiNo, sale_price
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from order_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.phoneerp.bean.OrderDetail" >
+    insert into order_detail (id, phone_imeiNo, sale_price
+      )
+    values (#{id,jdbcType=INTEGER}, #{phoneImeino,jdbcType=VARCHAR}, #{salePrice,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.phoneerp.bean.OrderDetail" >
+    insert into order_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="phoneImeino != null" >
+        phone_imeiNo,
+      </if>
+      <if test="salePrice != null" >
+        sale_price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="phoneImeino != null" >
+        #{phoneImeino,jdbcType=VARCHAR},
+      </if>
+      <if test="salePrice != null" >
+        #{salePrice,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.phoneerp.bean.OrderDetail" >
+    update order_detail
+    <set >
+      <if test="phoneImeino != null" >
+        phone_imeiNo = #{phoneImeino,jdbcType=VARCHAR},
+      </if>
+      <if test="salePrice != null" >
+        sale_price = #{salePrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.OrderDetail" >
+    update order_detail
+    set phone_imeiNo = #{phoneImeino,jdbcType=VARCHAR},
+      sale_price = #{salePrice,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

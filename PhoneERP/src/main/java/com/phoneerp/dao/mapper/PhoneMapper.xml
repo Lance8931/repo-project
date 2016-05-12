@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.phoneerp.dao.PhoneMapper" >
+  <resultMap id="BaseResultMap" type="com.phoneerp.bean.Phone" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="imeiNo" property="imeino" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="pur_price" property="purPrice" jdbcType="DECIMAL" />
+    <result column="sale_price" property="salePrice" jdbcType="DECIMAL" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, imeiNo, color, brand, pur_price, sale_price, supplier_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from phone
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from phone
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.phoneerp.bean.Phone" >
+    insert into phone (id, imeiNo, color, 
+      brand, pur_price, sale_price, 
+      supplier_id)
+    values (#{id,jdbcType=INTEGER}, #{imeino,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, 
+      #{brand,jdbcType=VARCHAR}, #{purPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, 
+      #{supplierId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.phoneerp.bean.Phone" >
+    insert into phone
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="imeino != null" >
+        imeiNo,
+      </if>
+      <if test="color != null" >
+        color,
+      </if>
+      <if test="brand != null" >
+        brand,
+      </if>
+      <if test="purPrice != null" >
+        pur_price,
+      </if>
+      <if test="salePrice != null" >
+        sale_price,
+      </if>
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="imeino != null" >
+        #{imeino,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="purPrice != null" >
+        #{purPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null" >
+        #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.phoneerp.bean.Phone" >
+    update phone
+    <set >
+      <if test="imeino != null" >
+        imeiNo = #{imeino,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        color = #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="purPrice != null" >
+        pur_price = #{purPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null" >
+        sale_price = #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Phone" >
+    update phone
+    set imeiNo = #{imeino,jdbcType=VARCHAR},
+      color = #{color,jdbcType=VARCHAR},
+      brand = #{brand,jdbcType=VARCHAR},
+      pur_price = #{purPrice,jdbcType=DECIMAL},
+      sale_price = #{salePrice,jdbcType=DECIMAL},
+      supplier_id = #{supplierId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
