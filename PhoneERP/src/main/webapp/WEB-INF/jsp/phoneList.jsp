@@ -45,7 +45,7 @@
             </div>
             <div class="fitem">
                 <label>手机颜色:</label>
-                <input name="phone" class="easyui-textbox">
+                <input id="cc1" class="easyui-combobox" name="dept1">
             </div>
             <div class="fitem">
                 <label>进货价格:</label>
@@ -72,8 +72,24 @@
 	        textField:'text',
 	        method:"GET"
 	    }); 
+	    $('#cc1').combobox({    
+	        url:'../resources/json/color.json',    
+	        valueField:'id',    
+	        textField:'text',
+	        method:"GET"
+	    });
         var url;
         function newUser(){
+        	$.ajax({
+        		url:'',
+        		type:'get',
+        		data:{id:1},
+        		success:function(data){
+        			$('#fm').form('clear');
+        			$('#fm').form('load',data);
+        			$('#dlg').dialog('open').dialog('center').dialog('setTitle','添加手机');
+        		}
+        	});
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','添加手机');
             $('#fm').form('clear');
             url = 'save_user.php';
