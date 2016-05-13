@@ -8,10 +8,11 @@
     <result column="brand" property="brand" jdbcType="VARCHAR" />
     <result column="pur_price" property="purPrice" jdbcType="DECIMAL" />
     <result column="sale_price" property="salePrice" jdbcType="DECIMAL" />
-    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="model_no" property="modelNo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, imeiNo, color, brand, pur_price, sale_price, supplier_id
+    id, imeiNo, color, brand, pur_price, sale_price, model_no, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -26,10 +27,10 @@
   <insert id="insert" parameterType="com.phoneerp.bean.Phone" >
     insert into phone (id, imeiNo, color, 
       brand, pur_price, sale_price, 
-      supplier_id)
+      model_no, create_time)
     values (#{id,jdbcType=INTEGER}, #{imeino,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, 
       #{brand,jdbcType=VARCHAR}, #{purPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, 
-      #{supplierId,jdbcType=INTEGER})
+      #{modelNo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.phoneerp.bean.Phone" >
     insert into phone
@@ -52,8 +53,11 @@
       <if test="salePrice != null" >
         sale_price,
       </if>
-      <if test="supplierId != null" >
-        supplier_id,
+      <if test="modelNo != null" >
+        model_no,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -75,8 +79,11 @@
       <if test="salePrice != null" >
         #{salePrice,jdbcType=DECIMAL},
       </if>
-      <if test="supplierId != null" >
-        #{supplierId,jdbcType=INTEGER},
+      <if test="modelNo != null" >
+        #{modelNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -98,8 +105,11 @@
       <if test="salePrice != null" >
         sale_price = #{salePrice,jdbcType=DECIMAL},
       </if>
-      <if test="supplierId != null" >
-        supplier_id = #{supplierId,jdbcType=INTEGER},
+      <if test="modelNo != null" >
+        model_no = #{modelNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -111,7 +121,8 @@
       brand = #{brand,jdbcType=VARCHAR},
       pur_price = #{purPrice,jdbcType=DECIMAL},
       sale_price = #{salePrice,jdbcType=DECIMAL},
-      supplier_id = #{supplierId,jdbcType=INTEGER}
+      model_no = #{modelNo,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

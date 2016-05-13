@@ -5,9 +5,10 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
     <result column="shop_address" property="shopAddress" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, shop_name, shop_address
+    id, shop_name, shop_address, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -20,10 +21,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.phoneerp.bean.Shop" >
-    insert into shop (id, shop_name, shop_address
-      )
-    values (#{id,jdbcType=INTEGER}, #{shopName,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR}
-      )
+    insert into shop (id, shop_name, shop_address, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{shopName,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.phoneerp.bean.Shop" >
     insert into shop
@@ -37,6 +38,9 @@
       <if test="shopAddress != null" >
         shop_address,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -47,6 +51,9 @@
       </if>
       <if test="shopAddress != null" >
         #{shopAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -59,13 +66,34 @@
       <if test="shopAddress != null" >
         shop_address = #{shopAddress,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Shop" >
     update shop
     set shop_name = #{shopName,jdbcType=VARCHAR},
-      shop_address = #{shopAddress,jdbcType=VARCHAR}
+      shop_address = #{shopAddress,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="getList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select * from shop t
+  	<include refid="conditions"/>
+  </select>
+  
+  <sql id="conditions" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="shop.shopName != null" >
+        and  t.shop_name like CONCAT ('%',#{shop.shopName},'%')
+      </if>
+      <if test="shop.shopAddress != null" >
+        and  t.shop_address like CONCAT ('%',#{shop.shopAddress},'%')
+      </if>
+    </trim>
+  </sql>
+  
 </mapper>

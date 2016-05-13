@@ -3,11 +3,14 @@
 <mapper namespace="com.phoneerp.dao.OrderDetailMapper" >
   <resultMap id="BaseResultMap" type="com.phoneerp.bean.OrderDetail" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="phone_imeiNo" property="phoneImeino" jdbcType="VARCHAR" />
-    <result column="sale_price" property="salePrice" jdbcType="DECIMAL" />
+    <result column="phone_id" property="phoneId" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, phone_imeiNo, sale_price
+    id, phone_id, price, amount, total_price, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -20,9 +23,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.phoneerp.bean.OrderDetail" >
-    insert into order_detail (id, phone_imeiNo, sale_price
+    insert into order_detail (id, phone_id, price, 
+      amount, total_price, create_time
       )
-    values (#{id,jdbcType=INTEGER}, #{phoneImeino,jdbcType=VARCHAR}, #{salePrice,jdbcType=DECIMAL}
+    values (#{id,jdbcType=INTEGER}, #{phoneId,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, 
+      #{amount,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.phoneerp.bean.OrderDetail" >
@@ -31,41 +36,71 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="phoneImeino != null" >
-        phone_imeiNo,
+      <if test="phoneId != null" >
+        phone_id,
       </if>
-      <if test="salePrice != null" >
-        sale_price,
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="totalPrice != null" >
+        total_price,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="phoneImeino != null" >
-        #{phoneImeino,jdbcType=VARCHAR},
+      <if test="phoneId != null" >
+        #{phoneId,jdbcType=INTEGER},
       </if>
-      <if test="salePrice != null" >
-        #{salePrice,jdbcType=DECIMAL},
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.phoneerp.bean.OrderDetail" >
     update order_detail
     <set >
-      <if test="phoneImeino != null" >
-        phone_imeiNo = #{phoneImeino,jdbcType=VARCHAR},
+      <if test="phoneId != null" >
+        phone_id = #{phoneId,jdbcType=INTEGER},
       </if>
-      <if test="salePrice != null" >
-        sale_price = #{salePrice,jdbcType=DECIMAL},
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.OrderDetail" >
     update order_detail
-    set phone_imeiNo = #{phoneImeino,jdbcType=VARCHAR},
-      sale_price = #{salePrice,jdbcType=DECIMAL}
+    set phone_id = #{phoneId,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      amount = #{amount,jdbcType=INTEGER},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

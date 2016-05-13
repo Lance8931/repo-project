@@ -4,9 +4,10 @@
   <resultMap id="BaseResultMap" type="com.phoneerp.bean.Saler" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="saler_name" property="salerName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, saler_name
+    id, saler_name, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -19,8 +20,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.phoneerp.bean.Saler" >
-    insert into saler (id, saler_name)
-    values (#{id,jdbcType=INTEGER}, #{salerName,jdbcType=VARCHAR})
+    insert into saler (id, saler_name, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{salerName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.phoneerp.bean.Saler" >
     insert into saler
@@ -31,6 +34,9 @@
       <if test="salerName != null" >
         saler_name,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -38,6 +44,9 @@
       </if>
       <if test="salerName != null" >
         #{salerName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -47,12 +56,29 @@
       <if test="salerName != null" >
         saler_name = #{salerName,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Saler" >
     update saler
-    set saler_name = #{salerName,jdbcType=VARCHAR}
+    set saler_name = #{salerName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="getList" resultMap="BaseResultMap">
+  	select * from saler t
+  	<include refid="conditions"/>
+  </select>
+  
+  <sql id="conditions" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="saler.salerName != null" >
+        and  t.saler_name like CONCAT('%',#{saler.salerName},'%')
+      </if>
+    </trim>
+  </sql>
 </mapper>

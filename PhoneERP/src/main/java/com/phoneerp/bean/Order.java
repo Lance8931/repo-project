@@ -1,5 +1,6 @@
 package com.phoneerp.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Order {
@@ -10,6 +11,14 @@ public class Order {
     private Integer shopId;
 
     private Date orderTime;
+
+    private Integer billNo;
+
+    private BigDecimal billPrice;
+
+    private String remark;
+
+    private Date createTime;
 
     public Integer getId() {
         return id;
@@ -41,5 +50,37 @@ public class Order {
 
     public void setOrderTime(Date orderTime) {
         this.orderTime = orderTime;
+    }
+
+    public Integer getBillNo() {
+        return billNo;
+    }
+
+    public void setBillNo(Integer billNo) {
+        this.billNo = billNo;
+    }
+
+    public BigDecimal getBillPrice() {
+        return billPrice;
+    }
+
+    public void setBillPrice(BigDecimal billPrice) {
+        this.billPrice = billPrice;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

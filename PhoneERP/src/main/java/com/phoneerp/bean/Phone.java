@@ -1,5 +1,7 @@
 package com.phoneerp.bean;
 
+import java.util.Date;
+
 public class Phone {
     private Integer id;
 
@@ -13,7 +15,9 @@ public class Phone {
 
     private Integer salePrice;
 
-    private Integer supplierId;
+    private String modelNo;
+
+    private Date createTime;
 
     public Integer getId() {
         return id;
@@ -63,11 +67,19 @@ public class Phone {
         this.salePrice = salePrice;
     }
 
-    public Integer getSupplierId() {
-        return supplierId;
+    public String getModelNo() {
+        return modelNo;
     }
 
-    public void setSupplierId(Integer supplierId) {
-        this.supplierId = supplierId;
+    public void setModelNo(String modelNo) {
+        this.modelNo = modelNo == null ? null : modelNo.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

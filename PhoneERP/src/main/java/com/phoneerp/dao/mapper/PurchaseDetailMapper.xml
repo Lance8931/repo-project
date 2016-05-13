@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.phoneerp.dao.PurchaseDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.phoneerp.bean.PurchaseDetail" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="phone_id" property="phoneId" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <insert id="insert" parameterType="com.phoneerp.bean.PurchaseDetail" >
+    insert into purchase_detail (id, phone_id, price, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{phoneId,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.phoneerp.bean.PurchaseDetail" >
+    insert into purchase_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="phoneId != null" >
+        phone_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="phoneId != null" >
+        #{phoneId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

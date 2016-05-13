@@ -3,13 +3,13 @@
 <mapper namespace="com.phoneerp.dao.AllotMapper" >
   <resultMap id="BaseResultMap" type="com.phoneerp.bean.Allot" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="in_shopId" property="inShopid" jdbcType="INTEGER" />
-    <result column="out_shopId" property="outShopid" jdbcType="INTEGER" />
-    <result column="phone_id" property="phoneId" jdbcType="INTEGER" />
+    <result column="in_shop_id" property="inShopId" jdbcType="INTEGER" />
+    <result column="out_shop_id" property="outShopId" jdbcType="INTEGER" />
     <result column="operat_time" property="operatTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, in_shopId, out_shopId, phone_id, operat_time
+    id, in_shop_id, out_shop_id, operat_time, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,10 +22,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.phoneerp.bean.Allot" >
-    insert into allot (id, in_shopId, out_shopId, 
-      phone_id, operat_time)
-    values (#{id,jdbcType=INTEGER}, #{inShopid,jdbcType=INTEGER}, #{outShopid,jdbcType=INTEGER}, 
-      #{phoneId,jdbcType=INTEGER}, #{operatTime,jdbcType=TIMESTAMP})
+    insert into allot (id, in_shop_id, out_shop_id, 
+      operat_time, create_time)
+    values (#{id,jdbcType=INTEGER}, #{inShopId,jdbcType=INTEGER}, #{outShopId,jdbcType=INTEGER}, 
+      #{operatTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.phoneerp.bean.Allot" >
     insert into allot
@@ -33,61 +33,61 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="inShopid != null" >
-        in_shopId,
+      <if test="inShopId != null" >
+        in_shop_id,
       </if>
-      <if test="outShopid != null" >
-        out_shopId,
-      </if>
-      <if test="phoneId != null" >
-        phone_id,
+      <if test="outShopId != null" >
+        out_shop_id,
       </if>
       <if test="operatTime != null" >
         operat_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="inShopid != null" >
-        #{inShopid,jdbcType=INTEGER},
+      <if test="inShopId != null" >
+        #{inShopId,jdbcType=INTEGER},
       </if>
-      <if test="outShopid != null" >
-        #{outShopid,jdbcType=INTEGER},
-      </if>
-      <if test="phoneId != null" >
-        #{phoneId,jdbcType=INTEGER},
+      <if test="outShopId != null" >
+        #{outShopId,jdbcType=INTEGER},
       </if>
       <if test="operatTime != null" >
         #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.phoneerp.bean.Allot" >
     update allot
     <set >
-      <if test="inShopid != null" >
-        in_shopId = #{inShopid,jdbcType=INTEGER},
+      <if test="inShopId != null" >
+        in_shop_id = #{inShopId,jdbcType=INTEGER},
       </if>
-      <if test="outShopid != null" >
-        out_shopId = #{outShopid,jdbcType=INTEGER},
-      </if>
-      <if test="phoneId != null" >
-        phone_id = #{phoneId,jdbcType=INTEGER},
+      <if test="outShopId != null" >
+        out_shop_id = #{outShopId,jdbcType=INTEGER},
       </if>
       <if test="operatTime != null" >
         operat_time = #{operatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Allot" >
     update allot
-    set in_shopId = #{inShopid,jdbcType=INTEGER},
-      out_shopId = #{outShopid,jdbcType=INTEGER},
-      phone_id = #{phoneId,jdbcType=INTEGER},
-      operat_time = #{operatTime,jdbcType=TIMESTAMP}
+    set in_shop_id = #{inShopId,jdbcType=INTEGER},
+      out_shop_id = #{outShopId,jdbcType=INTEGER},
+      operat_time = #{operatTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

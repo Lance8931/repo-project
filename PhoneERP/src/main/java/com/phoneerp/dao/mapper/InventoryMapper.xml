@@ -4,10 +4,11 @@
   <resultMap id="BaseResultMap" type="com.phoneerp.bean.Inventory" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="shop_id" property="shopId" jdbcType="INTEGER" />
-    <result column="phone_imeiNo" property="phoneImeino" jdbcType="VARCHAR" />
+    <result column="phone_id" property="phoneId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, shop_id, phone_imeiNo
+    id, shop_id, phone_id, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -20,10 +21,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.phoneerp.bean.Inventory" >
-    insert into inventory (id, shop_id, phone_imeiNo
-      )
-    values (#{id,jdbcType=INTEGER}, #{shopId,jdbcType=INTEGER}, #{phoneImeino,jdbcType=VARCHAR}
-      )
+    insert into inventory (id, shop_id, phone_id, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{shopId,jdbcType=INTEGER}, #{phoneId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.phoneerp.bean.Inventory" >
     insert into inventory
@@ -34,8 +35,11 @@
       <if test="shopId != null" >
         shop_id,
       </if>
-      <if test="phoneImeino != null" >
-        phone_imeiNo,
+      <if test="phoneId != null" >
+        phone_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -45,8 +49,11 @@
       <if test="shopId != null" >
         #{shopId,jdbcType=INTEGER},
       </if>
-      <if test="phoneImeino != null" >
-        #{phoneImeino,jdbcType=VARCHAR},
+      <if test="phoneId != null" >
+        #{phoneId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -56,8 +63,11 @@
       <if test="shopId != null" >
         shop_id = #{shopId,jdbcType=INTEGER},
       </if>
-      <if test="phoneImeino != null" >
-        phone_imeiNo = #{phoneImeino,jdbcType=VARCHAR},
+      <if test="phoneId != null" >
+        phone_id = #{phoneId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -65,7 +75,8 @@
   <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Inventory" >
     update inventory
     set shop_id = #{shopId,jdbcType=INTEGER},
-      phone_imeiNo = #{phoneImeino,jdbcType=VARCHAR}
+      phone_id = #{phoneId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

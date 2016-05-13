@@ -1,11 +1,15 @@
 package com.phoneerp.bean;
 
+import java.util.Date;
+
 public class Shop {
     private Integer id;
 
     private String shopName;
 
     private String shopAddress;
+
+    private Date createTime;
 
     public Integer getId() {
         return id;
@@ -29,5 +33,13 @@ public class Shop {
 
     public void setShopAddress(String shopAddress) {
         this.shopAddress = shopAddress == null ? null : shopAddress.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

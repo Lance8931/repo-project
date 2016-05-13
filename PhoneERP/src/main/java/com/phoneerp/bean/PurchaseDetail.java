@@ -2,10 +2,12 @@ package com.phoneerp.bean;
 
 import java.util.Date;
 
-public class Saler {
+public class PurchaseDetail {
     private Integer id;
 
-    private String salerName;
+    private Integer phoneId;
+
+    private Long price;
 
     private Date createTime;
 
@@ -17,12 +19,20 @@ public class Saler {
         this.id = id;
     }
 
-    public String getSalerName() {
-        return salerName;
+    public Integer getPhoneId() {
+        return phoneId;
     }
 
-    public void setSalerName(String salerName) {
-        this.salerName = salerName == null ? null : salerName.trim();
+    public void setPhoneId(Integer phoneId) {
+        this.phoneId = phoneId;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
     }
 
     public Date getCreateTime() {

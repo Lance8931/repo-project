@@ -1,17 +1,22 @@
 package com.phoneerp.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.phoneerp.bean.Shop;
 
 public interface ShopMapper {
-    int deleteByPrimaryKey(Integer id);
+	int deleteByPrimaryKey(Integer id);
 
-    int insert(Shop record);
+	int insert(Shop record);
 
-    int insertSelective(Shop record);
+	int insertSelective(Shop record);
 
-    Shop selectByPrimaryKey(Integer id);
+	Shop selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(Shop record);
+	int updateByPrimaryKeySelective(Shop record);
 
-    int updateByPrimaryKey(Shop record);
+	int updateByPrimaryKey(Shop record);
+
+	List<Shop> getList(Map<?, ?> map);
 }

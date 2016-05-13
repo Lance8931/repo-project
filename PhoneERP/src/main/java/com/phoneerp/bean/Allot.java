@@ -5,13 +5,13 @@ import java.util.Date;
 public class Allot {
     private Integer id;
 
-    private Integer inShopid;
+    private Integer inShopId;
 
-    private Integer outShopid;
-
-    private Integer phoneId;
+    private Integer outShopId;
 
     private Date operatTime;
+
+    private Date createTime;
 
     public Integer getId() {
         return id;
@@ -21,28 +21,20 @@ public class Allot {
         this.id = id;
     }
 
-    public Integer getInShopid() {
-        return inShopid;
+    public Integer getInShopId() {
+        return inShopId;
     }
 
-    public void setInShopid(Integer inShopid) {
-        this.inShopid = inShopid;
+    public void setInShopId(Integer inShopId) {
+        this.inShopId = inShopId;
     }
 
-    public Integer getOutShopid() {
-        return outShopid;
+    public Integer getOutShopId() {
+        return outShopId;
     }
 
-    public void setOutShopid(Integer outShopid) {
-        this.outShopid = outShopid;
-    }
-
-    public Integer getPhoneId() {
-        return phoneId;
-    }
-
-    public void setPhoneId(Integer phoneId) {
-        this.phoneId = phoneId;
+    public void setOutShopId(Integer outShopId) {
+        this.outShopId = outShopId;
     }
 
     public Date getOperatTime() {
@@ -51,5 +43,13 @@ public class Allot {
 
     public void setOperatTime(Date operatTime) {
         this.operatTime = operatTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

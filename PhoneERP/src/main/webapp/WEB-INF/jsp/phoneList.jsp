@@ -11,53 +11,65 @@
 		
 	</head>
 <body>
-	<h2>采购单模块</h2>
-
-    <table id="dg" title="采购单列表" class="easyui-datagrid" style="width:1000px;height:250px"
-            url="" toolbar="#toolbar" pagination="true"
-            rownumbers="true" fitColumns="true" singleSelect="true">
-        <thead>
-            <tr>
-                <th field="firstname" width="50">手机串号</th>
-                <th field="lastname" width="50">手机牌子</th>
-                <th field="phone" width="50">手机颜色</th>
-                <th field="email1" width="50">进货价格</th>
-                <th field="email2" width="50">建议销售价格</th>
-                <th field="email3" width="50">是否卖出</th>
-                <th field="email4" width="50">当前所属店铺</th>
-            </tr>
-        </thead>
-    </table>
-    <div id="toolbar">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">添加手机</a>
-    </div>
-    
-    <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
+	<h2>手机管理</h2>
+	<div class="easyui-layout" fit='true'>
+		<div data-options="region:'north',title:'查询条件',split:true" style="height:80px;">
+			<form id="phoneList_queryForm" method="post">
+				<table >
+		    		<tr>
+		    			<td width="150px" align="right">手机串号:</td>
+		    			<td><input class="easyui-textbox" type="text" style="width:150px;" name="userName" ></input></td>
+		    			<td >
+		    				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px" onclick="userList.formQuery.query()">查询</a>
+		    			</td>
+		    		</tr>
+		    	</table>
+			</form>
+		</div>
+		<div data-options="region:'center',title:'查询结果'">
+			<table id="dg" title="手机列表" class="easyui-datagrid" style="height:250px"
+		            url="" toolbar="#toolbar" pagination="true"
+		            rownumbers="true" fitColumns="true" singleSelect="true">
+		        <thead>
+		            <tr>
+		                <th field="firstname" width="50px">手机串号</th>
+		                <th field="lastname" width="50px">手机牌子</th>
+		                <th field="phone" width="50px">手机颜色</th>
+		                <th field="phone" width="50px">手机型号</th>
+		                <th field="email1" width="50px">进货价格</th>
+		                <th field="email2" width="50px">建议销售价格</th>
+		                <th field="email3" width="50px">是否卖出</th>
+		                <th field="email4" width="50px">当前所属店铺</th>
+		            </tr>
+		        </thead>
+		    </table>
+		    <div id="toolbar">
+		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">添加手机产品</a>
+		    </div>
+		</div>
+	</div>
+    <div id="dlg" class="easyui-dialog" style="width:400px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
         <form id="fm" method="post" novalidate>
             <div class="fitem">
                 <label>手机串号:</label>
-                <input name="firstname" class="easyui-textbox" required="true">
+                <input name="firstname" class="easyui-textbox" required="true" missingMessage="必须填写">
             </div>
             <div class="fitem">
                 <label>手机牌子:</label>
-                <input id="cc" class="easyui-combobox" name="dept">
+                <input id="cc" class="easyui-combobox" name="dept" required="true" missingMessage="必须选择">
             </div>
             <div class="fitem">
                 <label>手机颜色:</label>
-                <input id="cc1" class="easyui-combobox" name="dept1">
+                <input id="cc1" class="easyui-combobox" name="dept1" required="true" missingMessage="必须选择">
             </div>
             <div class="fitem">
-                <label>进货价格:</label>
-                <input name="email" class="easyui-numberbox" min="0" max="10000" precision="2" required="true" missingMessage="必须填写0~10000之间的数字">
+                <label>手机型号:</label>
+                <input id="cc2" class="easyui-combobox" name="dept1" required="true" missingMessage="必须选择">
             </div>
             <div class="fitem">
                 <label>建议销售价格:</label>
-                <input name="email" class="easyui-textbox" min="0" max="10000" precision="2" required="true" missingMessage="必须填写0~10000之间的数字">
-            </div>
-            <div class="fitem">
-                <label>所属店铺:</label>
-                <input name="email" class="easyui-textbox" required="true" validType="email">
+                <input name="email" class="easyui-numberbox" min="0" max="10000" precision="2" required="true" missingMessage="必须填写0~10000之间的数字">
             </div>
         </form>
     </div>
@@ -74,6 +86,12 @@
 	    }); 
 	    $('#cc1').combobox({    
 	        url:'../resources/json/color.json',    
+	        valueField:'id',    
+	        textField:'text',
+	        method:"GET"
+	    });
+	    $('#cc2').combobox({    
+	        url:'../resources/json/model.json',    
 	        valueField:'id',    
 	        textField:'text',
 	        method:"GET"
@@ -103,7 +121,13 @@
             }
         }
         function saveUser(){
-            $('#fm').form('submit',{
+        	var row;
+        	$('#fm').form('submit',{
+        		onSubmit:function(param){
+        			console.info(param);
+        	}});
+        	//$('#dg').datagrid('appendRow',{});
+            /** $('#fm').form('submit',{
                 url: url,
                 onSubmit: function(){
                     return $(this).form('validate');
@@ -120,7 +144,7 @@
                         $('#dg').datagrid('reload');    // reload the user data
                     }
                 }
-            });
+            });**/
         }
         function destroyUser(){
             var row = $('#dg').datagrid('getSelected');
@@ -160,9 +184,6 @@
         .fitem label{
             display:inline-block;
             width:80px;
-        }
-        .fitem input{
-            width:160px;
         }
     </style>
 </body>
