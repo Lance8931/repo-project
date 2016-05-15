@@ -12,6 +12,8 @@
 	<h3>商品</h3>
 	<a href="../admin/showPhone">手机</a>
 	<a href="../admin/showPurchase">配件</a>
+	<h3>采购</h3>
+	<a href="../admin/showPur">采购单</a>
 	<h3>销售</h3>
 	<a href="#">销售单</a>
 	<h3>调拨</h3>

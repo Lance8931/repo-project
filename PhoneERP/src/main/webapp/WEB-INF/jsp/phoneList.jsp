@@ -8,7 +8,7 @@
 	    <link rel="stylesheet" type="text/css" href="../resources/themes/color.css">
 	    <script type="text/javascript" src="../resources/jquery-2.2.1.min.js" charset="utf-8" ></script>
 		<script type="text/javascript" src="../resources/jquery.easyui.min.js" charset="utf-8" ></script>
-		
+		<script type="text/javascript" src="../resources/easyui-lang-zh_CN.js" charset="utf-8"></script>
 	</head>
 <body>
 	<h2>手机管理</h2>

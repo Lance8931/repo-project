@@ -3,6 +3,7 @@
 <mapper namespace="com.phoneerp.dao.PurchaseMapper" >
   <resultMap id="BaseResultMap" type="com.phoneerp.bean.Purchase" >
     <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pur_no" property="purNo" jdbcType="VARCHAR" />
     <result column="pur_time" property="purTime" jdbcType="TIMESTAMP" />
     <result column="shop_id" property="shopId" jdbcType="INTEGER" />
     <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
@@ -10,7 +11,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, pur_time, shop_id, supplier_id, remark, create_time
+    id, pur_no, pur_time, shop_id, supplier_id, remark, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -23,18 +24,21 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.phoneerp.bean.Purchase" >
-    insert into purchase (id, pur_time, shop_id, 
-      supplier_id, remark, create_time
-      )
-    values (#{id,jdbcType=INTEGER}, #{purTime,jdbcType=TIMESTAMP}, #{shopId,jdbcType=INTEGER}, 
-      #{supplierId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
+    insert into purchase (id, pur_no, pur_time, 
+      shop_id, supplier_id, remark, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{purNo,jdbcType=VARCHAR}, #{purTime,jdbcType=TIMESTAMP}, 
+      #{shopId,jdbcType=INTEGER}, #{supplierId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.phoneerp.bean.Purchase" >
     insert into purchase
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="purNo != null" >
+        pur_no,
       </if>
       <if test="purTime != null" >
         pur_time,
@@ -56,6 +60,9 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
+      <if test="purNo != null" >
+        #{purNo,jdbcType=VARCHAR},
+      </if>
       <if test="purTime != null" >
         #{purTime,jdbcType=TIMESTAMP},
       </if>
@@ -76,6 +83,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.phoneerp.bean.Purchase" >
     update purchase
     <set >
+      <if test="purNo != null" >
+        pur_no = #{purNo,jdbcType=VARCHAR},
+      </if>
       <if test="purTime != null" >
         pur_time = #{purTime,jdbcType=TIMESTAMP},
       </if>
@@ -96,11 +106,54 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Purchase" >
     update purchase
-    set pur_time = #{purTime,jdbcType=TIMESTAMP},
+    set pur_no = #{purNo,jdbcType=VARCHAR},
+      pur_time = #{purTime,jdbcType=TIMESTAMP},
       shop_id = #{shopId,jdbcType=INTEGER},
       supplier_id = #{supplierId,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <resultMap type="com.phoneerp.bean.Purchase" id="ListResultMap" extends="BaseResultMap">
+  	<result column="supplier_name" property="supplier.supplierName" jdbcType="VARCHAR" />
+  	<result column="shop_name" property="shop.shopName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="getList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT
+		t.*,
+		a.supplier_name,
+		b.shop_name
+	FROM
+		purchase t
+	LEFT JOIN supplier a ON t.supplier_id = a.id
+	LEFT JOIN shop b ON t.shop_id = b.id
+  	<include refid="conditions"/>
+  </select>
+  
+  <sql id="conditions" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="pur.purNo != null" >
+        and  t.pur_no like CONCAT('%',#{pur.purNo},'%')
+      </if>
+      <if test="pur.supplier != null and pur.supplier.supplierName != null" >
+        and  a.supplier_name like CONCAT('%',#{pur.supplier.supplierName},'%')
+      </if>
+      <if test="pur.shop != null and pur.shop.shopName != null" >
+        and  b.shop_name like CONCAT('%',#{pur.shop.shopName},'%')
+      </if>
+      <if test="pur.startTime != null" >
+        and  t.pur_time &gt;= #{pur.startTime}
+      </if>
+      <if test="pur.endTime != null" >
+        and  t.pur_time &lt;= #{pur.endTime}
+      </if>
+      <if test="imeiNo != null">
+      	and  t.id in (
+      		select distinct(pur_id) from purchase_detail k where k.imeiNo like CONCAT('%',#{imeiNo},'%')
+      	)
+      </if>
+    </trim>
+  </sql>
+  
 </mapper>

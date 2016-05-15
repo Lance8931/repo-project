@@ -1,12 +1,96 @@
-{"total":28,"rows":[
-	{"productid":"FI-SW-01","productname":"Koi","unitcost":10.00,"status":"P","listprice":36.50,"attr1":"Large","itemid":"EST-1"},
-	{"productid":"K9-DL-01","productname":"Dalmation","unitcost":12.00,"status":"P","listprice":18.50,"attr1":"Spotted Adult Female","itemid":"EST-10"},
-	{"productid":"RP-SN-01","productname":"Rattlesnake","unitcost":12.00,"status":"P","listprice":38.50,"attr1":"Venomless","itemid":"EST-11"},
-	{"productid":"RP-SN-01","productname":"Rattlesnake","unitcost":12.00,"status":"P","listprice":26.50,"attr1":"Rattleless","itemid":"EST-12"},
-	{"productid":"RP-LI-02","productname":"Iguana","unitcost":12.00,"status":"P","listprice":35.50,"attr1":"Green Adult","itemid":"EST-13"},
-	{"productid":"FL-DSH-01","productname":"Manx","unitcost":12.00,"status":"P","listprice":158.50,"attr1":"Tailless","itemid":"EST-14"},
-	{"productid":"FL-DSH-01","productname":"Manx","unitcost":12.00,"status":"P","listprice":83.50,"attr1":"With tail","itemid":"EST-15"},
-	{"productid":"FL-DLH-02","productname":"Persian","unitcost":12.00,"status":"P","listprice":23.50,"attr1":"Adult Female","itemid":"EST-16"},
-	{"productid":"FL-DLH-02","productname":"Persian","unitcost":12.00,"status":"P","listprice":89.50,"attr1":"Adult Male","itemid":"EST-17"},
-	{"productid":"AV-CB-01","productname":"Amazon Parrot","unitcost":92.00,"status":"P","listprice":63.50,"attr1":"Adult Male","itemid":"EST-18"}
-]}
+{
+    "total": 28,
+    "rows": [
+        {
+            "imeiNo": "861443031515638",
+            "brandId": "1",
+            "brand": "华为",
+            "colorId": "1",
+            "color": "银白",
+            "price": 36.5,
+            "model": "X6S(64G)",
+            "phoneId": 1
+        },
+        {
+            "imeiNo": "861443031517097",
+            "brandId": "2",
+            "brand": "苹果",
+            "color": "金色",
+            "price": 18.5,
+            "model": "R9tm",
+            "phoneId": 2
+        },
+        {
+            "imeiNo": "861463036567475",
+            "brandId": "3",
+            "brand": "vivo",
+            "color": "深空灰",
+            "price": 38.5,
+            "model": "A368t",
+            "phoneId": 3
+        },
+        {
+            "imeiNo": "861443031515620",
+            "brandId": "4",
+            "brand": "金立",
+            "color": "蓝色",
+            "price": 26.5,
+            "model": "X6S(64G)",
+            "phoneId": 4
+        },
+        {
+            "imeiNo": "861443031515632",
+            "brandId": "5",
+            "brand": "三星",
+            "color": "橘黄色",
+            "price": 35.5,
+            "model": "R9tm",
+            "phoneId": 5
+        },
+        {
+            "imeiNo": "861443031515623",
+            "brandId": "1",
+            "brand": "华为",
+            "color": "天空蓝",
+            "price": 158.5,
+            "model": "R9tm",
+            "phoneId": 6
+        },
+        {
+            "imeiNo": "861443031515621",
+            "brandId": "2",
+            "brand": "苹果",
+            "color": "粉红",
+            "price": 83.5,
+            "model": "A368t",
+            "phoneId": 7
+        },
+        {
+            "imeiNo": "861443031515685",
+            "brandId": "3",
+            "brand": "vivo",
+            "color": "象牙白",
+            "price": 23.5,
+            "model": "X6S(64G)",
+            "phoneId": 8
+        },
+        {
+            "imeiNo": "861443031515603",
+            "brandId": "4",
+            "brand": "金立",
+            "color": "黑色",
+            "price": 89.5,
+            "model": "8712",
+            "phoneId": 9
+        },
+        {
+            "imeiNo": "861443031515633",
+            "brandId": "5",
+            "brand": "三星",
+            "color": "黑色",
+            "price": 63.5,
+            "model": "A368t",
+            "phoneId": 10
+        }
+    ]
+}

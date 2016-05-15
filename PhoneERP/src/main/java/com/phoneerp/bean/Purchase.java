@@ -3,63 +3,123 @@ package com.phoneerp.bean;
 import java.util.Date;
 
 public class Purchase {
-    private Integer id;
+	private Integer id;
 
-    private Date purTime;
+	private String purNo;
 
-    private Integer shopId;
+	private Date purTime;
 
-    private Integer supplierId;
+	private Integer shopId;
 
-    private String remark;
+	private Integer supplierId;
 
-    private Date createTime;
+	private String remark;
 
-    public Integer getId() {
-        return id;
-    }
+	private Date createTime;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	private Supplier supplier;
 
-    public Date getPurTime() {
-        return purTime;
-    }
+	private Shop shop;
 
-    public void setPurTime(Date purTime) {
-        this.purTime = purTime;
-    }
+	private String startTime;
 
-    public Integer getShopId() {
-        return shopId;
-    }
+	private String endTime;
 
-    public void setShopId(Integer shopId) {
-        this.shopId = shopId;
-    }
+	private String imeiNo;
 
-    public Integer getSupplierId() {
-        return supplierId;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setSupplierId(Integer supplierId) {
-        this.supplierId = supplierId;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getRemark() {
-        return remark;
-    }
+	public String getPurNo() {
+		return purNo;
+	}
 
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
-    }
+	public void setPurNo(String purNo) {
+		this.purNo = purNo == null ? null : purNo.trim();
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public Date getPurTime() {
+		return purTime;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setPurTime(Date purTime) {
+		this.purTime = purTime;
+	}
+
+	public Integer getShopId() {
+		return shopId;
+	}
+
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
+
+	public Integer getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(Integer supplierId) {
+		this.supplierId = supplierId;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark == null ? null : remark.trim();
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Supplier getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
+	}
+
+	public Shop getShop() {
+		return shop;
+	}
+
+	public void setShop(Shop shop) {
+		this.shop = shop;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getImeiNo() {
+		return imeiNo;
+	}
+
+	public void setImeiNo(String imeiNo) {
+		this.imeiNo = imeiNo;
+	}
 }

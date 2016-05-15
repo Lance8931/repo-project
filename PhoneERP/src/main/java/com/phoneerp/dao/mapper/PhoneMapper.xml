@@ -125,4 +125,20 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(*) from phone t 
+  	<include refid="conditions" />
+  </select>
+  
+  <sql id="conditions">
+  	<trim prefix="where" prefixOverrides="and|or" >
+      <if test="phone.imeino != null and isCheck" >
+        and  t.imeiNo = #{phone.imeino}
+      </if>
+      <if test="phone.imeino != null and isCheck == null" >
+        and  t.imeiNo like CONCAT('%',#{phone.imeiNo},'%')
+      </if>
+    </trim>
+  </sql>
 </mapper>

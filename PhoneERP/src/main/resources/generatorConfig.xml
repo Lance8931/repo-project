@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
 <!-- 数据库驱动-->
-	<classPathEntry	location="D:\\code\\maven\\repo\\mysql\\mysql-connector-java\\5.1.6\\mysql-connector-java-5.1.6.jar"/>
+	<classPathEntry	location="F:\\learn\\maven\\repo\\mysql\\mysql-connector-java\\5.1.31\\mysql-connector-java-5.1.31.jar"/>
 	<context id="DB2Tables"	targetRuntime="MyBatis3">
 	
 		<!-- 扩展插件代码 
@@ -16,7 +16,7 @@
 			<property name="suppressAllComments" value="true"/>
 		</commentGenerator>
 		<!--数据库链接URL，用户名、密码 -->
-		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/phone_erp" userId="root" password="password">
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/phone_erp" userId="root" password="root">
 		</jdbcConnection>
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false"/>
@@ -35,7 +35,7 @@
 			<property name="enableSubPackages" value="true"/>
 		</javaClientGenerator>
 		<!-- 要生成哪些表-->
-		<table tableName="supplier" domainObjectName="Supplier" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+		<table tableName="purchase_detail" domainObjectName="PurchaseDetail" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
 		<!--<table tableName="knowledge_type" domainObjectName="KnowledgeType" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
 		 <table tableName="syslogs" domainObjectName="SyslogsDto" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
 	</context>
