@@ -5,7 +5,22 @@
 /**
  * 验证框架
  */
-$.extend($.fn.validatebox.defaults.rules, {    
+$.extend($.fn.validatebox.defaults.rules, {
+	imeiNoCheck:{
+		validator: function(value, param){
+			var isExist;
+			$.ajax({
+				url:"../phone/imeiNoCheck?imeiNo="+value,
+				dataType:'json',
+				async:false,
+				success:function(result){
+					isExist = result.success;
+				}
+			});
+			return isExist;
+		},
+		message: '已存在该手机串号。'
+	},
     minLength: {    
         validator: function(value, param){    
             return value.length >= param[0];    

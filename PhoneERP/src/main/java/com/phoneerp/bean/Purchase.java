@@ -1,5 +1,6 @@
 package com.phoneerp.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Purchase {
@@ -7,7 +8,7 @@ public class Purchase {
 
 	private String purNo;
 
-	private Date purTime;
+	private String purTime;
 
 	private Integer shopId;
 
@@ -16,6 +17,10 @@ public class Purchase {
 	private String remark;
 
 	private Date createTime;
+
+	private Integer phoneId;
+
+	private BigDecimal price;
 
 	private Supplier supplier;
 
@@ -43,11 +48,11 @@ public class Purchase {
 		this.purNo = purNo == null ? null : purNo.trim();
 	}
 
-	public Date getPurTime() {
+	public String getPurTime() {
 		return purTime;
 	}
 
-	public void setPurTime(Date purTime) {
+	public void setPurTime(String purTime) {
 		this.purTime = purTime;
 	}
 
@@ -81,6 +86,22 @@ public class Purchase {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	public Integer getPhoneId() {
+		return phoneId;
+	}
+
+	public void setPhoneId(Integer phoneId) {
+		this.phoneId = phoneId;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
 	}
 
 	public Supplier getSupplier() {

@@ -1,125 +1,146 @@
 package com.phoneerp.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Phone {
-    private Integer id;
+	private Integer id;
 
-    private String imeiNo;
+	private String imeiNo;
 
-    private String color;
+	private Integer colorId;
 
-    private String brand;
+	private Integer brandId;
 
-    private Integer purPrice;
+	private BigDecimal purPrice;
 
-    private Integer salePrice;
+	private BigDecimal salePrice;
 
-    private String modelNo;
+	private Integer modelId;
 
-    private Integer currentShopId;
+	private Integer currentShopId;
 
-    private Boolean isSold;
+	private Boolean isSold;
 
-    private String remark;
+	private String remark;
 
-    private Date createTime;
+	private Date createTime;
 
-    private Boolean isDeleted;
+	private Boolean isDeleted;
 
-    public Integer getId() {
-        return id;
-    }
+	private Integer amount;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	private Purchase purchase;
 
-    public String getImeiNo() {
-        return imeiNo;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setImeiNo(String imeiNo) {
-        this.imeiNo = imeiNo == null ? null : imeiNo.trim();
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getColor() {
-        return color;
-    }
+	public String getImeiNo() {
+		return imeiNo;
+	}
 
-    public void setColor(String color) {
-        this.color = color == null ? null : color.trim();
-    }
+	public void setImeiNo(String imeiNo) {
+		this.imeiNo = imeiNo == null ? null : imeiNo.trim();
+	}
 
-    public String getBrand() {
-        return brand;
-    }
+	public Integer getColorId() {
+		return colorId;
+	}
 
-    public void setBrand(String brand) {
-        this.brand = brand == null ? null : brand.trim();
-    }
+	public void setColorId(Integer colorId) {
+		this.colorId = colorId;
+	}
 
-    public Integer getPurPrice() {
-        return purPrice;
-    }
+	public Integer getBrandId() {
+		return brandId;
+	}
 
-    public void setPurPrice(Integer purPrice) {
-        this.purPrice = purPrice;
-    }
+	public void setBrandId(Integer brandId) {
+		this.brandId = brandId;
+	}
 
-    public Integer getSalePrice() {
-        return salePrice;
-    }
+	public BigDecimal getPurPrice() {
+		return purPrice;
+	}
 
-    public void setSalePrice(Integer salePrice) {
-        this.salePrice = salePrice;
-    }
+	public void setPurPrice(BigDecimal purPrice) {
+		this.purPrice = purPrice;
+	}
 
-    public String getModelNo() {
-        return modelNo;
-    }
+	public BigDecimal getSalePrice() {
+		return salePrice;
+	}
 
-    public void setModelNo(String modelNo) {
-        this.modelNo = modelNo == null ? null : modelNo.trim();
-    }
+	public void setSalePrice(BigDecimal salePrice) {
+		this.salePrice = salePrice;
+	}
 
-    public Integer getCurrentShopId() {
-        return currentShopId;
-    }
+	public Integer getModelId() {
+		return modelId;
+	}
 
-    public void setCurrentShopId(Integer currentShopId) {
-        this.currentShopId = currentShopId;
-    }
+	public void setModelId(Integer modelId) {
+		this.modelId = modelId;
+	}
 
-    public Boolean getIsSold() {
-        return isSold;
-    }
+	public Integer getCurrentShopId() {
+		return currentShopId;
+	}
 
-    public void setIsSold(Boolean isSold) {
-        this.isSold = isSold;
-    }
+	public void setCurrentShopId(Integer currentShopId) {
+		this.currentShopId = currentShopId;
+	}
 
-    public String getRemark() {
-        return remark;
-    }
+	public Boolean getIsSold() {
+		return isSold;
+	}
 
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
-    }
+	public void setIsSold(Boolean isSold) {
+		this.isSold = isSold;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public String getRemark() {
+		return remark;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setRemark(String remark) {
+		this.remark = remark == null ? null : remark.trim();
+	}
 
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public void setIsDeleted(Boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	public Integer getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
+	public Purchase getPurchase() {
+		return purchase;
+	}
+
+	public void setPurchase(Purchase purchase) {
+		this.purchase = purchase;
+	}
 }

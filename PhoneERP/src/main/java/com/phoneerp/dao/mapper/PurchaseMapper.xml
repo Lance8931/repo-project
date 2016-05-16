@@ -9,9 +9,11 @@
     <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="phone_id" property="phoneId" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, pur_no, pur_time, shop_id, supplier_id, remark, create_time
+    id, pur_no, pur_time, shop_id, supplier_id, remark, create_time, phone_id, price
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -26,10 +28,12 @@
   <insert id="insert" parameterType="com.phoneerp.bean.Purchase" >
     insert into purchase (id, pur_no, pur_time, 
       shop_id, supplier_id, remark, 
-      create_time)
+      create_time, phone_id, price
+      )
     values (#{id,jdbcType=INTEGER}, #{purNo,jdbcType=VARCHAR}, #{purTime,jdbcType=TIMESTAMP}, 
       #{shopId,jdbcType=INTEGER}, #{supplierId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{phoneId,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.phoneerp.bean.Purchase" >
     insert into purchase
@@ -55,6 +59,12 @@
       <if test="createTime != null" >
         create_time,
       </if>
+      <if test="phoneId != null" >
+        phone_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -77,6 +87,12 @@
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phoneId != null" >
+        #{phoneId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -101,6 +117,12 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="phoneId != null" >
+        phone_id = #{phoneId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -111,7 +133,9 @@
       shop_id = #{shopId,jdbcType=INTEGER},
       supplier_id = #{supplierId,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      phone_id = #{phoneId,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
@@ -155,5 +179,4 @@
       </if>
     </trim>
   </sql>
-  
 </mapper>

@@ -8,6 +8,7 @@
 	    <link rel="stylesheet" type="text/css" href="../resources/themes/color.css">
 	    <script type="text/javascript" src="../resources/jquery-2.2.1.min.js" charset="utf-8" ></script>
 		<script type="text/javascript" src="../resources/jquery.easyui.min.js" charset="utf-8" ></script>
+		<script type="text/javascript" src="../resources/easyuiExpand.js" charset="utf-8" ></script>
 		<script type="text/javascript" src="../resources/easyui-lang-zh_CN.js" charset="utf-8"></script>
 	</head>
 <body>
@@ -104,84 +105,88 @@
         	<table >
 	    		<tr>
 	    			<td width="80px" align="right">手机串号:</td>
-	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="imeiNo" validType="imeiNoCheck"/></td>
 	    		</tr>
 	    		<tr>
 	    			<td width="80px" align="right">手机牌子:</td>
-	    			<td><input class="easyui-combobox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    			<td><input class="easyui-combobox" required="true" id="fmccBrand" missingMessage="必须填写" name="brandId" /></td>
 	    		</tr>
 	    		<tr>
 	    			<td width="80px" align="right">手机颜色:</td>
-	    			<td><input class="easyui-combobox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    			<td><input class="easyui-combobox" required="true" id="fmccColor" missingMessage="必须填写" name="colorId" /></td>
 	    		</tr>
 	    		<tr>
 	    			<td width="80px" align="right">手机型号:</td>
-	    			<td><input class="easyui-combobox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    			<td><input class="easyui-combobox" required="true" id="fmccModel" missingMessage="必须填写" name="modelId" /></td>
 	    		</tr>
 	    		<tr>
 	    			<td width="80px" align="right">批发商:</td>
-	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    			<td><input class="easyui-combobox" required="true" id="fmccSupplier" missingMessage="必须填写" name="purchase.supplierId" /></td>
 	    		</tr>
 	    		<tr>
 	    			<td width="80px" align="right">入库店铺:</td>
-	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    			<td><input class="easyui-combobox" required="true" id="fmccShop" missingMessage="必须填写" name="currentShopId" /></td>
 	    		</tr>
 	    		<tr>
 	    			<td width="80px" align="right">进货价格:</td>
-	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="purPrice" /></td>
 	    		</tr>
 	    		<tr>
+	    			<td width="80px" align="right">数量:</td>
+	    			<td><input class="easyui-numberbox" required="true" missingMessage="必须填写" name="amount" /></td>
+	    		</tr>                 
+	    		<tr>
 	    			<td width="80px" align="right">采购单号:</td>
-	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="purchase.purNo" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">采购日期:</td>
+	    			<td><input class="easyui-datebox" required="true" missingMessage="必须填写" name="purchase.purTime" /></td>
 	    		</tr>
 	    	</table>
         </form>
     </div>
     <div id="dlg-buttons">
-        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">Save</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="savePur()" style="width:90px">Save</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
     </div>
     <script type="text/javascript">
     
-    	var supplierDatas,brandDatas,shopDatas,saleDatas,modelDatas,colorDatas;
+    	var supplierDatas,brandDatas,shopDatas,salerDatas,modelDatas,colorDatas;
     	$(function(){
     		getJSONDatas();
     	});
     	
-    	function getJSONDatas(){
-    		$.getJSON("../resources/json/brand.json",
-    				  function(result){
-    					$('#ccBrand').combobox({
-    	        			valueField:'id',
-    	        			textField:'text',
-    	        			data:result
-    	        		});
-    					brandDatas = result;
-    		});
-      		$.getJSON("../resources/json/color.json",
-      				  function(result){
-		      			$('#ccColor').combobox({
-		        			valueField:'id',
-		        			textField:'text',
-		        			data:result
-		        		});
-      					colorDatas = result;
-      		});
-      		$.getJSON("../resources/json/model.json",
-      				  function(result){
-		      			$('#ccModel').combobox({
-		        			valueField:'id',
-		        			textField:'text',
-		        			data:result
-		        		});
-      					modelDatas = result;
-      		});
-    	}
         var url;
         function newPur(){
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','添加手机');
             $('#fm').form('clear');
-            url = 'save_user.php';
+            $('#fmccBrand').combobox({
+    			valueField:'id',
+    			textField:'text',
+    			data:brandDatas
+    		});
+            $('#fmccColor').combobox({
+    			valueField:'id',
+    			textField:'text',
+    			data:colorDatas
+    		});
+            $('#fmccModel').combobox({
+    			valueField:'id',
+    			textField:'text',
+    			data:modelDatas
+    		});
+            $('#fmccShop').combobox({
+    			valueField:'id',
+    			textField:'shopName',
+    			data:shopDatas
+    		});
+            $('#fmccSupplier').combobox({
+    			valueField:'id',
+    			textField:'supplierName',
+    			data:supplierDatas
+    		});
+            url = '../phone/add';
         }
         function editUser(){
             var row = $('#dg').datagrid('getSelected');
@@ -191,12 +196,33 @@
                 url = 'update_user.php?id='+row.id;
             }
         }
-        function saveUser(){
+        function savePur(){
         	var row;
         	$('#fm').form('submit',{
-        		onSubmit:function(param){
-        			console.info(param);
-        	}});
+        		url: url,
+                onSubmit: function(){
+                    return $(this).form('validate');
+                },
+                success: function(result){
+                	if (result.success){
+                    	$.messager.alert(
+                    			'提示信息',
+                    			result.msg,
+                    			'info',
+                    			function(){
+                    				$('#dlg').dialog('close'); 
+                            		$('#dg').datagrid('reload');
+                    			}
+                    	);
+                    } else {
+                    	$.messager.alert(
+                    			'提示信息',
+                    			result.msg,
+                    			'error'
+                    	);
+                    }
+                }
+        	});
         	//$('#dg').datagrid('appendRow',{});
             /** $('#fm').form('submit',{
                 url: url,
@@ -236,6 +262,63 @@
                 });
             }
         }
+        
+        function getJSONDatas(){
+    		$.getJSON("../resources/json/brand.json",
+    				  function(result){
+    					$('#ccBrand').combobox({
+    	        			valueField:'id',
+    	        			textField:'text',
+    	        			data:result
+    	        		});
+    					brandDatas = result;
+    		});
+      		$.getJSON("../resources/json/color.json",
+      				  function(result){
+		      			$('#ccColor').combobox({
+		        			valueField:'id',
+		        			textField:'text',
+		        			data:result
+		        		});
+      					colorDatas = result;
+      		});
+      		$.getJSON("../resources/json/model.json",
+      				  function(result){
+		      			$('#ccModel').combobox({
+		        			valueField:'id',
+		        			textField:'text',
+		        			data:result
+		        		});
+      					modelDatas = result;
+      		});
+      		$.getJSON("getShopList",
+    				  function(result){
+		      			$('#ccShop').combobox({
+		        			valueField:'id',
+		        			textField:'shopName',
+		        			data:result.rows
+		        		});
+    					shopDatas = result.rows;
+    		});
+      		$.getJSON("getSupplierList",
+  				  function(result){
+		      			$('#ccSupplier').combobox({
+		        			valueField:'id',
+		        			textField:'supplierName',
+		        			data:result.rows
+		        		});
+  						supplierDatas = result.rows;
+  			});
+      		$.getJSON("getSalerList",
+    				  function(result){
+  		      			$('#ccSaler').combobox({
+  		        			valueField:'id',
+  		        			textField:'salerName',
+  		        			data:result.rows
+  		        		});
+    					salerDatas = result.rows;
+    		});
+    	}
     </script>
 </body>
 </html>

@@ -4,20 +4,21 @@
   <resultMap id="BaseResultMap" type="com.phoneerp.bean.Phone" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="imei_no" property="imeiNo" jdbcType="VARCHAR" />
-    <result column="color" property="color" jdbcType="VARCHAR" />
-    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="color_id" property="colorId" jdbcType="INTEGER" />
+    <result column="brand_id" property="brandId" jdbcType="INTEGER" />
     <result column="pur_price" property="purPrice" jdbcType="DECIMAL" />
     <result column="sale_price" property="salePrice" jdbcType="DECIMAL" />
-    <result column="model_no" property="modelNo" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
     <result column="current_shop_id" property="currentShopId" jdbcType="INTEGER" />
     <result column="is_sold" property="isSold" jdbcType="BIT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, imei_no, color, brand, pur_price, sale_price, model_no, current_shop_id, is_sold, 
-    remark, create_time, is_deleted
+    id, imei_no, color_id, brand_id, pur_price, sale_price, model_id, current_shop_id, 
+    is_sold, remark, create_time, is_deleted, amount
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -30,18 +31,18 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.phoneerp.bean.Phone" >
-    insert into phone (id, imei_no, color, 
-      brand, pur_price, sale_price, 
-      model_no, current_shop_id, is_sold, 
-      remark, create_time, is_deleted
-      )
-    values (#{id,jdbcType=INTEGER}, #{imeiNo,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, 
-      #{brand,jdbcType=VARCHAR}, #{purPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, 
-      #{modelNo,jdbcType=VARCHAR}, #{currentShopId,jdbcType=INTEGER}, #{isSold,jdbcType=BIT}, 
-      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}
-      )
+    insert into phone (id, imei_no, color_id, 
+      brand_id, pur_price, sale_price, 
+      model_id, current_shop_id, is_sold, 
+      remark, create_time, is_deleted, 
+      amount)
+    values (#{id,jdbcType=INTEGER}, #{imeiNo,jdbcType=VARCHAR}, #{colorId,jdbcType=INTEGER}, 
+      #{brandId,jdbcType=INTEGER}, #{purPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, 
+      #{modelId,jdbcType=INTEGER}, #{currentShopId,jdbcType=INTEGER}, #{isSold,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, 
+      #{amount,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.phoneerp.bean.Phone" >
+  <insert id="insertSelective" parameterType="com.phoneerp.bean.Phone" useGeneratedKeys="true" keyProperty="id">
     insert into phone
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -50,11 +51,11 @@
       <if test="imeiNo != null" >
         imei_no,
       </if>
-      <if test="color != null" >
-        color,
+      <if test="colorId != null" >
+        color_id,
       </if>
-      <if test="brand != null" >
-        brand,
+      <if test="brandId != null" >
+        brand_id,
       </if>
       <if test="purPrice != null" >
         pur_price,
@@ -62,8 +63,8 @@
       <if test="salePrice != null" >
         sale_price,
       </if>
-      <if test="modelNo != null" >
-        model_no,
+      <if test="modelId != null" >
+        model_id,
       </if>
       <if test="currentShopId != null" >
         current_shop_id,
@@ -80,6 +81,9 @@
       <if test="isDeleted != null" >
         is_deleted,
       </if>
+      <if test="amount != null" >
+        amount,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -88,11 +92,11 @@
       <if test="imeiNo != null" >
         #{imeiNo,jdbcType=VARCHAR},
       </if>
-      <if test="color != null" >
-        #{color,jdbcType=VARCHAR},
+      <if test="colorId != null" >
+        #{colorId,jdbcType=INTEGER},
       </if>
-      <if test="brand != null" >
-        #{brand,jdbcType=VARCHAR},
+      <if test="brandId != null" >
+        #{brandId,jdbcType=INTEGER},
       </if>
       <if test="purPrice != null" >
         #{purPrice,jdbcType=DECIMAL},
@@ -100,8 +104,8 @@
       <if test="salePrice != null" >
         #{salePrice,jdbcType=DECIMAL},
       </if>
-      <if test="modelNo != null" >
-        #{modelNo,jdbcType=VARCHAR},
+      <if test="modelId != null" >
+        #{modelId,jdbcType=INTEGER},
       </if>
       <if test="currentShopId != null" >
         #{currentShopId,jdbcType=INTEGER},
@@ -118,6 +122,9 @@
       <if test="isDeleted != null" >
         #{isDeleted,jdbcType=BIT},
       </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.phoneerp.bean.Phone" >
@@ -126,11 +133,11 @@
       <if test="imeiNo != null" >
         imei_no = #{imeiNo,jdbcType=VARCHAR},
       </if>
-      <if test="color != null" >
-        color = #{color,jdbcType=VARCHAR},
+      <if test="colorId != null" >
+        color_id = #{colorId,jdbcType=INTEGER},
       </if>
-      <if test="brand != null" >
-        brand = #{brand,jdbcType=VARCHAR},
+      <if test="brandId != null" >
+        brand_id = #{brandId,jdbcType=INTEGER},
       </if>
       <if test="purPrice != null" >
         pur_price = #{purPrice,jdbcType=DECIMAL},
@@ -138,8 +145,8 @@
       <if test="salePrice != null" >
         sale_price = #{salePrice,jdbcType=DECIMAL},
       </if>
-      <if test="modelNo != null" >
-        model_no = #{modelNo,jdbcType=VARCHAR},
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=INTEGER},
       </if>
       <if test="currentShopId != null" >
         current_shop_id = #{currentShopId,jdbcType=INTEGER},
@@ -156,22 +163,26 @@
       <if test="isDeleted != null" >
         is_deleted = #{isDeleted,jdbcType=BIT},
       </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Phone" >
     update phone
     set imei_no = #{imeiNo,jdbcType=VARCHAR},
-      color = #{color,jdbcType=VARCHAR},
-      brand = #{brand,jdbcType=VARCHAR},
+      color_id = #{colorId,jdbcType=INTEGER},
+      brand_id = #{brandId,jdbcType=INTEGER},
       pur_price = #{purPrice,jdbcType=DECIMAL},
       sale_price = #{salePrice,jdbcType=DECIMAL},
-      model_no = #{modelNo,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=INTEGER},
       current_shop_id = #{currentShopId,jdbcType=INTEGER},
       is_sold = #{isSold,jdbcType=BIT},
       remark = #{remark,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      is_deleted = #{isDeleted,jdbcType=BIT}
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      amount = #{amount,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
