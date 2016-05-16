@@ -3,16 +3,21 @@
 <mapper namespace="com.phoneerp.dao.PhoneMapper" >
   <resultMap id="BaseResultMap" type="com.phoneerp.bean.Phone" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="imeiNo" property="imeino" jdbcType="VARCHAR" />
+    <result column="imei_no" property="imeiNo" jdbcType="VARCHAR" />
     <result column="color" property="color" jdbcType="VARCHAR" />
     <result column="brand" property="brand" jdbcType="VARCHAR" />
     <result column="pur_price" property="purPrice" jdbcType="DECIMAL" />
     <result column="sale_price" property="salePrice" jdbcType="DECIMAL" />
     <result column="model_no" property="modelNo" jdbcType="VARCHAR" />
+    <result column="current_shop_id" property="currentShopId" jdbcType="INTEGER" />
+    <result column="is_sold" property="isSold" jdbcType="BIT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, imeiNo, color, brand, pur_price, sale_price, model_no, create_time
+    id, imei_no, color, brand, pur_price, sale_price, model_no, current_shop_id, is_sold, 
+    remark, create_time, is_deleted
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -25,12 +30,16 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.phoneerp.bean.Phone" >
-    insert into phone (id, imeiNo, color, 
+    insert into phone (id, imei_no, color, 
       brand, pur_price, sale_price, 
-      model_no, create_time)
-    values (#{id,jdbcType=INTEGER}, #{imeino,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, 
+      model_no, current_shop_id, is_sold, 
+      remark, create_time, is_deleted
+      )
+    values (#{id,jdbcType=INTEGER}, #{imeiNo,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, 
       #{brand,jdbcType=VARCHAR}, #{purPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, 
-      #{modelNo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+      #{modelNo,jdbcType=VARCHAR}, #{currentShopId,jdbcType=INTEGER}, #{isSold,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.phoneerp.bean.Phone" >
     insert into phone
@@ -38,8 +47,8 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="imeino != null" >
-        imeiNo,
+      <if test="imeiNo != null" >
+        imei_no,
       </if>
       <if test="color != null" >
         color,
@@ -56,16 +65,28 @@
       <if test="modelNo != null" >
         model_no,
       </if>
+      <if test="currentShopId != null" >
+        current_shop_id,
+      </if>
+      <if test="isSold != null" >
+        is_sold,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
       <if test="createTime != null" >
         create_time,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="imeino != null" >
-        #{imeino,jdbcType=VARCHAR},
+      <if test="imeiNo != null" >
+        #{imeiNo,jdbcType=VARCHAR},
       </if>
       <if test="color != null" >
         #{color,jdbcType=VARCHAR},
@@ -82,16 +103,28 @@
       <if test="modelNo != null" >
         #{modelNo,jdbcType=VARCHAR},
       </if>
+      <if test="currentShopId != null" >
+        #{currentShopId,jdbcType=INTEGER},
+      </if>
+      <if test="isSold != null" >
+        #{isSold,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.phoneerp.bean.Phone" >
     update phone
     <set >
-      <if test="imeino != null" >
-        imeiNo = #{imeino,jdbcType=VARCHAR},
+      <if test="imeiNo != null" >
+        imei_no = #{imeiNo,jdbcType=VARCHAR},
       </if>
       <if test="color != null" >
         color = #{color,jdbcType=VARCHAR},
@@ -108,21 +141,37 @@
       <if test="modelNo != null" >
         model_no = #{modelNo,jdbcType=VARCHAR},
       </if>
+      <if test="currentShopId != null" >
+        current_shop_id = #{currentShopId,jdbcType=INTEGER},
+      </if>
+      <if test="isSold != null" >
+        is_sold = #{isSold,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Phone" >
     update phone
-    set imeiNo = #{imeino,jdbcType=VARCHAR},
+    set imei_no = #{imeiNo,jdbcType=VARCHAR},
       color = #{color,jdbcType=VARCHAR},
       brand = #{brand,jdbcType=VARCHAR},
       pur_price = #{purPrice,jdbcType=DECIMAL},
       sale_price = #{salePrice,jdbcType=DECIMAL},
       model_no = #{modelNo,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      current_shop_id = #{currentShopId,jdbcType=INTEGER},
+      is_sold = #{isSold,jdbcType=BIT},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
@@ -133,11 +182,11 @@
   
   <sql id="conditions">
   	<trim prefix="where" prefixOverrides="and|or" >
-      <if test="phone.imeino != null and isCheck" >
-        and  t.imeiNo = #{phone.imeino}
+      <if test="phone.imeiNo != null and isCheck" >
+        and  t.imei_no = #{phone.imeiNo}
       </if>
-      <if test="phone.imeino != null and isCheck == null" >
-        and  t.imeiNo like CONCAT('%',#{phone.imeiNo},'%')
+      <if test="phone.imeiNo != null and isCheck == null" >
+        and  t.imei_no like CONCAT('%',#{phone.imeiNo},'%')
       </if>
     </trim>
   </sql>

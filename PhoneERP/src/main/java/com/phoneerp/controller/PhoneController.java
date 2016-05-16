@@ -30,7 +30,7 @@ public class PhoneController {
 	public ResultMsg imeiNoCheck(String imeiNo) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		Phone phone = new Phone();
-		phone.setImeino(imeiNo);
+		phone.setImeiNo(imeiNo);
 		paramMap.put("phone", phone);
 		paramMap.put("isCheck", true);
 		if (phoneMapper.getCount(paramMap) > 1) {
@@ -38,6 +38,5 @@ public class PhoneController {
 		} else {
 			return new ResultMsg(true, "不存在。");
 		}
-
 	}
 }

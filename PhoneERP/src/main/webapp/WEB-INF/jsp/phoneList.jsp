@@ -13,13 +13,55 @@
 <body>
 	<h2>手机管理</h2>
 	<div class="easyui-layout" fit='true'>
-		<div data-options="region:'north',title:'查询条件',split:true" style="height:80px;">
+		<div data-options="region:'north',title:'查询条件',split:true" style="height:150px;">
 			<form id="phoneList_queryForm" method="post">
 				<table >
 		    		<tr>
 		    			<td width="150px" align="right">手机串号:</td>
-		    			<td><input class="easyui-textbox" type="text" style="width:150px;" name="userName" ></input></td>
-		    			<td >
+		    			<td><input class="easyui-textbox" type="text" style="width:150px;" name="" ></input></td>
+		    			<td width="150px" align="right">批发商:</td>
+		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccSupplier" name="" ></input></td>
+		    			<td width="150px" align="right">手机牌子:</td>
+		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccBrand" name="" ></input></td>
+		    			<td width="150px" align="right">进货日期:</td>
+		    			<td>
+		    				<input  type="text" class="easyui-datebox" style="width:150px;" editable="false" prompt="开始" name="" />
+		    				至
+		    				<input  type="text" class="easyui-datebox" style="width:150px;" editable="false" prompt="结束" name="" />
+		    			</td>
+		    		</tr>
+		    		<tr>
+		    			<td width="150px" align="right">当前店铺:</td>
+		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccShop" name="" ></input></td>
+		    			<td width="150px" align="right">是否卖出:</td>
+		    			<td><input class="easyui-combobox" type="text" style="width:150px;" name="" ></input></td>
+		    			<td width="150px" align="right">销售员:</td>
+		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccSaler" name="" ></input></td>
+		    			<td width="150px" align="right">销售日期:</td>
+		    			<td>
+		    				<input  type="text" class="easyui-datebox" style="width:150px;" editable="false" prompt="开始" name="" />
+		    				至
+		    				<input  type="text" class="easyui-datebox" style="width:150px;" editable="false" prompt="结束" name="" />
+		    			</td>
+		    		</tr>
+		    		<tr>
+		    			<td width="150px" align="right">手机型号:</td>
+		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccModel" name="" ></input></td>
+		    			<td width="150px" align="right">手机颜色:</td>
+		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccColor" name="" ></input></td>
+		    			<td width="150px" align="right">进货价:</td>
+		    			<td colspan="3">
+		    				<input  type="text" class="easyui-numberbox" style="width:150px;" prompt="从" name="" />
+		    				至
+		    				<input  type="text" class="easyui-numberbox" style="width:150px;" prompt="止" name="" />
+		    			</td>
+		    		</tr>
+		    		<tr>
+		    			<td width="150px" align="right">实际销售金额:</td>
+		    			<td colspan="4">
+		    				<input  type="text" class="easyui-numberbox" style="width:150px;" prompt="从" name="" />
+		    				至
+		    				<input  type="text" class="easyui-numberbox" style="width:150px;" prompt="止" name="" />
 		    				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px" onclick="userList.formQuery.query()">查询</a>
 		    			</td>
 		    		</tr>
@@ -32,45 +74,67 @@
 		            rownumbers="true" fitColumns="true" singleSelect="true">
 		        <thead>
 		            <tr>
-		                <th field="firstname" width="50px">手机串号</th>
-		                <th field="lastname" width="50px">手机牌子</th>
-		                <th field="phone" width="50px">手机颜色</th>
-		                <th field="phone" width="50px">手机型号</th>
-		                <th field="email1" width="50px">进货价格</th>
-		                <th field="email2" width="50px">建议销售价格</th>
-		                <th field="email3" width="50px">是否卖出</th>
-		                <th field="email4" width="50px">当前所属店铺</th>
+		            	<th data-options="field:'code',width:100">批发商</th>
+		            	<th data-options="field:'code1',width:100">进货日期</th>
+		                <th data-options="field:'code2',width:100">手机串号</th>
+		                <th data-options="field:'code3',width:100">手机牌子</th>
+		                <th data-options="field:'code4',width:100">手机颜色</th>
+		                <th data-options="field:'code5',width:100">手机型号</th>
+		                <th data-options="field:'code6',width:100">数量</th>
+		                <th data-options="field:'code7',width:100">进货价格</th>
+		                <th data-options="field:'code8',width:100">备注</th>
+		                <th data-options="field:'code9',width:100">当前所在店铺</th>
+		                <th data-options="field:'code10',width:100">是否卖出</th>
+		                <th data-options="field:'code11',width:100">实际销售价格</th>
+		                <th data-options="field:'code12',width:100">销售员</th>
+		                <th data-options="field:'code13',width:100">销售日期</th>
 		            </tr>
 		        </thead>
 		    </table>
 		    <div id="toolbar">
-		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">添加手机产品</a>
+		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newPur()">采购</a>
+		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newAllot()">调拨</a>
+		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newSale()">销售</a>
 		    </div>
 		</div>
 	</div>
     <div id="dlg" class="easyui-dialog" style="width:400px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
         <form id="fm" method="post" novalidate>
-            <div class="fitem">
-                <label>手机串号:</label>
-                <input name="firstname" class="easyui-textbox" required="true" missingMessage="必须填写">
-            </div>
-            <div class="fitem">
-                <label>手机牌子:</label>
-                <input id="cc" class="easyui-combobox" name="dept" required="true" missingMessage="必须选择">
-            </div>
-            <div class="fitem">
-                <label>手机颜色:</label>
-                <input id="cc1" class="easyui-combobox" name="dept1" required="true" missingMessage="必须选择">
-            </div>
-            <div class="fitem">
-                <label>手机型号:</label>
-                <input id="cc2" class="easyui-combobox" name="dept1" required="true" missingMessage="必须选择">
-            </div>
-            <div class="fitem">
-                <label>建议销售价格:</label>
-                <input name="email" class="easyui-numberbox" min="0" max="10000" precision="2" required="true" missingMessage="必须填写0~10000之间的数字">
-            </div>
+        	<table >
+	    		<tr>
+	    			<td width="80px" align="right">手机串号:</td>
+	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">手机牌子:</td>
+	    			<td><input class="easyui-combobox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">手机颜色:</td>
+	    			<td><input class="easyui-combobox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">手机型号:</td>
+	    			<td><input class="easyui-combobox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">批发商:</td>
+	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">入库店铺:</td>
+	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">进货价格:</td>
+	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">采购单号:</td>
+	    			<td><input class="easyui-textbox" required="true" missingMessage="必须填写" name="firstname" /></td>
+	    		</tr>
+	    	</table>
         </form>
     </div>
     <div id="dlg-buttons">
@@ -78,36 +142,43 @@
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
     </div>
     <script type="text/javascript">
-	    $('#cc').combobox({    
-	        url:'../resources/json/brand.json',    
-	        valueField:'id',    
-	        textField:'text',
-	        method:"GET"
-	    }); 
-	    $('#cc1').combobox({    
-	        url:'../resources/json/color.json',    
-	        valueField:'id',    
-	        textField:'text',
-	        method:"GET"
-	    });
-	    $('#cc2').combobox({    
-	        url:'../resources/json/model.json',    
-	        valueField:'id',    
-	        textField:'text',
-	        method:"GET"
-	    });
+    
+    	var supplierDatas,brandDatas,shopDatas,saleDatas,modelDatas,colorDatas;
+    	$(function(){
+    		getJSONDatas();
+    	});
+    	
+    	function getJSONDatas(){
+    		$.getJSON("../resources/json/brand.json",
+    				  function(result){
+    					$('#ccBrand').combobox({
+    	        			valueField:'id',
+    	        			textField:'text',
+    	        			data:result
+    	        		});
+    					brandDatas = result;
+    		});
+      		$.getJSON("../resources/json/color.json",
+      				  function(result){
+		      			$('#ccColor').combobox({
+		        			valueField:'id',
+		        			textField:'text',
+		        			data:result
+		        		});
+      					colorDatas = result;
+      		});
+      		$.getJSON("../resources/json/model.json",
+      				  function(result){
+		      			$('#ccModel').combobox({
+		        			valueField:'id',
+		        			textField:'text',
+		        			data:result
+		        		});
+      					modelDatas = result;
+      		});
+    	}
         var url;
-        function newUser(){
-        	$.ajax({
-        		url:'',
-        		type:'get',
-        		data:{id:1},
-        		success:function(data){
-        			$('#fm').form('clear');
-        			$('#fm').form('load',data);
-        			$('#dlg').dialog('open').dialog('center').dialog('setTitle','添加手机');
-        		}
-        	});
+        function newPur(){
             $('#dlg').dialog('open').dialog('center').dialog('setTitle','添加手机');
             $('#fm').form('clear');
             url = 'save_user.php';
@@ -166,25 +237,5 @@
             }
         }
     </script>
-    <style type="text/css">
-        #fm{
-            margin:0;
-            padding:10px 30px;
-        }
-        .ftitle{
-            font-size:14px;
-            font-weight:bold;
-            padding:5px 0;
-            margin-bottom:10px;
-            border-bottom:1px solid #ccc;
-        }
-        .fitem{
-            margin-bottom:5px;
-        }
-        .fitem label{
-            display:inline-block;
-            width:80px;
-        }
-    </style>
 </body>
 </html>

@@ -5,7 +5,7 @@ import java.util.Date;
 public class Phone {
     private Integer id;
 
-    private String imeino;
+    private String imeiNo;
 
     private String color;
 
@@ -17,7 +17,15 @@ public class Phone {
 
     private String modelNo;
 
+    private Integer currentShopId;
+
+    private Boolean isSold;
+
+    private String remark;
+
     private Date createTime;
+
+    private Boolean isDeleted;
 
     public Integer getId() {
         return id;
@@ -27,12 +35,12 @@ public class Phone {
         this.id = id;
     }
 
-    public String getImeino() {
-        return imeino;
+    public String getImeiNo() {
+        return imeiNo;
     }
 
-    public void setImeino(String imeino) {
-        this.imeino = imeino == null ? null : imeino.trim();
+    public void setImeiNo(String imeiNo) {
+        this.imeiNo = imeiNo == null ? null : imeiNo.trim();
     }
 
     public String getColor() {
@@ -75,11 +83,43 @@ public class Phone {
         this.modelNo = modelNo == null ? null : modelNo.trim();
     }
 
+    public Integer getCurrentShopId() {
+        return currentShopId;
+    }
+
+    public void setCurrentShopId(Integer currentShopId) {
+        this.currentShopId = currentShopId;
+    }
+
+    public Boolean getIsSold() {
+        return isSold;
+    }
+
+    public void setIsSold(Boolean isSold) {
+        this.isSold = isSold;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }
