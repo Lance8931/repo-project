@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.phoneerp.bean.Purchase" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="pur_no" property="purNo" jdbcType="VARCHAR" />
-    <result column="pur_time" property="purTime" jdbcType="TIMESTAMP" />
+    <result column="pur_time" property="purTime" jdbcType="DATE" />
     <result column="shop_id" property="shopId" jdbcType="INTEGER" />
     <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
@@ -30,7 +30,7 @@
       shop_id, supplier_id, remark, 
       create_time, phone_id, price
       )
-    values (#{id,jdbcType=INTEGER}, #{purNo,jdbcType=VARCHAR}, #{purTime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=INTEGER}, #{purNo,jdbcType=VARCHAR}, #{purTime,jdbcType=DATE}, 
       #{shopId,jdbcType=INTEGER}, #{supplierId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{phoneId,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}
       )
@@ -74,7 +74,7 @@
         #{purNo,jdbcType=VARCHAR},
       </if>
       <if test="purTime != null" >
-        #{purTime,jdbcType=TIMESTAMP},
+        #{purTime,jdbcType=DATE},
       </if>
       <if test="shopId != null" >
         #{shopId,jdbcType=INTEGER},
@@ -103,7 +103,7 @@
         pur_no = #{purNo,jdbcType=VARCHAR},
       </if>
       <if test="purTime != null" >
-        pur_time = #{purTime,jdbcType=TIMESTAMP},
+        pur_time = #{purTime,jdbcType=DATE},
       </if>
       <if test="shopId != null" >
         shop_id = #{shopId,jdbcType=INTEGER},
@@ -129,7 +129,7 @@
   <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Purchase" >
     update purchase
     set pur_no = #{purNo,jdbcType=VARCHAR},
-      pur_time = #{purTime,jdbcType=TIMESTAMP},
+      pur_time = #{purTime,jdbcType=DATE},
       shop_id = #{shopId,jdbcType=INTEGER},
       supplier_id = #{supplierId,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},

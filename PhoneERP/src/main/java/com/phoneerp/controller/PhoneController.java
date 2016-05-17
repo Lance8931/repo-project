@@ -47,6 +47,7 @@ public class PhoneController {
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@ResponseBody
 	public ResultMsg add(Phone phone) {
 		Purchase purchase = phone.getPurchase();
 		purchase.setShopId(phone.getCurrentShopId());
@@ -56,5 +57,15 @@ public class PhoneController {
 		purchaseMapper.insertSelective(purchase);
 		System.out.println(phone);
 		return new ResultMsg(true, "成功。");
+	}
+
+	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST, RequestMethod.GET })
+	@ResponseBody
+	public Map<String, Object> getSupplierList(Phone phone) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("phone", phone);
+		map.put("rows", phoneMapper.getList(paramMap));
+		return map;
 	}
 }

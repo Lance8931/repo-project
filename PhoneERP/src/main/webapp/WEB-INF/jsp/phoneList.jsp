@@ -70,21 +70,21 @@
 			</form>
 		</div>
 		<div data-options="region:'center',title:'查询结果'">
-			<table id="dg" title="手机列表" class="easyui-datagrid" style="height:250px"
-		            url="" toolbar="#toolbar" pagination="true"
+			<table id="dg" title="手机列表" class="easyui-datagrid" style="height:auto"
+		            url="../phone/getPhoneList" toolbar="#toolbar"
 		            rownumbers="true" fitColumns="true" singleSelect="true">
 		        <thead>
 		            <tr>
-		            	<th data-options="field:'code',width:100">批发商</th>
-		            	<th data-options="field:'code1',width:100">进货日期</th>
-		                <th data-options="field:'code2',width:100">手机串号</th>
+		            	<th data-options="field:'supplier.supplierName',width:100">批发商</th>
+		            	<th data-options="field:'purchase.purTime',width:100">进货日期</th>
+		                <th data-options="field:'imeiNo',width:100">手机串号</th>
 		                <th data-options="field:'code3',width:100">手机牌子</th>
 		                <th data-options="field:'code4',width:100">手机颜色</th>
 		                <th data-options="field:'code5',width:100">手机型号</th>
 		                <th data-options="field:'code6',width:100">数量</th>
 		                <th data-options="field:'code7',width:100">进货价格</th>
 		                <th data-options="field:'code8',width:100">备注</th>
-		                <th data-options="field:'code9',width:100">当前所在店铺</th>
+		                <th data-options="field:'shop.shopName',width:100">当前所在店铺</th>
 		                <th data-options="field:'code10',width:100">是否卖出</th>
 		                <th data-options="field:'code11',width:100">实际销售价格</th>
 		                <th data-options="field:'code12',width:100">销售员</th>
@@ -204,6 +204,7 @@
                     return $(this).form('validate');
                 },
                 success: function(result){
+                	result = eval('('+result+')');
                 	if (result.success){
                     	$.messager.alert(
                     			'提示信息',

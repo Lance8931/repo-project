@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.phoneerp.dao.OrdersMapper" >
+  <resultMap id="BaseResultMap" type="com.phoneerp.bean.Orders" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="phone_id" property="phoneId" jdbcType="INTEGER" />
+    <result column="saler_id" property="salerId" jdbcType="INTEGER" />
+    <result column="shop_id" property="shopId" jdbcType="INTEGER" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="bill_no" property="billNo" jdbcType="INTEGER" />
+    <result column="bill_price" property="billPrice" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, phone_id, saler_id, shop_id, order_time, bill_no, bill_price, remark, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orders
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.phoneerp.bean.Orders" >
+    insert into orders (id, phone_id, saler_id, 
+      shop_id, order_time, bill_no, 
+      bill_price, remark, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{phoneId,jdbcType=INTEGER}, #{salerId,jdbcType=INTEGER}, 
+      #{shopId,jdbcType=INTEGER}, #{orderTime,jdbcType=TIMESTAMP}, #{billNo,jdbcType=INTEGER}, 
+      #{billPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.phoneerp.bean.Orders" >
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="phoneId != null" >
+        phone_id,
+      </if>
+      <if test="salerId != null" >
+        saler_id,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="orderTime != null" >
+        order_time,
+      </if>
+      <if test="billNo != null" >
+        bill_no,
+      </if>
+      <if test="billPrice != null" >
+        bill_price,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="phoneId != null" >
+        #{phoneId,jdbcType=INTEGER},
+      </if>
+      <if test="salerId != null" >
+        #{salerId,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="orderTime != null" >
+        #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="billNo != null" >
+        #{billNo,jdbcType=INTEGER},
+      </if>
+      <if test="billPrice != null" >
+        #{billPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.phoneerp.bean.Orders" >
+    update orders
+    <set >
+      <if test="phoneId != null" >
+        phone_id = #{phoneId,jdbcType=INTEGER},
+      </if>
+      <if test="salerId != null" >
+        saler_id = #{salerId,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="orderTime != null" >
+        order_time = #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="billNo != null" >
+        bill_no = #{billNo,jdbcType=INTEGER},
+      </if>
+      <if test="billPrice != null" >
+        bill_price = #{billPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.phoneerp.bean.Orders" >
+    update orders
+    set phone_id = #{phoneId,jdbcType=INTEGER},
+      saler_id = #{salerId,jdbcType=INTEGER},
+      shop_id = #{shopId,jdbcType=INTEGER},
+      order_time = #{orderTime,jdbcType=TIMESTAMP},
+      bill_no = #{billNo,jdbcType=INTEGER},
+      bill_price = #{billPrice,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
