@@ -14,6 +14,7 @@ import com.phoneerp.bean.Orders;
 import com.phoneerp.bean.Phone;
 import com.phoneerp.bean.Purchase;
 import com.phoneerp.bean.ResultMsg;
+import com.phoneerp.bean.SearchPhoneListBean;
 import com.phoneerp.dao.AllotMapper;
 import com.phoneerp.dao.OrdersMapper;
 import com.phoneerp.dao.PhoneMapper;
@@ -45,9 +46,9 @@ public class PhoneController {
 	@ResponseBody
 	public ResultMsg imeiNoCheck(String imeiNo) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		Phone phone = new Phone();
-		phone.setImeiNo(imeiNo);
-		paramMap.put("phone", phone);
+		SearchPhoneListBean searchPhoneListBean = new SearchPhoneListBean();
+		searchPhoneListBean.setImeiNo(imeiNo);
+		paramMap.put("searchBean", searchPhoneListBean);
 		paramMap.put("isCheck", true);
 		if (phoneMapper.getCount(paramMap) > 0) {
 			return new ResultMsg(false, "存在。");
@@ -87,14 +88,16 @@ public class PhoneController {
 	 * @date 2016年5月18日下午3:59:57
 	 * @author siping-L.J.H
 	 */
-	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST,
-			RequestMethod.GET })
+	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST, RequestMethod.GET })
 	@ResponseBody
-	public Map<String, Object> getSupplierList(Phone phone) {
+	public Map<String, Object> getSupplierList(SearchPhoneListBean searchPhoneListBean, Long page, Long rows) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("phone", phone);
+		paramMap.put("searchBean", searchPhoneListBean);
+		paramMap.put("startNo", (page - 1) * rows);
+		paramMap.put("pageSize", rows);
 		map.put("rows", phoneMapper.getList(paramMap));
+		map.put("total", phoneMapper.getCount(paramMap));
 		return map;
 	}
 

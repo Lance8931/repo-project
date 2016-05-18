@@ -188,16 +188,66 @@
   
   <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
   	select count(*) from phone t 
+  	LEFT OUTER JOIN purchase a ON t.id = a.phone_id
+	LEFT OUTER JOIN shop b on t.current_shop_id = b.id
+	LEFT OUTER JOIN supplier c on a.supplier_id = c.id
+	LEFT OUTER JOIN orders d on t.id = d.phone_id
+	LEFT OUTER JOIN saler e on d.saler_id=e.id
   	<include refid="conditions" />
   </select>
   
   <sql id="conditions">
   	<trim prefix="where" prefixOverrides="and|or" >
-      <if test="phone.imeiNo != null and isCheck" >
-        and  t.imei_no = #{phone.imeiNo}
+      <if test="searchBean.imeiNo != null and isCheck" >
+        and  t.imei_no = #{searchBean.imeiNo}
       </if>
-      <if test="phone.imeiNo != null and isCheck == null" >
-        and  t.imei_no like CONCAT('%',#{phone.imeiNo},'%')
+      <if test="searchBean.imeiNo != null and isCheck == null" >
+        and  t.imei_no like CONCAT('%',#{searchBean.imeiNo},'%')
+      </if>
+      <if test="searchBean.supplierId != null" >
+        and  c.id = #{searchBean.supplierId}
+      </if>
+      <if test="searchBean.brandId != null" >
+        and  t.brand_id = #{searchBean.brandId}
+      </if>
+      <if test="searchBean.purStartTime != null" >
+        and  a.pur_time &gt;= #{searchBean.purStartTime}
+      </if>
+      <if test="searchBean.purEndTime != null" >
+        and  a.pur_time &lt;= #{searchBean.purEndTime}
+      </if>
+      <if test="searchBean.currentShopId != null" >
+        and  t.current_shop_id = #{searchBean.currentShopId}
+      </if>
+      <if test="searchBean.isSold != null" >
+        and  t.is_sold = #{searchBean.isSold}
+      </if>
+      <if test="searchBean.salerId != null" >
+        and  d.saler_id = #{searchBean.salerId}
+      </if>
+      <if test="searchBean.saleStartTime != null" >
+        and  d.order_time &gt;= #{searchBean.saleStartTime}
+      </if>
+      <if test="searchBean.saleEndTime != null" >
+        and  d.order_time &lt;= #{searchBean.saleEndTime}
+      </if>
+      <if test="searchBean.modelId != null" >
+        and  t.model_id = #{searchBean.modelId}
+      </if>
+      <if test="searchBean.colorId != null" >
+        and  t.color_id = #{searchBean.colorId}
+      </if>
+      <if test="searchBean.purStartPrice != null" >
+        and  t.pur_price &gt;= #{searchBean.purStartPrice}
+      </if>
+      <if test="searchBean.purEndPrice != null" >
+        and  t.pur_price &lt;= #{searchBean.purEndPrice}
+      </if>
+      <if test="searchBean.saleStartPrice != null" >
+        and  t.sale_price &gt;= #{searchBean.saleStartPrice}
+      </if>
+      <if test="searchBean.saleEndPrice != null" >
+        and  t.sale_price &lt;= #{searchBean.saleEndPrice}
       </if>
     </trim>
   </sql>
@@ -245,5 +295,8 @@
 	LEFT OUTER JOIN orders d on t.id = d.phone_id
 	LEFT OUTER JOIN saler e on d.saler_id=e.id
 	<include refid="conditions" />
+	<if test="startNo != null">
+		limit #{startNo},#{pageSize}
+	</if>
   </select>
 </mapper>

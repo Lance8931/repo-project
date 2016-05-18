@@ -19,51 +19,52 @@
 				<table >
 		    		<tr>
 		    			<td width="150px" align="right">手机串号:</td>
-		    			<td><input class="easyui-textbox" type="text" style="width:150px;" name="" ></input></td>
+		    			<td><input class="easyui-textbox" type="text" style="width:120px;" name="imeiNo" ></input></td>
 		    			<td width="150px" align="right">批发商:</td>
-		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccSupplier" name="" ></input></td>
+		    			<td><input class="easyui-combobox" type="text" style="width:120px;" id="ccSupplier" name="supplierId" ></input></td>
 		    			<td width="150px" align="right">手机牌子:</td>
-		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccBrand" name="" ></input></td>
+		    			<td><input class="easyui-combobox" type="text" style="width:120px;" id="ccBrand" name="brandId" ></input></td>
 		    			<td width="150px" align="right">进货日期:</td>
 		    			<td>
-		    				<input  type="text" class="easyui-datebox" style="width:150px;" editable="false" prompt="开始" name="" />
+		    				<input  type="text" class="easyui-datebox" style="width:120px;" editable="false" prompt="开始" name="purStartTime" />
 		    				至
-		    				<input  type="text" class="easyui-datebox" style="width:150px;" editable="false" prompt="结束" name="" />
+		    				<input  type="text" class="easyui-datebox" style="width:120px;" editable="false" prompt="结束" name="purEndTime" />
 		    			</td>
 		    		</tr>
 		    		<tr>
 		    			<td width="150px" align="right">当前店铺:</td>
-		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccShop" name="" ></input></td>
+		    			<td><input class="easyui-combobox" type="text" style="width:120px;" id="ccShop" name="currentShopId" ></input></td>
 		    			<td width="150px" align="right">是否卖出:</td>
-		    			<td><input class="easyui-combobox" type="text" style="width:150px;" name="" ></input></td>
+		    			<td><input class="easyui-combobox" type="text" style="width:120px;" name="isSold" data-options="valueField: 'id',textField: 'text',data:[{id:'1',text:'是'},{id:'0',text:'否'}]" ></input></td>
 		    			<td width="150px" align="right">销售员:</td>
-		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccSaler" name="" ></input></td>
+		    			<td><input class="easyui-combobox" type="text" style="width:120px;" id="ccSaler" name="salerId" ></input></td>
 		    			<td width="150px" align="right">销售日期:</td>
 		    			<td>
-		    				<input  type="text" class="easyui-datebox" style="width:150px;" editable="false" prompt="开始" name="" />
+		    				<input  type="text" class="easyui-datebox" style="width:120px;" prompt="开始" name="saleStartTime" />
 		    				至
-		    				<input  type="text" class="easyui-datebox" style="width:150px;" editable="false" prompt="结束" name="" />
+		    				<input  type="text" class="easyui-datebox" style="width:120px;" prompt="结束" name="saleEndTime" />
 		    			</td>
 		    		</tr>
 		    		<tr>
 		    			<td width="150px" align="right">手机型号:</td>
-		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccModel" name="" ></input></td>
+		    			<td><input class="easyui-combobox" type="text" style="width:120px;" id="ccModel" name="modelId" ></input></td>
 		    			<td width="150px" align="right">手机颜色:</td>
-		    			<td><input class="easyui-combobox" type="text" style="width:150px;" id="ccColor" name="" ></input></td>
+		    			<td><input class="easyui-combobox" type="text" style="width:120px;" id="ccColor" name="colorId" ></input></td>
 		    			<td width="150px" align="right">进货价:</td>
 		    			<td colspan="3">
-		    				<input  type="text" class="easyui-numberbox" style="width:150px;" prompt="从" name="" />
+		    				<input  type="text" class="easyui-numberbox" style="width:120px;" prompt="从" name="purStartPrice" />
 		    				至
-		    				<input  type="text" class="easyui-numberbox" style="width:150px;" prompt="止" name="" />
+		    				<input  type="text" class="easyui-numberbox" style="width:120px;" prompt="止" name="purEndPrice" />
 		    			</td>
 		    		</tr>
-		    		<tr>
+		    		<tr> 
 		    			<td width="150px" align="right">实际销售金额:</td>
 		    			<td colspan="4">
-		    				<input  type="text" class="easyui-numberbox" style="width:150px;" prompt="从" name="" />
+		    				<input  type="text" class="easyui-numberbox" style="width:120px;" prompt="从" name="saleStartPrice" />
 		    				至
-		    				<input  type="text" class="easyui-numberbox" style="width:150px;" prompt="止" name="" />
-		    				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px" onclick="userList.formQuery.query()">查询</a>
+		    				<input  type="text" class="easyui-numberbox" style="width:120px;" prompt="止" name="saleEndPrice" />
+		    				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px" onclick="query()">查询</a>
+		    				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px" onclick="reset()">重置</a>
 		    			</td>
 		    		</tr>
 		    	</table>
@@ -560,9 +561,18 @@
 			        {field:'saler.salerName',title:'销售员',width:'80px'}, 
 			        {field:'orders.orderTime',title:'销售日期',width:'80px'},     
 			    ]],
-			    toolbar:'#toolbar'
+			    toolbar:'#toolbar',
+			    pagination: true
 	       	});
 	   }
+		
+		function query(){
+        	$('#dg').datagrid('load',$('#phoneList_queryForm').form('serialize'))
+        }
+		
+		function reset(){
+			$("#phoneList_queryForm").form('reset');
+		}
     </script>
 </body>
 </html>
