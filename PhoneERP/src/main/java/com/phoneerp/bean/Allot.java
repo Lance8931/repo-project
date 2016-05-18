@@ -3,53 +3,63 @@ package com.phoneerp.bean;
 import java.util.Date;
 
 public class Allot {
-    private Integer id;
+	private Integer id;
 
-    private Integer inShopId;
+	private Integer inShopId;
 
-    private Integer outShopId;
+	private Integer outShopId;
 
-    private Date operatTime;
+	private String operatTime;
 
-    private Date createTime;
+	private Date createTime;
 
-    public Integer getId() {
-        return id;
-    }
+	private Integer phoneId;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public Integer getInShopId() {
-        return inShopId;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public void setInShopId(Integer inShopId) {
-        this.inShopId = inShopId;
-    }
+	public Integer getInShopId() {
+		return inShopId;
+	}
 
-    public Integer getOutShopId() {
-        return outShopId;
-    }
+	public void setInShopId(Integer inShopId) {
+		this.inShopId = inShopId;
+	}
 
-    public void setOutShopId(Integer outShopId) {
-        this.outShopId = outShopId;
-    }
+	public Integer getOutShopId() {
+		return outShopId;
+	}
 
-    public Date getOperatTime() {
-        return operatTime;
-    }
+	public void setOutShopId(Integer outShopId) {
+		this.outShopId = outShopId;
+	}
 
-    public void setOperatTime(Date operatTime) {
-        this.operatTime = operatTime;
-    }
+	public String getOperatTime() {
+		return operatTime;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setOperatTime(String operatTime) {
+		this.operatTime = operatTime;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Integer getPhoneId() {
+		return phoneId;
+	}
+
+	public void setPhoneId(Integer phoneId) {
+		this.phoneId = phoneId;
+	}
 }

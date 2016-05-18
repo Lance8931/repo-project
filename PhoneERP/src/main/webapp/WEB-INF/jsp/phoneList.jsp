@@ -70,32 +70,11 @@
 			</form>
 		</div>
 		<div data-options="region:'center',title:'查询结果'">
-			<table id="dg" title="手机列表" class="easyui-datagrid" style="height:auto"
-		            url="../phone/getPhoneList" toolbar="#toolbar"
-		            rownumbers="true" fitColumns="true" singleSelect="true">
-		        <thead>
-		            <tr>
-		            	<th data-options="field:'supplier.supplierName',width:100">批发商</th>
-		            	<th data-options="field:'purchase.purTime',width:100">进货日期</th>
-		                <th data-options="field:'imeiNo',width:100">手机串号</th>
-		                <th data-options="field:'code3',width:100">手机牌子</th>
-		                <th data-options="field:'code4',width:100">手机颜色</th>
-		                <th data-options="field:'code5',width:100">手机型号</th>
-		                <th data-options="field:'code6',width:100">数量</th>
-		                <th data-options="field:'code7',width:100">进货价格</th>
-		                <th data-options="field:'code8',width:100">备注</th>
-		                <th data-options="field:'shop.shopName',width:100">当前所在店铺</th>
-		                <th data-options="field:'code10',width:100">是否卖出</th>
-		                <th data-options="field:'code11',width:100">实际销售价格</th>
-		                <th data-options="field:'code12',width:100">销售员</th>
-		                <th data-options="field:'code13',width:100">销售日期</th>
-		            </tr>
-		        </thead>
-		    </table>
+			<table id="dg" ></table>
 		    <div id="toolbar">
 		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newPur()">采购</a>
 		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newAllot()">调拨</a>
-		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newSale()">销售</a>
+		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newOrders()">销售</a>
 		    </div>
 		</div>
 	</div>
@@ -147,14 +126,100 @@
         </form>
     </div>
     <div id="dlg-buttons">
-        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="savePur()" style="width:90px">Save</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="savePur()" style="width:90px">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
     </div>
+    
+    <div id="dlgAllot" class="easyui-dialog" style="width:400px;padding:10px 20px"
+            closed="true" buttons="#dlgAllot-buttons">
+        <form id="fmAllot" method="post" novalidate>
+        	<table >
+	    		<tr>
+	    			<td width="80px" align="right">手机串号:</td>
+	    			<td>
+	    				<input class="easyui-textbox" readonly="true" name="imeiNo"/>
+	    				<input type="text" style="display:none" name="id"/>
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">出库店铺:</td>
+	    			<td><input class="easyui-combobox" required="true" id="fmAllotOutShopId" missingMessage="必须填写" name="outShopId" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">入库店铺:</td>
+	    			<td><input class="easyui-combobox" required="true" id="fmAllotInShopId" missingMessage="必须填写" name="inShopId" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">调拨日期:</td>
+	    			<td><input class="easyui-datebox" required="true" missingMessage="必须填写" name="operatTime" /></td>
+	    		</tr>
+	    	</table>
+        </form>
+    </div>
+    <div id="dlgAllot-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveAllot()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgAllot').dialog('close')" style="width:90px">Cancel</a>
+    </div>
+    
+    <div id="dlgOrders" class="easyui-dialog" style="width:400px;padding:10px 20px"
+            closed="true" buttons="#dlgOrders-buttons">
+        <form id="fmOrders" method="post" novalidate>
+        	<table >
+	    		<tr>
+	    			<td width="80px" align="right">手机串号:</td>
+	    			<td>
+	    				<input class="easyui-textbox" readonly="true" name="imeiNo"/>
+	    				<input type="text" style="display:none" name="id"/>
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">卖出店铺:</td>
+	    			<td><input class="easyui-combobox" required="true" id="fmOrdersShopId" missingMessage="必须填写" name="shopId" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">销售员:</td>
+	    			<td><input class="easyui-combobox" required="true" id="fmOrdersSalerId" missingMessage="必须填写" name="salerId" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">销售日期:</td>
+	    			<td><input class="easyui-datebox" required="true" missingMessage="必须填写" name="orderTime" /></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">发票流水号:</td>
+	    			<td><input class="easyui-textbox" required="true" name="billNo"/></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">销售价格:</td>
+	    			<td><input class="easyui-numberbox" required="true" name="billPrice"/></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">顾客姓名:</td>
+	    			<td><input class="easyui-textbox" required="true" name="buyerName"/></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">顾客联系方式:</td>
+	    			<td><input class="easyui-textbox" required="true" name="buyerPhone"/></td>
+	    		</tr>
+	    		<tr>
+	    			<td width="80px" align="right">销售备注:</td>
+	    			<td><input class="easyui-textbox" required="true" name="orderRemark"/></td>
+	    		</tr>
+	    	</table>
+        </form>
+    </div>
+    <div id="dlgOrders-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveOrders()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgOrders').dialog('close')" style="width:90px">Cancel</a>
+    </div>
+    
     <script type="text/javascript">
+    
+	    
     
     	var supplierDatas,brandDatas,shopDatas,salerDatas,modelDatas,colorDatas;
     	$(function(){
     		getJSONDatas();
+    		initGrid();
     	});
     	
         var url;
@@ -188,6 +253,119 @@
     		});
             url = '../phone/add';
         }
+        
+        
+        function newAllot(){
+        	var row = $('#dg').datagrid('getSelected');
+        	if (row){
+                $('#dlgAllot').dialog('open').dialog('center').dialog('setTitle','添加调拨');
+                $('#fmAllot').form('clear');
+                $('#fmAllot').form('load',row);
+                $('#fmAllotOutShopId').combobox({
+         			valueField:'id',
+         			textField:'shopName',
+         			data:shopDatas,
+         			value:row.currentShopId,
+         			readonly:true
+         		});
+                $('#fmAllotInShopId').combobox({
+         			valueField:'id',
+         			textField:'shopName',
+         			data:shopDatas,
+         			loadFilter:function(data){
+         				var tempData=[];
+         				for(var i = 0; i < data.length; i++){
+         					if(data[i].id != row.currentShopId){
+         						tempData.push(data[i]);
+         					}
+         				}
+         				return tempData;
+         			}
+         		});
+                url = '../phone/addAllot';
+            }
+        }
+        
+        function saveAllot(){
+        	$('#fmAllot').form('submit',{
+        		url: url,
+                onSubmit: function(){
+                    return $(this).form('validate');
+                },
+                success: function(result){
+                	result = eval('('+result+')');
+                	if (result.success){
+                    	$.messager.alert(
+                    			'提示信息',
+                    			result.msg,
+                    			'info',
+                    			function(){
+                    				$('#dlgAllot').dialog('close'); 
+                            		$('#dg').datagrid('reload');
+                    			}
+                    	);
+                    } else {
+                    	$.messager.alert(
+                    			'提示信息',
+                    			result.msg,
+                    			'error'
+                    	);
+                    }
+                }
+        	});
+        }
+        
+        function newOrders(){
+	    	var row = $('#dg').datagrid('getSelected');
+	    	if (row){
+	            $('#dlgOrders').dialog('open').dialog('center').dialog('setTitle','添加销售');
+	            $('#fmOrders').form('clear');
+	            $('#fmOrders').form('load',row);
+	            $('#fmOrdersShopId').combobox({
+	     			valueField:'id',
+	     			textField:'shopName',
+	     			data:shopDatas,
+	     			value:row.currentShopId,
+	     			readonly:true
+	     		});
+	            $('#fmOrdersSalerId').combobox({
+	     			valueField:'id',
+	     			textField:'salerName',
+	     			data:salerDatas
+	     		});
+	            url = '../phone/addOrders';
+	        }
+	    }
+        
+        function saveOrders(){
+        	$('#fmOrders').form('submit',{
+        		url: url,
+                onSubmit: function(){
+                    return $(this).form('validate');
+                },
+                success: function(result){
+                	result = eval('('+result+')');
+                	if (result.success){
+                    	$.messager.alert(
+                    			'提示信息',
+                    			result.msg,
+                    			'info',
+                    			function(){
+                    				$('#dlgOrders').dialog('close'); 
+                            		$('#dg').datagrid('reload');
+                    			}
+                    	);
+                    } else {
+                    	$.messager.alert(
+                    			'提示信息',
+                    			result.msg,
+                    			'error'
+                    	);
+                    }
+                }
+        	});
+        }
+        
         function editUser(){
             var row = $('#dg').datagrid('getSelected');
             if (row){
@@ -320,6 +498,71 @@
     					salerDatas = result.rows;
     		});
     	}
+        
+       
+        
+        function formatterBrand(value,row){
+        	for(var i = 0; i < brandDatas.length; i++){
+        		if(brandDatas[i].id == value){
+        			return brandDatas[i].text;
+        		}
+        	}
+        	return '-';
+        }
+        
+		function formatterColor(value,row){
+			for(var i = 0; i < colorDatas.length; i++){
+        		if(colorDatas[i].id == value){
+        			return colorDatas[i].text;
+        		}
+        	}
+        	return '-';
+		}
+        
+		function formatterModel(value,row){
+			for(var i = 0; i < modelDatas.length; i++){
+        		if(modelDatas[i].id == value){
+        			return modelDatas[i].text;
+        		}
+        	}
+        	return '-';
+		}
+		
+		function formatterIsSold(value,row){
+        	if(value){
+        		return '已卖出';
+        	}else{
+        		return '未卖出';
+        	}
+		}
+		
+		function initGrid(){
+	       	$("#dg").datagrid({
+	       		url : '../phone/getPhoneList',
+	       		title : '手机列表',
+	       		rownumbers : true,
+	       		fitColumns : true,
+	       		singleSelect : true,
+	       		height : 'auto',
+	       		columns:[[    
+			        {field:'supplier.supplierName',title:'批发商',width:'80px'},
+			        {field:'purchase.purTime',title:'进货日期',width:'80px'},
+			        {field:'imeiNo',title:'手机串号',width:'80px'},
+			        {field:'brandId',title:'手机牌子',width:'80px',formatter:formatterBrand}, 
+			        {field:'colorId',title:'手机颜色',width:'80px',formatter:formatterColor}, 
+			        {field:'modelId',title:'手机型号',width:'80px',formatter:formatterModel}, 
+			        {field:'amount',title:'数量',width:'80px'}, 
+			        {field:'purPrice',title:'进货价格',width:'80px'}, 
+			        {field:'remark',title:'备注',width:'80px'}, 
+			        {field:'shop.shopName',title:'当前所在店铺',width:'80px'}, 
+			        {field:'isSold',title:'是否卖出',width:'80px',formatter:formatterIsSold}, 
+			        {field:'orders.billPrice',title:'实际销售价格',width:'80px'}, 
+			        {field:'saler.salerName',title:'销售员',width:'80px'}, 
+			        {field:'orders.orderTime',title:'销售日期',width:'80px'},     
+			    ]],
+			    toolbar:'#toolbar'
+	       	});
+	   }
     </script>
 </body>
 </html>

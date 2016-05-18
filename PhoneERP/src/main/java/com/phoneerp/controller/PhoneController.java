@@ -9,9 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.phoneerp.bean.Allot;
+import com.phoneerp.bean.Orders;
 import com.phoneerp.bean.Phone;
 import com.phoneerp.bean.Purchase;
 import com.phoneerp.bean.ResultMsg;
+import com.phoneerp.dao.AllotMapper;
+import com.phoneerp.dao.OrdersMapper;
 import com.phoneerp.dao.PhoneMapper;
 import com.phoneerp.dao.PurchaseMapper;
 
@@ -31,6 +35,12 @@ public class PhoneController {
 	@Autowired
 	private PurchaseMapper purchaseMapper;
 
+	@Autowired
+	private AllotMapper allotMapper;
+
+	@Autowired
+	private OrdersMapper ordersMapper;
+
 	@RequestMapping("/imeiNoCheck")
 	@ResponseBody
 	public ResultMsg imeiNoCheck(String imeiNo) {
@@ -46,6 +56,15 @@ public class PhoneController {
 		}
 	}
 
+	/**
+	 * 采购
+	 * 
+	 * @param phone
+	 * @return
+	 *
+	 * @date 2016年5月18日下午3:59:43
+	 * @author siping-L.J.H
+	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultMsg add(Phone phone) {
@@ -59,7 +78,17 @@ public class PhoneController {
 		return new ResultMsg(true, "成功。");
 	}
 
-	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST, RequestMethod.GET })
+	/**
+	 * 获取列表
+	 * 
+	 * @param phone
+	 * @return
+	 *
+	 * @date 2016年5月18日下午3:59:57
+	 * @author siping-L.J.H
+	 */
+	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
 	public Map<String, Object> getSupplierList(Phone phone) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -68,4 +97,42 @@ public class PhoneController {
 		map.put("rows", phoneMapper.getList(paramMap));
 		return map;
 	}
+
+	/**
+	 * 添加调拨单
+	 * 
+	 * @param allot
+	 * @return
+	 *
+	 * @date 2016年5月18日下午4:08:35
+	 * @author siping-L.J.H
+	 */
+	@RequestMapping(value = "/addAllot", method = RequestMethod.POST)
+	@ResponseBody
+	public ResultMsg addAllot(Allot allot) {
+		Phone phone = new Phone();
+		phone.setId(allot.getId());
+		phone.setCurrentShopId(allot.getInShopId());
+		allot.setId(null);
+		allot.setPhoneId(phone.getId());
+		phoneMapper.updateByPrimaryKeySelective(phone);
+		allotMapper.insertSelective(allot);
+		return new ResultMsg(true, "成功。");
+	}
+
+	@RequestMapping(value = "/addOrders", method = RequestMethod.POST)
+	@ResponseBody
+	public ResultMsg addSale(Orders orders) {
+		Phone phone = new Phone();
+		phone.setId(orders.getId());
+		phone.setAmount(0);
+		phone.setSalePrice(orders.getBillPrice());
+		phone.setIsSold(true);
+		orders.setId(null);
+		orders.setPhoneId(phone.getId());
+		phoneMapper.updateByPrimaryKeySelective(phone);
+		ordersMapper.insertSelective(orders);
+		return new ResultMsg(true, "成功。");
+	}
+
 }

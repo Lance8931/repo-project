@@ -203,13 +203,14 @@
   </sql>
   
   <resultMap type="com.phoneerp.bean.Phone" id="ListResultMap" extends="BaseResultMap">
-  	<result column="pur_time" property="purchase.purTime" jdbcType="TIMESTAMP" />
+  	<result column="pur_time" property="purchase.purTime" jdbcType="DATE" />
   	<result column="pur_id" property="purchase.id" jdbcType="INTEGER" />
   	<result column="shop_name" property="shop.shopName" jdbcType="VARCHAR" />
   	<result column="supplier_name" property="supplier.supplierName" jdbcType="VARCHAR" />
   	<result column="sup_id" property="supplier.id" jdbcType="INTEGER" />
   	<result column="bill_price" property="orders.billPrice" jdbcType="DECIMAL" />
   	<result column="orders_id" property="orders.id" jdbcType="INTEGER" />
+  	<result column="order_time" property="orders.orderTime" jdbcType="DATE" />
   	<result column="saler_name" property="saler.salerName" jdbcType="VARCHAR" />
   	<result column="saler_id" property="saler.id" jdbcType="INTEGER" />
   </resultMap>
@@ -224,6 +225,7 @@
 		t.model_id,
 		t.is_sold,
 		t.remark,
+		t.amount,
 		t.current_shop_id,
 		a.pur_time,
 		a.id as pur_id,
@@ -232,6 +234,7 @@
 		c.id as sup_id,
 		d.bill_price,
 		d.id as orders_id,
+		d.order_time,
 		e.saler_name,
 		e.id as saler_id
 	FROM
@@ -239,7 +242,7 @@
 	LEFT OUTER JOIN purchase a ON t.id = a.phone_id
 	LEFT OUTER JOIN shop b on t.current_shop_id = b.id
 	LEFT OUTER JOIN supplier c on a.supplier_id = c.id
-	LEFT OUTER JOIN orders d on t.id = d.shop_id
+	LEFT OUTER JOIN orders d on t.id = d.phone_id
 	LEFT OUTER JOIN saler e on d.saler_id=e.id
 	<include refid="conditions" />
   </select>

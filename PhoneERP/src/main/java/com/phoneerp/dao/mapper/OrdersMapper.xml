@@ -6,14 +6,17 @@
     <result column="phone_id" property="phoneId" jdbcType="INTEGER" />
     <result column="saler_id" property="salerId" jdbcType="INTEGER" />
     <result column="shop_id" property="shopId" jdbcType="INTEGER" />
-    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="order_time" property="orderTime" jdbcType="DATE" />
     <result column="bill_no" property="billNo" jdbcType="INTEGER" />
     <result column="bill_price" property="billPrice" jdbcType="DECIMAL" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="order_remark" property="orderRemark" jdbcType="VARCHAR" />
+    <result column="buyer_name" property="buyerName" jdbcType="VARCHAR" />
+    <result column="buyer_phone" property="buyerPhone" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, phone_id, saler_id, shop_id, order_time, bill_no, bill_price, remark, create_time
+    id, phone_id, saler_id, shop_id, order_time, bill_no, bill_price, order_remark, buyer_name, 
+    buyer_phone, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -28,12 +31,12 @@
   <insert id="insert" parameterType="com.phoneerp.bean.Orders" >
     insert into orders (id, phone_id, saler_id, 
       shop_id, order_time, bill_no, 
-      bill_price, remark, create_time
-      )
+      bill_price, order_remark, buyer_name, 
+      buyer_phone, create_time)
     values (#{id,jdbcType=INTEGER}, #{phoneId,jdbcType=INTEGER}, #{salerId,jdbcType=INTEGER}, 
-      #{shopId,jdbcType=INTEGER}, #{orderTime,jdbcType=TIMESTAMP}, #{billNo,jdbcType=INTEGER}, 
-      #{billPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{shopId,jdbcType=INTEGER}, #{orderTime,jdbcType=DATE}, #{billNo,jdbcType=INTEGER}, 
+      #{billPrice,jdbcType=DECIMAL}, #{orderRemark,jdbcType=VARCHAR}, #{buyerName,jdbcType=VARCHAR}, 
+      #{buyerPhone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.phoneerp.bean.Orders" >
     insert into orders
@@ -59,8 +62,14 @@
       <if test="billPrice != null" >
         bill_price,
       </if>
-      <if test="remark != null" >
-        remark,
+      <if test="orderRemark != null" >
+        order_remark,
+      </if>
+      <if test="buyerName != null" >
+        buyer_name,
+      </if>
+      <if test="buyerPhone != null" >
+        buyer_phone,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -80,7 +89,7 @@
         #{shopId,jdbcType=INTEGER},
       </if>
       <if test="orderTime != null" >
-        #{orderTime,jdbcType=TIMESTAMP},
+        #{orderTime,jdbcType=DATE},
       </if>
       <if test="billNo != null" >
         #{billNo,jdbcType=INTEGER},
@@ -88,8 +97,14 @@
       <if test="billPrice != null" >
         #{billPrice,jdbcType=DECIMAL},
       </if>
-      <if test="remark != null" >
-        #{remark,jdbcType=VARCHAR},
+      <if test="orderRemark != null" >
+        #{orderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerName != null" >
+        #{buyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerPhone != null" >
+        #{buyerPhone,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -109,7 +124,7 @@
         shop_id = #{shopId,jdbcType=INTEGER},
       </if>
       <if test="orderTime != null" >
-        order_time = #{orderTime,jdbcType=TIMESTAMP},
+        order_time = #{orderTime,jdbcType=DATE},
       </if>
       <if test="billNo != null" >
         bill_no = #{billNo,jdbcType=INTEGER},
@@ -117,8 +132,14 @@
       <if test="billPrice != null" >
         bill_price = #{billPrice,jdbcType=DECIMAL},
       </if>
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
+      <if test="orderRemark != null" >
+        order_remark = #{orderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerName != null" >
+        buyer_name = #{buyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerPhone != null" >
+        buyer_phone = #{buyerPhone,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -131,10 +152,12 @@
     set phone_id = #{phoneId,jdbcType=INTEGER},
       saler_id = #{salerId,jdbcType=INTEGER},
       shop_id = #{shopId,jdbcType=INTEGER},
-      order_time = #{orderTime,jdbcType=TIMESTAMP},
+      order_time = #{orderTime,jdbcType=DATE},
       bill_no = #{billNo,jdbcType=INTEGER},
       bill_price = #{billPrice,jdbcType=DECIMAL},
-      remark = #{remark,jdbcType=VARCHAR},
+      order_remark = #{orderRemark,jdbcType=VARCHAR},
+      buyer_name = #{buyerName,jdbcType=VARCHAR},
+      buyer_phone = #{buyerPhone,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

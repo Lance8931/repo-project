@@ -4,93 +4,113 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Orders {
-    private Integer id;
+	private Integer id;
 
-    private Integer phoneId;
+	private Integer phoneId;
 
-    private Integer salerId;
+	private Integer salerId;
 
-    private Integer shopId;
+	private Integer shopId;
 
-    private Date orderTime;
+	private String orderTime;
 
-    private Integer billNo;
+	private Integer billNo;
 
-    private BigDecimal billPrice;
+	private BigDecimal billPrice;
 
-    private String remark;
+	private String orderRemark;
 
-    private Date createTime;
+	private String buyerName;
 
-    public Integer getId() {
-        return id;
-    }
+	private String buyerPhone;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	private Date createTime;
 
-    public Integer getPhoneId() {
-        return phoneId;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setPhoneId(Integer phoneId) {
-        this.phoneId = phoneId;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Integer getSalerId() {
-        return salerId;
-    }
+	public Integer getPhoneId() {
+		return phoneId;
+	}
 
-    public void setSalerId(Integer salerId) {
-        this.salerId = salerId;
-    }
+	public void setPhoneId(Integer phoneId) {
+		this.phoneId = phoneId;
+	}
 
-    public Integer getShopId() {
-        return shopId;
-    }
+	public Integer getSalerId() {
+		return salerId;
+	}
 
-    public void setShopId(Integer shopId) {
-        this.shopId = shopId;
-    }
+	public void setSalerId(Integer salerId) {
+		this.salerId = salerId;
+	}
 
-    public Date getOrderTime() {
-        return orderTime;
-    }
+	public Integer getShopId() {
+		return shopId;
+	}
 
-    public void setOrderTime(Date orderTime) {
-        this.orderTime = orderTime;
-    }
+	public void setShopId(Integer shopId) {
+		this.shopId = shopId;
+	}
 
-    public Integer getBillNo() {
-        return billNo;
-    }
+	public String getOrderTime() {
+		return orderTime;
+	}
 
-    public void setBillNo(Integer billNo) {
-        this.billNo = billNo;
-    }
+	public void setOrderTime(String orderTime) {
+		this.orderTime = orderTime;
+	}
 
-    public BigDecimal getBillPrice() {
-        return billPrice;
-    }
+	public Integer getBillNo() {
+		return billNo;
+	}
 
-    public void setBillPrice(BigDecimal billPrice) {
-        this.billPrice = billPrice;
-    }
+	public void setBillNo(Integer billNo) {
+		this.billNo = billNo;
+	}
 
-    public String getRemark() {
-        return remark;
-    }
+	public BigDecimal getBillPrice() {
+		return billPrice;
+	}
 
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
-    }
+	public void setBillPrice(BigDecimal billPrice) {
+		this.billPrice = billPrice;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public String getOrderRemark() {
+		return orderRemark;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setOrderRemark(String orderRemark) {
+		this.orderRemark = orderRemark == null ? null : orderRemark.trim();
+	}
+
+	public String getBuyerName() {
+		return buyerName;
+	}
+
+	public void setBuyerName(String buyerName) {
+		this.buyerName = buyerName == null ? null : buyerName.trim();
+	}
+
+	public String getBuyerPhone() {
+		return buyerPhone;
+	}
+
+	public void setBuyerPhone(String buyerPhone) {
+		this.buyerPhone = buyerPhone == null ? null : buyerPhone.trim();
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 }
