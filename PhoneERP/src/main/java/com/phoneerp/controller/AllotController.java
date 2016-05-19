@@ -33,8 +33,13 @@ public class AllotController {
 		paramMap.put("startNo", (page - 1) * rows);
 		paramMap.put("pageSize", rows);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("rows", allotMapper.getList(paramMap));
-		resultMap.put("total", allotMapper.getCount(paramMap));
-		return resultMap;
+		try {
+			resultMap.put("rows", allotMapper.getList(paramMap));
+			resultMap.put("total", allotMapper.getCount(paramMap));
+			return resultMap;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

@@ -72,11 +72,16 @@ public class PhoneController {
 		Purchase purchase = phone.getPurchase();
 		purchase.setShopId(phone.getCurrentShopId());
 		purchase.setPrice(phone.getPurPrice());
-		phoneMapper.insertSelective(phone);
-		purchase.setPhoneId(phone.getId());
-		purchaseMapper.insertSelective(purchase);
-		System.out.println(phone);
-		return new ResultMsg(true, "成功。");
+		try {
+			phoneMapper.insertSelective(phone);
+			purchase.setPhoneId(phone.getId());
+			purchaseMapper.insertSelective(purchase);
+			return new ResultMsg(true, "成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "失败。");
+		}
+
 	}
 
 	/**
@@ -88,17 +93,24 @@ public class PhoneController {
 	 * @date 2016年5月18日下午3:59:57
 	 * @author siping-L.J.H
 	 */
-	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
-	public Map<String, Object> getSupplierList(SearchPhoneListBean searchPhoneListBean, Long page, Long rows) {
+	public Map<String, Object> getSupplierList(
+			SearchPhoneListBean searchPhoneListBean, Long page, Long rows) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("searchBean", searchPhoneListBean);
 		paramMap.put("startNo", (page - 1) * rows);
 		paramMap.put("pageSize", rows);
-		map.put("rows", phoneMapper.getList(paramMap));
-		map.put("total", phoneMapper.getCount(paramMap));
-		return map;
+		try {
+			map.put("rows", phoneMapper.getList(paramMap));
+			map.put("total", phoneMapper.getCount(paramMap));
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -118,9 +130,14 @@ public class PhoneController {
 		phone.setCurrentShopId(allot.getInShopId());
 		allot.setId(null);
 		allot.setPhoneId(phone.getId());
-		phoneMapper.updateByPrimaryKeySelective(phone);
-		allotMapper.insertSelective(allot);
-		return new ResultMsg(true, "成功。");
+		try {
+			phoneMapper.updateByPrimaryKeySelective(phone);
+			allotMapper.insertSelective(allot);
+			return new ResultMsg(true, "成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "失败。");
+		}
 	}
 
 	@RequestMapping(value = "/addOrders", method = RequestMethod.POST)
@@ -133,9 +150,15 @@ public class PhoneController {
 		phone.setIsSold(true);
 		orders.setId(null);
 		orders.setPhoneId(phone.getId());
-		phoneMapper.updateByPrimaryKeySelective(phone);
-		ordersMapper.insertSelective(orders);
-		return new ResultMsg(true, "成功。");
+		try {
+			phoneMapper.updateByPrimaryKeySelective(phone);
+			ordersMapper.insertSelective(orders);
+			return new ResultMsg(true, "成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "失败。");
+		}
+
 	}
 
 }

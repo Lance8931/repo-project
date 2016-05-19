@@ -1,8 +1,6 @@
 package com.phoneerp.controller;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.phoneerp.bean.Result;
 import com.phoneerp.bean.ResultMsg;
 import com.phoneerp.bean.Saler;
 import com.phoneerp.bean.Shop;
@@ -96,10 +93,6 @@ public class AdminController {
 		return "salerList";
 	}
 
-	public List<Result> getBrand() {
-		return null;
-	}
-
 	@RequestMapping(value = "/getShopList", method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@ResponseBody
@@ -107,36 +100,60 @@ public class AdminController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("shop", shop);
-		map.put("rows", shopMapper.getList(paramMap));
+		try {
+			map.put("rows", shopMapper.getList(paramMap));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		return map;
 	}
 
 	@RequestMapping(value = "/getShop", method = RequestMethod.GET)
 	@ResponseBody
 	public Shop getShop(int id) {
-		return shopMapper.selectByPrimaryKey(id);
+		try {
+			return shopMapper.selectByPrimaryKey(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@RequestMapping(value = "/addShop", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultMsg addShop(Shop shop) {
-		shop.setCreateTime(new Date());
-		shopMapper.insert(shop);
-		return new ResultMsg(true, "添加成功。");
+		try {
+			shopMapper.insert(shop);
+			return new ResultMsg(true, "添加成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "添加失败。");
+		}
 	}
 
 	@RequestMapping(value = "/editShop", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultMsg editShop(Shop shop) {
-		shopMapper.updateByPrimaryKeySelective(shop);
-		return new ResultMsg(true, "编辑成功。");
+		try {
+			shopMapper.updateByPrimaryKeySelective(shop);
+			return new ResultMsg(true, "编辑成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "编辑失败。");
+		}
 	}
 
 	@RequestMapping(value = "/removeShop", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultMsg removeShop(int id) {
-		shopMapper.deleteByPrimaryKey(id);
-		return new ResultMsg(true, "删除成功。");
+		try {
+			shopMapper.deleteByPrimaryKey(id);
+			return new ResultMsg(true, "删除成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "删除失败。");
+		}
 	}
 
 	@RequestMapping(value = "/getSupplierList", method = { RequestMethod.POST,
@@ -146,36 +163,60 @@ public class AdminController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("supplier", supplier);
-		map.put("rows", supplierMapper.getList(paramMap));
+		try {
+			map.put("rows", supplierMapper.getList(paramMap));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		return map;
 	}
 
 	@RequestMapping(value = "/getSupplier", method = RequestMethod.GET)
 	@ResponseBody
 	public Supplier getSupplier(int id) {
-		return supplierMapper.selectByPrimaryKey(id);
+		try {
+			return supplierMapper.selectByPrimaryKey(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@RequestMapping(value = "/addSupplier", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultMsg addSupplier(Supplier supplier) {
-		supplier.setCreateTime(new Date());
-		supplierMapper.insert(supplier);
-		return new ResultMsg(true, "添加成功。");
+		try {
+			supplierMapper.insert(supplier);
+			return new ResultMsg(true, "添加成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "添加失败。");
+		}
 	}
 
 	@RequestMapping(value = "/editSupplier", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultMsg editSupplier(Supplier supplier) {
-		supplierMapper.updateByPrimaryKeySelective(supplier);
-		return new ResultMsg(true, "编辑成功。");
+		try {
+			supplierMapper.updateByPrimaryKeySelective(supplier);
+			return new ResultMsg(true, "编辑成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "编辑失败。");
+		}
 	}
 
 	@RequestMapping(value = "/removeSupplier", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultMsg removeSupplier(int id) {
-		supplierMapper.deleteByPrimaryKey(id);
-		return new ResultMsg(true, "删除成功。");
+		try {
+			supplierMapper.deleteByPrimaryKey(id);
+			return new ResultMsg(true, "删除成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "删除失败。");
+		}
 	}
 
 	@RequestMapping(value = "/getSalerList", method = { RequestMethod.POST,
@@ -185,36 +226,60 @@ public class AdminController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("saler", saler);
-		map.put("rows", salerMapper.getList(paramMap));
+		try {
+			map.put("rows", salerMapper.getList(paramMap));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		return map;
 	}
 
 	@RequestMapping(value = "/getSaler", method = RequestMethod.GET)
 	@ResponseBody
 	public Saler getSaler(int id) {
-		return salerMapper.selectByPrimaryKey(id);
+		try {
+			return salerMapper.selectByPrimaryKey(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@RequestMapping(value = "/addSaler", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultMsg addSaler(Saler saler) {
-		saler.setCreateTime(new Date());
-		salerMapper.insert(saler);
-		return new ResultMsg(true, "添加成功。");
+		try {
+			salerMapper.insert(saler);
+			return new ResultMsg(true, "添加成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "添加失败。");
+		}
 	}
 
 	@RequestMapping(value = "/editSaler", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultMsg editSaler(Saler saler) {
-		salerMapper.updateByPrimaryKeySelective(saler);
-		return new ResultMsg(true, "编辑成功。");
+		try {
+			salerMapper.updateByPrimaryKeySelective(saler);
+			return new ResultMsg(true, "编辑成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "编辑失败。");
+		}
 	}
 
 	@RequestMapping(value = "/removeSaler", method = RequestMethod.POST)
 	@ResponseBody
 	public ResultMsg removeSaler(int id) {
-		salerMapper.deleteByPrimaryKey(id);
-		return new ResultMsg(true, "删除成功。");
+		try {
+			salerMapper.deleteByPrimaryKey(id);
+			return new ResultMsg(true, "删除成功。");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultMsg(false, "删除失败。");
+		}
 	}
 
 }

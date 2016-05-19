@@ -35,9 +35,15 @@ public class PurchaseController {
 		paramMap.put("startNo", (page - 1) * rows);
 		paramMap.put("pageSize", rows);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("rows", purchaseMapper.getList(paramMap));
-		resultMap.put("total", purchaseMapper.getCount(paramMap));
-		return resultMap;
+		try {
+			resultMap.put("rows", purchaseMapper.getList(paramMap));
+			resultMap.put("total", purchaseMapper.getCount(paramMap));
+			return resultMap;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 
 }
