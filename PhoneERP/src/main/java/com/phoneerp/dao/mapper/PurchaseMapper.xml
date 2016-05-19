@@ -139,20 +139,32 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
+  <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(*) from purchase t 
+  	<include refid="conditions"/>
+  </select>
+  
+  
   <resultMap type="com.phoneerp.bean.Purchase" id="ListResultMap" extends="BaseResultMap">
   	<result column="supplier_name" property="supplier.supplierName" jdbcType="VARCHAR" />
   	<result column="shop_name" property="shop.shopName" jdbcType="VARCHAR" />
+  	<result column="imei_no" property="imeiNo" jdbcType="VARCHAR" />
   </resultMap>
-  <select id="getList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  <select id="getList" parameterType="java.util.Map" resultMap="ListResultMap">
   	SELECT
 		t.*,
 		a.supplier_name,
-		b.shop_name
+		b.shop_name,
+		c.imei_no
 	FROM
 		purchase t
-	LEFT JOIN supplier a ON t.supplier_id = a.id
-	LEFT JOIN shop b ON t.shop_id = b.id
-  	<include refid="conditions"/>
+	LEFT OUTER JOIN supplier a ON t.supplier_id = a.id
+	LEFT OUTER JOIN shop b ON t.shop_id = b.id
+	LEFT OUTER JOIN phone c on t.phone_id = c.id
+   	<include refid="conditions"/>
+  	<if test="startNo != null">
+  		limit #{startNo},#{pageSize}
+  	</if>
   </select>
   
   <sql id="conditions" >
@@ -160,11 +172,11 @@
       <if test="pur.purNo != null" >
         and  t.pur_no like CONCAT('%',#{pur.purNo},'%')
       </if>
-      <if test="pur.supplier != null and pur.supplier.supplierName != null" >
-        and  a.supplier_name like CONCAT('%',#{pur.supplier.supplierName},'%')
+      <if test="pur.supplierId != null" >
+        and  t.supplier_id = #{pur.supplierId}
       </if>
-      <if test="pur.shop != null and pur.shop.shopName != null" >
-        and  b.shop_name like CONCAT('%',#{pur.shop.shopName},'%')
+      <if test="pur.shopId != null" >
+        and  t.shop_id = #{pur.shopId}
       </if>
       <if test="pur.startTime != null" >
         and  t.pur_time &gt;= #{pur.startTime}
@@ -173,8 +185,8 @@
         and  t.pur_time &lt;= #{pur.endTime}
       </if>
       <if test="imeiNo != null">
-      	and  t.id in (
-      		select distinct(pur_id) from purchase_detail k where k.imeiNo like CONCAT('%',#{imeiNo},'%')
+      	and  t.phone_id in (
+      		select distinct(id) from phone k where k.imeiNo like CONCAT('%',#{imeiNo},'%')
       	)
       </if>
     </trim>

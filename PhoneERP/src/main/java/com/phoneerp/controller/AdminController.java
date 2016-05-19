@@ -100,7 +100,8 @@ public class AdminController {
 		return null;
 	}
 
-	@RequestMapping(value = "/getShopList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/getShopList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
 	public Map<String, Object> getShopList(Shop shop) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -138,7 +139,8 @@ public class AdminController {
 		return new ResultMsg(true, "删除成功。");
 	}
 
-	@RequestMapping(value = "/getSupplierList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/getSupplierList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
 	public Map<String, Object> getSupplierList(Supplier supplier) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -176,7 +178,8 @@ public class AdminController {
 		return new ResultMsg(true, "删除成功。");
 	}
 
-	@RequestMapping(value = "/getSalerList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/getSalerList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
 	public Map<String, Object> getSalerList(Saler saler) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -213,4 +216,5 @@ public class AdminController {
 		salerMapper.deleteByPrimaryKey(id);
 		return new ResultMsg(true, "删除成功。");
 	}
+
 }

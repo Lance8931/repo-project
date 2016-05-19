@@ -6,38 +6,35 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.phoneerp.bean.Purchase;
-import com.phoneerp.dao.PurchaseMapper;
+import com.phoneerp.bean.Orders;
+import com.phoneerp.dao.OrdersMapper;
 
 /**
  *
  *
  * @author siping-L.J.H
- * @date 2016年5月15日下午4:01:52
+ * @date 2016年5月19日下午2:09:56
  * @version 1.0
  */
 @Controller
-@RequestMapping("/purchase")
-public class PurchaseController {
+@RequestMapping("/orders")
+public class OrdersController {
 
 	@Autowired
-	private PurchaseMapper purchaseMapper;
+	private OrdersMapper ordersMapper;
 
-	@RequestMapping(value = "/getPurList", method = RequestMethod.POST)
+	@RequestMapping(value = "/getOrdersList")
 	@ResponseBody
-	public Map<String, Object> getPurList(Purchase purchase, Long page,
-			Long rows) {
+	public Map<String, Object> getList(Orders orders, Long page, Long rows) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("pur", purchase);
+		paramMap.put("orders", orders);
 		paramMap.put("startNo", (page - 1) * rows);
 		paramMap.put("pageSize", rows);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("rows", purchaseMapper.getList(paramMap));
-		resultMap.put("total", purchaseMapper.getCount(paramMap));
+		resultMap.put("rows", ordersMapper.getList(paramMap));
+		resultMap.put("total", ordersMapper.getCount(paramMap));
 		return resultMap;
 	}
-
 }

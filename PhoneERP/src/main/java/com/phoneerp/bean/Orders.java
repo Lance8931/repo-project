@@ -26,6 +26,24 @@ public class Orders {
 
 	private Date createTime;
 
+	private String orderStartTime;
+
+	private String orderEndTime;
+
+	private String orderStartPrice;
+
+	private String orderEndPrice;
+
+	private String imeiNo;
+
+	public String getImeiNo() {
+		return imeiNo;
+	}
+
+	public void setImeiNo(String imeiNo) {
+		this.imeiNo = imeiNo;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -112,5 +130,37 @@ public class Orders {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	public String getOrderStartTime() {
+		return orderStartTime;
+	}
+
+	public void setOrderStartTime(String orderStartTime) {
+		this.orderStartTime = orderStartTime;
+	}
+
+	public String getOrderEndTime() {
+		return orderEndTime;
+	}
+
+	public void setOrderEndTime(String orderEndTime) {
+		this.orderEndTime = orderEndTime;
+	}
+
+	public String getOrderStartPrice() {
+		return orderStartPrice;
+	}
+
+	public void setOrderStartPrice(String orderStartPrice) {
+		this.orderStartPrice = orderStartPrice;
+	}
+
+	public String getOrderEndPrice() {
+		return orderEndPrice;
+	}
+
+	public void setOrderEndPrice(String orderEndPrice) {
+		this.orderEndPrice = orderEndPrice;
 	}
 }

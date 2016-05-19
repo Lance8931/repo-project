@@ -13,6 +13,7 @@
     <result column="buyer_name" property="buyerName" jdbcType="VARCHAR" />
     <result column="buyer_phone" property="buyerPhone" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="imei_no" property="imeiNo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, phone_id, saler_id, shop_id, order_time, bill_no, bill_price, order_remark, buyer_name, 
@@ -161,4 +162,59 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="getList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select t.*,a.imei_no from orders t 
+  	LEFT OUTER JOIN phone a ON t.phone_id = a.id
+  	<include refid="conditions" />
+  	<if test="startNo != null">
+  		limit #{startNo},#{pageSize}
+  	</if>
+  </select>
+  
+  <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(*) from orders t
+  	<include refid="conditions" />
+  </select>
+  
+  <sql id="conditions">
+  	<trim prefix="where" prefixOverrides="and|or" >
+      <if test="orders.salerId != null" >
+        and  t.saler_id = #{orders.salerId}
+      </if>
+      <if test="orders.shopId != null" >
+        and  t.shop_id = #{orders.shopId}
+      </if>
+      <if test="orders.orderStartTime != null" >
+        and  t.operat_time &gt;= #{orders.orderStartTime}
+      </if>
+      <if test="orders.orderEndTime != null" >
+        and  t.operat_time &lt;= #{orders.orderEndTime}
+      </if>
+      <if test="orders.orderStartPrice != null" >
+        and  t.bill_price &gt;= #{orders.orderStartTime}
+      </if>
+      <if test="orders.orderEndPrice != null" >
+        and  t.bill_price &lt;= #{orders.orderEndTime}
+      </if>
+      <if test="orders.buyerName != null" >
+        and  t.buyer_name like CONCAT('%',#{orders.buyerName},'%') 
+      </if>
+      <if test="orders.buyerPhone != null" >
+        and  t.buyer_phone like CONCAT('%',#{orders.buyerPhone},'%')
+      </if>
+      <if test="imeiNo != null">
+      	and  t.phone_id in (
+      		select distinct(id) from phone k where k.imeiNo like CONCAT('%',#{imeiNo},'%')
+      	)
+      </if>
+    </trim>
+  </sql>
+  
+  
+  
+  
+  
+  
+  
 </mapper>

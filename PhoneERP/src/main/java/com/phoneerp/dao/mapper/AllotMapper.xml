@@ -8,6 +8,7 @@
     <result column="operat_time" property="operatTime" jdbcType="DATE" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="phone_id" property="phoneId" jdbcType="INTEGER" />
+    <result column="imei_no" property="imeiNo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, in_shop_id, out_shop_id, operat_time, create_time, phone_id
@@ -103,4 +104,41 @@
       phone_id = #{phoneId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="getList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select t.*,a.imei_no from allot t 
+  	LEFT OUTER JOIN phone a ON t.phone_id = a.id
+  	<include refid="conditions" />
+  	<if test="startNo != null">
+  		limit #{startNo},#{pageSize}
+  	</if>
+  </select>
+  
+  <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(*) from allot t
+  	<include refid="conditions" />
+  </select>
+  
+  <sql id="conditions">
+  	<trim prefix="where" prefixOverrides="and|or" >
+      <if test="allot.inShopId != null" >
+        and  t.in_shop_id = #{allot.inShopId}
+      </if>
+      <if test="allot.outShopId != null" >
+        and  t.out_shop_id = #{allot.outShopId}
+      </if>
+      <if test="allot.startTime != null" >
+        and  t.operat_time &gt;= #{allot.startTime}
+      </if>
+      <if test="allot.endTime != null" >
+        and  t.operat_time &lt;= #{allot.endTime}
+      </if>
+      <if test="imeiNo != null">
+      	and  t.phone_id in (
+      		select distinct(id) from phone k where k.imeiNo like CONCAT('%',#{imeiNo},'%')
+      	)
+      </if>
+    </trim>
+  </sql>
+  
 </mapper>

@@ -19,4 +19,6 @@ public interface PurchaseMapper {
 	int updateByPrimaryKey(Purchase record);
 
 	List<Purchase> getList(Map<?, ?> map);
+
+	Integer getCount(Map<?, ?> map);
 }

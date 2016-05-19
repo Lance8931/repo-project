@@ -15,9 +15,9 @@
 	<h3>采购</h3>
 	<a href="../admin/showPur">采购单</a>
 	<h3>销售</h3>
-	<a href="#">销售单</a>
+	<a href="../admin/showOrder">销售单</a>
 	<h3>调拨</h3>
-	<a href="#">调拨单</a>
+	<a href="../admin/showAllot">调拨单</a>
 	<h3>库存</h3>
 	<a href="#">查看各店库存</a>
 	<h3>报表</h3>
