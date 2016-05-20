@@ -13,6 +13,9 @@
 	</head>
 <body>
 	<h2>调拨管理</h2>
+	<a href="../admin/showMenu">返回菜单</a>
+	<br />
+	<br />
 	<div class="easyui-layout" fit='true'>
 		<div data-options="region:'north',title:'查询条件',split:true" style="height:120px;">
 			<form id="queryForm" method="post">

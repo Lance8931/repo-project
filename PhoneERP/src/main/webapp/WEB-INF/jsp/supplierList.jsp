@@ -10,6 +10,10 @@
 		<script type="text/javascript" src="../resources/jquery.easyui.min.js" charset="utf-8" ></script>
 	</head>
 <body>
+	<h2>供应商管理</h2>
+	<a href="../admin/showMenu">返回菜单</a>
+	<br />
+	<br />
 	<div class="easyui-layout" fit='true'>
 		<div data-options="region:'north',title:'查询条件',split:true" style="height:80px;">
 			<form id="queryForm" method="post">

@@ -9,7 +9,10 @@
 	<h3>基础数据</h3>
 	<a href="../admin/showSupplier">供应商</a>
 	<a href="../admin/showShop">店铺</a>
-	<a href="../admin/showSaler">店铺</a>
+	<a href="../admin/showSaler">职员</a>
+	<a href="../admin/showBrand">手机牌子</a>
+	<a href="../admin/showColor">手机颜色</a>
+	<a href="../admin/showModel">手机型号</a>
 	<h3>商品</h3>
 	<a href="../admin/showPhone">手机</a>
 	<a href="../admin/showPurchase">配件</a>
@@ -19,8 +22,6 @@
 	<a href="../admin/showOrder">销售单</a>
 	<h3>调拨</h3>
 	<a href="../admin/showAllot">调拨单</a>
-	<h3>库存</h3>
-	<a href="#">查看各店库存</a>
 	<h3>报表</h3>
 	<a href="#">月利润</a>
 	<script type="text/javascript">

@@ -93,11 +93,9 @@ public class PhoneController {
 	 * @date 2016年5月18日下午3:59:57
 	 * @author siping-L.J.H
 	 */
-	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST,
-			RequestMethod.GET })
+	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST, RequestMethod.GET })
 	@ResponseBody
-	public Map<String, Object> getSupplierList(
-			SearchPhoneListBean searchPhoneListBean, Long page, Long rows) {
+	public Map<String, Object> getPhoneList(SearchPhoneListBean searchPhoneListBean, Long page, Long rows) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("searchBean", searchPhoneListBean);
@@ -159,6 +157,17 @@ public class PhoneController {
 			return new ResultMsg(false, "失败。");
 		}
 
+	}
+
+	@RequestMapping(value = "/getPhone", method = RequestMethod.GET)
+	@ResponseBody
+	public Phone getPhone(int id) {
+		try {
+			return phoneMapper.selectByPrimaryKey(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

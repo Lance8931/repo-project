@@ -11,6 +11,10 @@
 		<script type="text/javascript" src="../resources/easyuiExpand.js" charset="utf-8" ></script>
 	</head>
 <body>
+	<h2>店铺管理</h2>
+	<a href="../admin/showMenu">返回菜单</a>
+	<br />
+	<br />
 	<div class="easyui-layout" fit='true'>
 		<div data-options="region:'north',title:'查询条件',split:true" style="height:80px;">
 			<form id="queryForm" method="post">

@@ -13,6 +13,9 @@
 	</head>
 <body>
 	<h2>手机管理</h2>
+	<a href="../admin/showMenu">返回菜单</a>
+	<br />
+	<br />
 	<div class="easyui-layout" fit='true'>
 		<div data-options="region:'north',title:'查询条件',split:true" style="height:150px;">
 			<form id="phoneList_queryForm" method="post">
@@ -255,35 +258,49 @@
             url = '../phone/add';
         }
         
-        
         function newAllot(){
         	var row = $('#dg').datagrid('getSelected');
         	if (row){
-                $('#dlgAllot').dialog('open').dialog('center').dialog('setTitle','添加调拨');
-                $('#fmAllot').form('clear');
-                $('#fmAllot').form('load',row);
-                $('#fmAllotOutShopId').combobox({
-         			valueField:'id',
-         			textField:'shopName',
-         			data:shopDatas,
-         			value:row.currentShopId,
-         			readonly:true
-         		});
-                $('#fmAllotInShopId').combobox({
-         			valueField:'id',
-         			textField:'shopName',
-         			data:shopDatas,
-         			loadFilter:function(data){
-         				var tempData=[];
-         				for(var i = 0; i < data.length; i++){
-         					if(data[i].id != row.currentShopId){
-         						tempData.push(data[i]);
-         					}
-         				}
-         				return tempData;
-         			}
-         		});
-                url = '../phone/addAllot';
+        		$.getJSON(
+                    	'../phone/getPhone',
+                    	{id:row.id},
+                    	function(data){
+                    		if(data.isSold == 0){
+                    			$('#dlgAllot').dialog('open').dialog('center').dialog('setTitle','添加调拨');
+                                $('#fmAllot').form('clear');
+                                $('#fmAllot').form('load',row);
+                                $('#fmAllotOutShopId').combobox({
+                         			valueField:'id',
+                         			textField:'shopName',
+                         			data:shopDatas,
+                         			value:row.currentShopId,
+                         			readonly:true
+                         		});
+                                $('#fmAllotInShopId').combobox({
+                         			valueField:'id',
+                         			textField:'shopName',
+                         			data:shopDatas,
+                         			loadFilter:function(data){
+                         				var tempData=[];
+                         				for(var i = 0; i < data.length; i++){
+                         					if(data[i].id != row.currentShopId){
+                         						tempData.push(data[i]);
+                         					}
+                         				}
+                         				return tempData;
+                         			}
+                         		});
+                                url = '../phone/addAllot';
+                    		}else{
+                    			$.messager.alert(
+	                        			'提示信息',
+	                        			'该商品已经卖出,不能调拨.',
+	                        			'error'
+	                        	);
+                    		}
+                    		
+                });
+                
             }
         }
         
@@ -319,22 +336,35 @@
         function newOrders(){
 	    	var row = $('#dg').datagrid('getSelected');
 	    	if (row){
-	            $('#dlgOrders').dialog('open').dialog('center').dialog('setTitle','添加销售');
-	            $('#fmOrders').form('clear');
-	            $('#fmOrders').form('load',row);
-	            $('#fmOrdersShopId').combobox({
-	     			valueField:'id',
-	     			textField:'shopName',
-	     			data:shopDatas,
-	     			value:row.currentShopId,
-	     			readonly:true
-	     		});
-	            $('#fmOrdersSalerId').combobox({
-	     			valueField:'id',
-	     			textField:'salerName',
-	     			data:salerDatas
-	     		});
-	            url = '../phone/addOrders';
+	    		$.getJSON(
+	                	'../phone/getPhone',
+	                	{id:row.id},
+	                	function(data){
+	                		if(data.isSold == 0){
+	                			$('#dlgOrders').dialog('open').dialog('center').dialog('setTitle','添加销售');
+		        	            $('#fmOrders').form('clear');
+		        	            $('#fmOrders').form('load',row);
+		        	            $('#fmOrdersShopId').combobox({
+		        	     			valueField:'id',
+		        	     			textField:'shopName',
+		        	     			data:shopDatas,
+		        	     			value:row.currentShopId,
+		        	     			readonly:true
+		        	     		});
+		        	            $('#fmOrdersSalerId').combobox({
+		        	     			valueField:'id',
+		        	     			textField:'salerName',
+		        	     			data:salerDatas
+		        	     		});
+		        	            url = '../phone/addOrders';
+	                		}else{
+	                			$.messager.alert(
+	                        			'提示信息',
+	                        			'该商品已经卖出,不能再次销售.',
+	                        			'error'
+	                        	);
+	                		}
+	            });
 	        }
 	    }
         
@@ -367,14 +397,6 @@
         	});
         }
         
-        function editUser(){
-            var row = $('#dg').datagrid('getSelected');
-            if (row){
-                $('#dlg').dialog('open').dialog('center').dialog('setTitle','Edit User');
-                $('#fm').form('load',row);
-                url = 'update_user.php?id='+row.id;
-            }
-        }
         function savePur(){
         	var row;
         	$('#fm').form('submit',{
@@ -404,53 +426,34 @@
                 }
         	});
         }
-        function destroyUser(){
-            var row = $('#dg').datagrid('getSelected');
-            if (row){
-                $.messager.confirm('Confirm','Are you sure you want to destroy this user?',function(r){
-                    if (r){
-                        $.post('destroy_user.php',{id:row.id},function(result){
-                            if (result.success){
-                                $('#dg').datagrid('reload');    // reload the user data
-                            } else {
-                                $.messager.show({    // show error message
-                                    title: 'Error',
-                                    msg: result.errorMsg
-                                });
-                            }
-                        },'json');
-                    }
-                });
-            }
-        }
-        
+
         function getJSONDatas(){
-    		$.getJSON("../resources/json/brand.json",
+    		$.getJSON("getBrandList",
     				  function(result){
     					$('#ccBrand').combobox({
     	        			valueField:'id',
-    	        			textField:'text',
-    	        			data:result
+    	        			textField:'brandName',
+    	        			data:result.rows
     	        		});
-    					brandDatas = result;
+    					brandDatas = result.rows;
     		});
-      		$.getJSON("../resources/json/color.json",
+      		$.getJSON("getColorList",
       				  function(result){
 		      			$('#ccColor').combobox({
 		        			valueField:'id',
-		        			textField:'text',
-		        			data:result
+		        			textField:'colorName',
+		        			data:result.rows
 		        		});
-      					colorDatas = result;
+      					colorDatas = result.rows;
       		});
-      		$.getJSON("../resources/json/model.json",
+      		$.getJSON("getModelList",
       				  function(result){
 		      			$('#ccModel').combobox({
 		        			valueField:'id',
-		        			textField:'text',
-		        			data:result
+		        			textField:'modelName',
+		        			data:result.rows
 		        		});
-      					modelDatas = result;
+      					modelDatas = result.rows;
       		});
       		$.getJSON("getShopList",
     				  function(result){
@@ -486,7 +489,7 @@
         function formatterBrand(value,row){
         	for(var i = 0; i < brandDatas.length; i++){
         		if(brandDatas[i].id == value){
-        			return brandDatas[i].text;
+        			return brandDatas[i].brandName;
         		}
         	}
         	return '-';
@@ -495,7 +498,7 @@
 		function formatterColor(value,row){
 			for(var i = 0; i < colorDatas.length; i++){
         		if(colorDatas[i].id == value){
-        			return colorDatas[i].text;
+        			return colorDatas[i].colorName;
         		}
         	}
         	return '-';
@@ -504,7 +507,7 @@
 		function formatterModel(value,row){
 			for(var i = 0; i < modelDatas.length; i++){
         		if(modelDatas[i].id == value){
-        			return modelDatas[i].text;
+        			return modelDatas[i].modelName;
         		}
         	}
         	return '-';
@@ -554,6 +557,7 @@
 		function reset(){
 			$("#phoneList_queryForm").form('reset');
 		}
+		
     </script>
 </body>
 </html>
