@@ -9,6 +9,7 @@
 	<h3>基础数据</h3>
 	<a href="../admin/showSupplier">供应商</a>
 	<a href="../admin/showShop">店铺</a>
+	<a href="../admin/showSaler">店铺</a>
 	<h3>商品</h3>
 	<a href="../admin/showPhone">手机</a>
 	<a href="../admin/showPurchase">配件</a>
