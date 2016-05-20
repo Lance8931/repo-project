@@ -43,7 +43,7 @@
   	<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
   </listener>
   
-  <!-- Spring监听器开始，初始化ApplicationContext，默认查找applicationContext.xml文件 -->
+  <!-- Spring监听器开始，初始化ApplicationContext，默认查找/WEB-INF/applicationContext.xml文件 -->
   <listener>
   	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
@@ -53,10 +53,10 @@
   <servlet>
   	<servlet-name>SpringMVC</servlet-name>
   	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-  	<init-param>
+  	<!-- <init-param>
   		<param-name>contextConfigLocation</param-name>
   		<param-value>classpath:spring-mvc.xml</param-value>
-  	</init-param>
+  	</init-param> -->
   	<load-on-startup>1</load-on-startup>
   	<async-supported>true</async-supported>
   </servlet>
