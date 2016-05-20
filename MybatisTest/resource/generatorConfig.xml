@@ -22,20 +22,20 @@
 			<property name="forceBigDecimals" value="false"/>
 		</javaTypeResolver>
 		<!-- 生成模型的包名和位置，目标项目-->
-		<javaModelGenerator targetPackage="com.generator.bean" targetProject="MybatisTest">
+		<javaModelGenerator targetPackage="com.generator.bean" targetProject="D:\\code\\Git\\repo-project\\MybatisTest\\src">
 			<property name="enableSubPackages" value="true"/>
 			<property name="trimStrings" value="true"/>
 		</javaModelGenerator>
 		<!-- 生成映射文件的包名和位置，目标项目-->
-		<sqlMapGenerator targetPackage="com.generator.mapper.sql" targetProject="MybatisTest">
+		<sqlMapGenerator targetPackage="com.generator.mapper.sql" targetProject="D:\\code\\Git\\repo-project\\MybatisTest\\src">
 			<property name="enableSubPackages" value="true"/>
 		</sqlMapGenerator>
 		<!-- 生成DAO的包名和位置，目标项目-->
-		<javaClientGenerator type="XMLMAPPER" targetPackage="com.generator.mapper" targetProject="MybatisTest">
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.generator.mapper" targetProject="D:\\code\\Git\\repo-project\\MybatisTest\\src">
 			<property name="enableSubPackages" value="true"/>
 		</javaClientGenerator>
 		<!-- 要生成哪些表-->
-		<table tableName="msg_type" domainObjectName="MsgType" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+		<table tableName="user_personal_info" domainObjectName="UserPersonalInfo" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true"></table>
 		<!--<table tableName="knowledge_type" domainObjectName="KnowledgeType" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
 		 <table tableName="syslogs" domainObjectName="SyslogsDto" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
 	</context>
