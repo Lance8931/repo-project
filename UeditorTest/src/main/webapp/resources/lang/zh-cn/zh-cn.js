@@ -665,5 +665,35 @@ UE.I18N['zh-cn'] = {
     'autosave': {
         'saving':'保存中...',
         'success':'本地保存成功'
+    },
+    'musicself':{
+        'static':{
+            'lang_tab_upload': '上传音频',
+            'lang_tab_online': '在线音频',
+            'lang_start_upload':"开始上传",
+            'lang_drop_remind':"可以将文件拖到这里，单次最多可选100个文件"
+        },
+        'uploadSelectFile':'点击选择音频',
+        'uploadAddFile':'继续添加',
+        'uploadStart':'开始上传',
+        'uploadPause':'暂停上传',
+        'uploadContinue':'继续上传',
+        'uploadRetry':'重试上传',
+        'uploadDelete':'删除',
+        'uploadTurnLeft':'向左旋转',
+        'uploadTurnRight':'向右旋转',
+        'uploadPreview':'预览中',
+        'updateStatusReady': '选中_个文件，共_KB。',
+        'updateStatusConfirm': '已成功上传_个文件，_个音频上传失败',
+        'updateStatusFinish': '共_个（_KB），_个上传成功',
+        'updateStatusError': '，_个上传失败。',
+        'errorNotSupport': 'WebUploader 不支持您的浏览器！如果你使用的是IE浏览器，请尝试升级 flash 播放器。',
+        'errorLoadConfig': '后端配置项没有正常加载，上传插件不能正常使用！',
+        'errorExceedSize':'音频大小超出',
+        'errorFileType':'音频格式不允许',
+        'errorInterrupt':'音频传输中断',
+        'errorUploadRetry':'上传失败，请重试',
+        'errorHttp':'http请求错误',
+        'errorServerUpload':'服务器返回出错'
     }
 };

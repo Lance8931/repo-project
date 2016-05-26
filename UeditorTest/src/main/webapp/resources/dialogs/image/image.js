@@ -346,7 +346,8 @@
                 })(),
             // WebUploader实例
                 uploader,
-                actionUrl = editor.getActionUrl(editor.getOpt('imageActionName')),
+                //actionUrl = editor.getActionUrl(editor.getOpt('imageActionName')),
+                actionUrl = window.location.origin+'/UeditorTest/ueditor/dispatch?action='+editor.getOpt('imageActionName'),
                 acceptExtensions = (editor.getOpt('imageAllowFiles') || []).join('').replace(/\./g, ',').replace(/^[,]/, ''),
                 imageMaxSize = editor.getOpt('imageMaxSize'),
                 imageCompressBorder = editor.getOpt('imageCompressBorder');

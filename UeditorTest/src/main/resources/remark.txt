@@ -1,0 +1,5 @@
+使用SpringMVC配合Ueditor步骤：
+1、在ueditor.config.js中的serverUrl改为对应的Controller的Url
+2、修改实际的config.json获取地址
+3、修改上传文件等的地址，以及预览的时候的地址
+4、添加

@@ -19,7 +19,7 @@ import com.baidu.ueditor.define.ActionMap;
  * 配置管理器
  * 
  * @author hancong03@baidu.com
- *
+ * @history 2016-05-26 添加音频
  */
 public final class ConfigManager {
 
