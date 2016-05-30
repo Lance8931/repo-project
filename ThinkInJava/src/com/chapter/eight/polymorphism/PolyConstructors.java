@@ -1,0 +1,40 @@
+package com.chapter.eight.polymorphism;
+
+/**
+ *
+ *
+ * @author siping-L.J.H
+ * @date 2016年5月30日下午2:53:11
+ * @version 1.0
+ */
+class Glyph {
+	void draw() {
+		System.out.println("Glyph.draw()");
+	}
+
+	Glyph() {
+		System.out.println("Glyph() before draw()");
+		draw();
+		System.out.println("Glyph() after draw()");
+	}
+}
+
+class RoundGlyph extends Glyph {
+	private int radius = 1;
+
+	RoundGlyph(int i) {
+		System.out.println(radius);
+		radius = i;
+		System.out.println("RoundGlyph.RoundGlyph(), radius = " + radius);
+	}
+
+	void draw() {
+		System.out.println("RoundGlyph.draw(), radius = " + radius);
+	}
+}
+
+public class PolyConstructors {
+	public static void main(String[] args) {
+		new RoundGlyph(5);
+	}
+}
