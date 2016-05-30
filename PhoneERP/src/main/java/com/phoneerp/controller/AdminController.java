@@ -123,7 +123,13 @@ public class AdminController {
 		return "modelList";
 	}
 
-	@RequestMapping(value = "/getShopList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping("/test")
+	public String showTest() {
+		return "test";
+	}
+
+	@RequestMapping(value = "/getShopList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
 	public Map<String, Object> getShopList(Shop shop) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -185,7 +191,8 @@ public class AdminController {
 		}
 	}
 
-	@RequestMapping(value = "/getSupplierList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/getSupplierList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
 	public Map<String, Object> getSupplierList(Supplier supplier) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -247,7 +254,8 @@ public class AdminController {
 		}
 	}
 
-	@RequestMapping(value = "/getSalerList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/getSalerList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
 	public Map<String, Object> getSalerList(Saler saler) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -309,7 +317,8 @@ public class AdminController {
 		}
 	}
 
-	@RequestMapping(value = "/getBrandList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/getBrandList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
 	public Map<String, Object> getBrandList(Brand brand) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -371,7 +380,8 @@ public class AdminController {
 		}
 	}
 
-	@RequestMapping(value = "/getColorList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/getColorList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
 	public Map<String, Object> getColorList(Color color) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -434,7 +444,8 @@ public class AdminController {
 	}
 
 	// ---------------------------手机型号--------------------------
-	@RequestMapping(value = "/getModelList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/getModelList", method = { RequestMethod.POST,
+			RequestMethod.GET })
 	@ResponseBody
 	public Map<String, Object> getModelList(Model model) {
 		Map<String, Object> map = new HashMap<String, Object>();
