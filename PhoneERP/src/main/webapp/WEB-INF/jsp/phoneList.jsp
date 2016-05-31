@@ -232,17 +232,17 @@
             $('#fm').form('clear');
             $('#fmccBrand').combobox({
     			valueField:'id',
-    			textField:'text',
+    			textField:'brandName',
     			data:brandDatas
     		});
             $('#fmccColor').combobox({
     			valueField:'id',
-    			textField:'text',
+    			textField:'colorName',
     			data:colorDatas
     		});
             $('#fmccModel').combobox({
     			valueField:'id',
-    			textField:'text',
+    			textField:'modelName',
     			data:modelDatas
     		});
             $('#fmccShop').combobox({
