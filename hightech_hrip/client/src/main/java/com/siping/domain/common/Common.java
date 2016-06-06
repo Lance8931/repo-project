@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 public class Common {
     private BigInteger id;
-    private Boolean isDelete;
+    private Integer isDelete;
     private String createDate;
     private BigInteger createBy;
     private String updateDate;
@@ -34,11 +34,11 @@ public class Common {
         this.updateBy = updateBy;
     }
 
-    public Boolean getIsDelete() {
+    public Integer getIsDelete() {
         return isDelete;
     }
 
-    public void setIsDelete(Boolean isDelete) {
+    public void setIsDelete(Integer isDelete) {
         this.isDelete = isDelete;
     }
 

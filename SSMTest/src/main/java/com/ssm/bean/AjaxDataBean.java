@@ -1,5 +1,7 @@
 package com.ssm.bean;
 
+import java.util.List;
+
 /**
  *
  *
@@ -10,6 +12,26 @@ package com.ssm.bean;
 public class AjaxDataBean {
 	private String userName;
 	private String nickName;
+
+	private String[] userNames;
+
+	private List<String> nickNames;
+
+	public List<String> getNickNames() {
+		return nickNames;
+	}
+
+	public void setNickNames(List<String> nickNames) {
+		this.nickNames = nickNames;
+	}
+
+	public String[] getUserNames() {
+		return userNames;
+	}
+
+	public void setUserNames(String[] userNames) {
+		this.userNames = userNames;
+	}
 
 	public String getUserName() {
 		return userName;

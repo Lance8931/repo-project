@@ -15,20 +15,12 @@ public class ResultMsg implements Serializable {
      */
     private String msg;
 
-    private String billNumber;
-
     public ResultMsg() {
     }
 
     public ResultMsg(boolean success, String msg) {
         this.success = success;
         this.msg = msg;
-    }
-
-    public ResultMsg(boolean success, String msg, String billNumber) {
-        this.success = success;
-        this.msg = msg;
-        this.billNumber = billNumber;
     }
 
     public boolean isSuccess() {
@@ -45,14 +37,6 @@ public class ResultMsg implements Serializable {
 
     public void setMsg(String msg) {
         this.msg = msg;
-    }
-
-    public String getBillNumber() {
-        return billNumber;
-    }
-
-    public void setBillNumber(String billNumber) {
-        this.billNumber = billNumber;
     }
 
 }

@@ -1,0 +1,9 @@
+<@css href="css/bootstrap/bootstrap.min.css" />
+<@css href="css/bui/dpl-min.css" />
+<@css href="css/bui/bui-min.css" />
+<@css href="css/bui/main-min.css" />
+<@js src="js/jquery/jquery-1.10.2.js" />
+<@js src="js/bootstrap/bootstrap.min.js" />
+<@js src="js/bui/bui-min.js" />
+<@js src="js/bui/config-min.js" />
+<@js src="js/bui/main-min.js" />

@@ -3,15 +3,13 @@
 <mapper namespace="com.siping.hrip.portal.user.mapper.UserPersonalMapper" >
   <resultMap id="BaseResultMap" type="com.siping.domain.portal.entity.UserPersonalInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="id_code" property="idCode" jdbcType="VARCHAR" />
-    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
-    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
-    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
-    <result column="psd_question" property="psdQuestion" jdbcType="VARCHAR" />
-    <result column="psd_answer" property="psdAnswer" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="nationality" property="nationality" jdbcType="VARCHAR" />
     <result column="nickname" property="nickname" jdbcType="VARCHAR" />
     <result column="realname" property="realname" jdbcType="VARCHAR" />
-    <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+    <result column="foreign_name" property="foreignName" jdbcType="VARCHAR" />
+    <result column="birthplace" property="birthplace" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
     <result column="province" property="province" jdbcType="INTEGER" />
     <result column="city" property="city" jdbcType="INTEGER" />
     <result column="county" property="county" jdbcType="INTEGER" />
@@ -21,112 +19,39 @@
     <result column="politics_status" property="politicsStatus" jdbcType="VARCHAR" />
     <result column="marital_status" property="maritalStatus" jdbcType="VARCHAR" />
     <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
     <result column="fax" property="fax" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="website" property="website" jdbcType="VARCHAR" />
+    <result column="start_work_year" property="startWorkYear" jdbcType="INTEGER" />
+    <result column="resident_city" property="residentCity" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
   </resultMap>
-  
-  <insert id="addUser" parameterType="com.siping.domain.portal.entity.User">
-        INSERT INTO users
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="username != null">
-                username,
-            </if>
-            <if test="pwdHash != null">
-                pwd_hash,
-            </if>
-            <if test="pwdIterator != null">
-                pwd_iterator,
-            </if>
-            <if test="pwdSalt != null">
-                pwd_salt,
-            </if>
-            <if test="userType != null">
-                user_type,
-            </if>
-            <if test="createDate != null">
-                create_date,
-            </if>
-            <if test="updateDate != null">
-                update_date,
-            </if>
-            <if test="enabled != null">
-                enabled,
-            </if>
-            <if test="createBy != null">
-                create_by,
-            </if>
-            <if test="updateBy != null">
-                update_by,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-
-            <if test="username != null">
-                #{username,jdbcType=VARCHAR},
-            </if>
-            <if test="pwdHash != null">
-                #{pwdHash,jdbcType=VARCHAR},
-            </if>
-            <if test="pwdIterator != null">
-                #{pwdIterator,jdbcType=INTEGER},
-            </if>
-            <if test="pwdSalt != null">
-                #{pwdSalt,jdbcType=VARCHAR},
-            </if>
-            <if test="userType != null">
-                #{userType,jdbcType=INTEGER},
-            </if>
-            <if test="createDate != null">
-                STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-            </if>
-            <if test="updateDate != null">
-                STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-            </if>
-            <if test="enabled != null">
-                #{enabled,jdbcType=TINYINT},
-            </if>
-            <if test="createBy != null">
-                #{createBy,jdbcType=TINYINT},
-            </if>
-            <if test="updateBy != null">
-                #{updateBy,jdbcType=TINYINT},
-            </if>
-        </trim>
-    </insert>
-  
-  
   <insert id="addUserPersonalInfo" parameterType="com.siping.domain.portal.entity.UserPersonalInfo" >
     insert into user_personal_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
-      <if test="idCode != null" >
-        id_code,
+      <if test="username != null" >
+        username,
       </if>
-      <if test="createDate != null" >
-        create_date,
-      </if>
-      <if test="updateDate != null" >
-        update_date,
-      </if>
-      <if test="updateBy != null" >
-        update_by,
-      </if>
-      <if test="psdQuestion != null" >
-        psd_question,
-      </if>
-      <if test="psdAnswer != null" >
-        psd_answer,
+      <if test="nationality != null" >
+        nationality,
       </if>
       <if test="nickname != null" >
         nickname,
       </if>
       <if test="realname != null" >
         realname,
+      </if>
+      <if test="foreignName != null" >
+        foreign_name,
+      </if>
+      <if test="birthplace != null" >
+        birthplace,
       </if>
       <if test="birthday != null" >
         birthday,
@@ -158,6 +83,9 @@
       <if test="telephone != null" >
         telephone,
       </if>
+      <if test="cellphone != null" >
+        cellphone,
+      </if>
       <if test="fax != null" >
         fax,
       </if>
@@ -167,28 +95,29 @@
       <if test="website != null" >
         website,
       </if>
+      <if test="startWorkYear != null" >
+        start_work_year,
+      </if>
+      <if test="residentCity != null" >
+        resident_city,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      create_date
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="idCode != null" >
-        #{idCode,jdbcType=VARCHAR},
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null" >
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateDate != null" >
-        #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateBy != null" >
-        #{updateBy,jdbcType=INTEGER},
-      </if>
-      <if test="psdQuestion != null" >
-        #{psdQuestion,jdbcType=VARCHAR},
-      </if>
-      <if test="psdAnswer != null" >
-        #{psdAnswer,jdbcType=VARCHAR},
+      <if test="nationality != null" >
+        #{nationality,jdbcType=VARCHAR},
       </if>
       <if test="nickname != null" >
         #{nickname,jdbcType=VARCHAR},
@@ -196,9 +125,14 @@
       <if test="realname != null" >
         #{realname,jdbcType=VARCHAR},
       </if>
+      <if test="foreignName != null" >
+        #{foreignName,jdbcType=VARCHAR},
+      </if>
+      <if test="birthplace != null" >
+        #{birthplace,jdbcType=VARCHAR},
+      </if>
       <if test="birthday != null" >
-       STR_TO_DATE(#{birthday,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
+        #{birthday,jdbcType=DATE},
       </if>
       <if test="province != null" >
         #{province,jdbcType=INTEGER},
@@ -227,6 +161,9 @@
       <if test="telephone != null" >
         #{telephone,jdbcType=VARCHAR},
       </if>
+      <if test="cellphone != null" >
+        #{cellphone,jdbcType=VARCHAR},
+      </if>
       <if test="fax != null" >
         #{fax,jdbcType=VARCHAR},
       </if>
@@ -236,77 +173,30 @@
       <if test="website != null" >
         #{website,jdbcType=VARCHAR},
       </if>
+      <if test="startWorkYear != null" >
+        #{startWorkYear,jdbcType=DATE},
+      </if>
+      <if test="residentCity != null" >
+        #{residentCity,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+        now()
     </trim>
   </insert>
   
-  
-  <select id="selectUserName" parameterType="com.siping.domain.portal.entity.User"
-        resultType="java.lang.Integer">
-        select count(t.username) from users t where t.username =
-        #{username,jdbcType=VARCHAR}
-    </select>
-    
-
-  <select id="selectIdCode" parameterType="com.siping.domain.portal.entity.UserPersonalInfo"
-        resultType="java.lang.Integer">
-        select count(*) from user_personal_info t where t.id_code =
-        #{id_code,jdbcType=VARCHAR}
-    </select>
-    
-    
-    <update id="updateUser" parameterType="com.siping.domain.portal.entity.User">
-        update users
-        <set>
-            <if test="pwdHash != null">
-                pwd_hash = #{pwdHash,jdbcType=VARCHAR},
-            </if>
-            <if test="pwdIterator != null">
-                pwd_iterator = #{pwdIterator,jdbcType=INTEGER},
-            </if>
-            <if test="pwdSalt != null">
-                pwd_salt= #{pwdSalt,jdbcType=VARCHAR},
-            </if>
-            <if test="userType != null">
-                user_type= #{userType,jdbcType=INTEGER},
-            </if>
-            <if test="createDate != null">
-                create_date=
-                STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-            </if>
-            <if test="updateDate != null">
-                update_date=
-                STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-            </if>
-            <if test="enabled != null">
-                enabled = #{enabled,jdbcType=TINYINT},
-            </if>
-            <if test="createBy != null">
-                create_by = #{createBy,jdbcType=TINYINT},
-            </if>
-            <if test="updateBy != null">
-                update_by = #{updateBy,jdbcType=TINYINT},
-            </if>
-        </set>
-        where username = #{username,jdbcType=VARCHAR}
-    </update>
-    
-    
   <update id="updatePersonal" parameterType="com.siping.domain.portal.entity.UserPersonalInfo">
-        update user_personal_info
+     update user_personal_info
     <set >
-      <if test="updateDate != null" >
-        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
       </if>
-      <if test="updateBy != null" >
-        update_by = #{updateBy,jdbcType=INTEGER},
-      </if>
-      <if test="psdQuestion != null" >
-        psd_question = #{psdQuestion,jdbcType=VARCHAR},
-      </if>
-      <if test="psdAnswer != null" >
-        psd_answer = #{psdAnswer,jdbcType=VARCHAR},
+      <if test="nationality != null" >
+        nationality = #{nationality,jdbcType=VARCHAR},
       </if>
       <if test="nickname != null" >
         nickname = #{nickname,jdbcType=VARCHAR},
@@ -314,9 +204,14 @@
       <if test="realname != null" >
         realname = #{realname,jdbcType=VARCHAR},
       </if>
+      <if test="foreignName != null" >
+        foreign_name = #{foreignName,jdbcType=VARCHAR},
+      </if>
+      <if test="birthplace != null" >
+        birthplace = #{birthplace,jdbcType=VARCHAR},
+      </if>
       <if test="birthday != null" >
-        birthday = STR_TO_DATE(#{birthday,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
+        birthday = #{birthday,jdbcType=DATE},
       </if>
       <if test="province != null" >
         province = #{province,jdbcType=INTEGER},
@@ -345,6 +240,9 @@
       <if test="telephone != null" >
         telephone = #{telephone,jdbcType=VARCHAR},
       </if>
+      <if test="cellphone != null" >
+        cellphone = #{cellphone,jdbcType=VARCHAR},
+      </if>
       <if test="fax != null" >
         fax = #{fax,jdbcType=VARCHAR},
       </if>
@@ -354,28 +252,161 @@
       <if test="website != null" >
         website = #{website,jdbcType=VARCHAR},
       </if>
+      <if test="startWorkYear != null" >
+        start_work_year = #{startWorkYear,jdbcType=INTEGER},
+      </if>
+      <if test="residentCity != null" >
+        resident_city = #{residentCity,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      update_date = now()
     </set>
-    where id_code = #{idCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
     </update>
-  
-  
-  <select id="verifyAnswer" parameterType="com.siping.domain.portal.entity.UserPersonalInfo" resultType="java.lang.Integer">
-    select COUNT(*)  from user_personal_info
-    where id_code = #{idCode,jdbcType=VARCHAR} and psd_answer = #{psdAnswer,jdbcType=VARCHAR}
-  </select>
-  
-  
-  <select id="getUserpersonal" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from user_personal_info
-    where id_code = #{idCode,jdbcType=VARCHAR}
-  </select>
-  
-  <sql id="Base_Column_List" >
-    id, id_code, create_date, update_date, update_by, psd_question, psd_answer, nickname, 
-    realname, birthday, province, city, county, address, sex, nation, politics_status, 
-    marital_status, telephone, fax, email, website
-  </sql>
-  
+    
+    <sql id="conditions" >
+        <trim prefix="where" prefixOverrides="and|or" >
+            a.user_type = 3
+          <if test="id != null and id != ''" >
+            and a.id = #{id}
+          </if>
+          <if test="username != null and id != ''" >
+            and a.username = #{username}
+          </if>
+          <if test="nationality != null and id != ''" >
+            and b.nationality = #{nationality}
+          </if>
+          <if test="nickname != null and id != ''" >
+            and b.nickname = #{nickname}
+          </if>
+          <if test="realname != null and id != ''" >
+            and b.realname = LIKE CONCAT(CONCAT('%',
+                #{realname}), '%')
+          </if>
+          <if test="foreignName != null and id != ''" >
+            and b.foreign_name = #{foreignName}
+          </if>
+          <if test="birthplace != null and id != ''" >
+            and b.birthplace = #{birthplace}
+          </if>
+          <if test="birthday != null and id != ''" >
+            and b.birthday = #{birthday}
+          </if>
+          <if test="province != null and id != ''" >
+            and b.province = #{province}
+          </if>
+          <if test="city != null and id != ''" >
+            and b.city = #{city}
+          </if>
+          <if test="county != null and id != ''" >
+            and b.county = #{county}
+          </if>
+          <if test="address != null and id != ''" >
+            and b.address = #{address}
+          </if>
+          <if test="sex != null and id != ''" >
+            and b.sex = #{sex}
+          </if>
+          <if test="nation != null and id != ''" >
+            and b.nation = #{nation}
+          </if>
+          <if test="politicsStatus != null and id != ''" >
+            and b.politics_status = #{politicsStatus}
+          </if>
+          <if test="maritalStatus != null and id != ''" >
+            and b.marital_status = #{maritalStatus}
+          </if>
+          <if test="telephone != null and id != ''" >
+            and b.telephone = #{telephone}
+          </if>
+          <if test="cellphone != null and id != ''" >
+            and b.cellphone = #{cellphone}
+          </if>
+          <if test="fax != null and id != ''" >
+            and b.fax = #{fax}
+          </if>
+          <if test="email != null and id != ''" >
+            and b.email = #{email}
+          </if>
+          <if test="website != null and id != ''" >
+            and b.website = #{website}
+          </if>
+          <if test="startWorkYear != null and id != ''" >
+            and b.start_work_year = #{startWorkYear}
+          </if>
+          <if test="residentCity != null and id != ''" >
+            and b.resident_city = #{residentCity}
+          </if>
+        </trim>
+      </sql>
+    
+    <resultMap id="UsersResultMap" type="com.siping.domain.portal.entity.User">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="realname" property="personalInfo.realname" jdbcType="VARCHAR"/>
+        <result column="telephone" property="personalInfo.telephone" jdbcType="VARCHAR"/>
+        <result column="cellphone" property="personalInfo.cellphone" jdbcType="VARCHAR"/>
+        <result column="sex" property="personalInfo.sex" jdbcType="BIT"/>
+        <result column="birthday" property="personalInfo.birthday" jdbcType="DATE"/>
+        <result column="start_work_year" property="personalInfo.startWorkYear" jdbcType="INTEGER"/>
+        <result column="address" property="personalInfo.address" jdbcType="VARCHAR"/>
+        <result column="pro_name" property="personalInfo.provinceArea.name" jdbcType="VARCHAR"/>
+        <result column="city_name" property="personalInfo.cityArea.name" jdbcType="VARCHAR"/>
+        <result column="county_name" property="personalInfo.countyArea.name" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getListByPage" parameterType="java.util.Map" resultMap="UsersResultMap">
+        SELECT
+            a.id,
+            a.username,
+            a.email,
+            b.realname,
+            b.cellphone,
+            b.telephone,
+            b.sex,
+            b.birthday,
+            b.start_work_year,
+            b.address,
+            pr.province AS pro_name,
+            ci.city AS city_name,
+            co.county AS county_name
+        FROM
+            users AS a
+        LEFT OUTER JOIN user_personal_info AS b ON b.username = a.username
+        LEFT OUTER JOIN siping_province pr ON b.province = pr.province_id
+        LEFT OUTER JOIN siping_city ci ON b.city = ci.city_id
+        LEFT OUTER JOIN siping_county co ON b.county = co.county_id 
+        <include refid="conditions"/>
+        <if test="startNo != null" >
+          LIMIT #{startNo},#{pageSize}
+        </if>
+    </select>
+    
+    <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        SELECT
+            count(*)
+        FROM
+            users AS a
+        LEFT OUTER JOIN user_personal_info AS b ON b.username = a.username
+        <include refid="conditions"/>
+    </select>
+    
+    <sql id="Base_Column_List" >
+        a.username, a.email, b.id, b.nationality, b.nickname, b.realname, b.foreign_name, b.birthplace, b.birthday, 
+        b.province, b.city, b.county, b.address, b.sex, b.nation, b.politics_status, b.marital_status, b.telephone, 
+        b.cellphone, b.fax, b.email, b.website, b.start_work_year, b.resident_city, b.create_date, b.update_date, 
+        b.update_by
+    </sql>
+    <select id="getUserpersonal" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        select 
+        <include refid="Base_Column_List" />
+        from users AS a LEFT OUTER JOIN user_personal_info AS b ON b.username = a.username
+        WHERE a.username = #{_parameter}
+    </select>
+    
 </mapper>

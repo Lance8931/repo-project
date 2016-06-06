@@ -1,6 +1,9 @@
 package com.ssm.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,9 +47,46 @@ public class AjaxComplexDataController {
 
 	@RequestMapping(value = "/method4", method = RequestMethod.GET)
 	@ResponseBody
-	public ResultMsg method4(String userName, String nickName) {
-		System.out.println(userName);
-		System.out.println(nickName);
+	public ResultMsg method4(String[] userNames) {
+		for (String string : userNames) {
+			System.out.println(string);
+		}
+		return new ResultMsg(true, "存在");
+	}
+
+	@RequestMapping(value = "/method5", method = RequestMethod.GET)
+	@ResponseBody
+	public ResultMsg method5(AjaxDataBean bean) {
+		for (String string : bean.getUserNames()) {
+			System.out.println(string);
+		}
+		return new ResultMsg(true, "存在");
+	}
+
+	@RequestMapping(value = "/method6", method = RequestMethod.GET)
+	@ResponseBody
+	public ResultMsg method6(AjaxDataBean bean) {
+		for (String string : bean.getNickNames()) {
+			System.out.println(string);
+		}
+		return new ResultMsg(true, "存在");
+	}
+
+	@RequestMapping(value = "/method7", method = RequestMethod.GET)
+	@ResponseBody
+	public ResultMsg method7(List<String> nickNames) {
+		for (String string : nickNames) {
+			System.out.println(string);
+		}
+		return new ResultMsg(true, "存在");
+	}
+
+	@RequestMapping(value = "/method8", method = RequestMethod.GET)
+	@ResponseBody
+	public ResultMsg method8(@RequestBody List<String> nickNames) {
+		for (String string : nickNames) {
+			System.out.println(string);
+		}
 		return new ResultMsg(true, "存在");
 	}
 

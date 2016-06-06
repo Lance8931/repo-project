@@ -6,16 +6,18 @@ import java.util.Map;
 import com.siping.domain.portal.entity.MsgType;
 
 public interface MsgTypeMapper {
-	int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Integer id);
 
-	int insertSelective(MsgType record);
+    int insertSelective(MsgType record);
 
-	MsgType selectByPrimaryKey(Integer id);
+    MsgType selectByPrimaryKey(Integer id);
 
-	int updateByPrimaryKeySelective(MsgType record);
+    int updateByPrimaryKeySelective(MsgType record);
 
-	List<MsgType> getByPage(Map<?, ?> map);
+    List<MsgType> getByPage(Map<?, ?> map);
 
-	Long getCount(Map<?, ?> map);
+    Long getCount(Map<?, ?> map);
+
+    List<MsgType> get(Map<?, ?> map);
 
 }

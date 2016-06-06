@@ -27,25 +27,51 @@
     <!-- 菜单列表 -->
     <sql id="menu_Column_List">
         id, menu_name, menu_url, DATE_FORMAT(create_date,"%Y-%m-%d %H:%i:%s") create_date,
-        create_by ,DATE_FORMAT(update_date,"%Y-%m-%d") update_date, update_by, order_no
+        create_by ,DATE_FORMAT(update_date,"%Y-%m-%d") update_date, update_by, oder_no
     </sql>
     <!-- 幻灯片图片 -->
     <sql id="slidePic_Column_List">
         id, pic_path, url, hover_tips, order_no, DATE_FORMAT(create_date,"%Y-%m-%d %H:%i:%s") create_date,
-        create_by ,DATE_FORMAT(update_date,"%Y-%m-%d") update_date, update_by
+        create_by ,DATE_FORMAT(update_date,"%Y-%m-%d") update_date, update_by,enabled
     </sql>
     <!-- 查询菜单列表 -->
     <select id="getMenuList" resultMap="menuMap">
-        select 
-        <include refid="menu_Column_List" />slidePicList
-        from `menu` ORDER BY order_no DESC
+        select
+        <include refid="menu_Column_List" />
+        from `menu`
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="menuName != null">
+                menu_name = #{menuName}
+            </if>
+            <if test="menuUrl != null">
+                menu_url = #{menuUrl}
+            </if>
+            <if test="id != createDate">
+                create_date = #{createDate}
+            </if>
+            <if test="id != createBy">
+                create_by = #{createBy}
+            </if>
+            <if test="id != updateBy">
+                update_by = #{updateBy}
+            </if>
+            <if test="id != orderNo">
+                oder_no = #{orderNo}
+            </if>
+        </trim>
+         ORDER BY oder_no DESC
     </select>
     
     <!-- 查询幻灯片图片列表 -->
-    <select id="getSlidePicList" resultMap="slidePicMap">
+    <select id="getSlidePicList" resultMap="slidePicMap" parameterType="java.util.Map">
         select 
         <include refid="slidePic_Column_List" />
         from `slide_pic` 
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="enabled != null">
+                enabled = #{enabled}
+            </if>
+        </trim>
         <if test="startNo != null">
             LIMIT #{startNo},#{pageSize}
         </if>
@@ -53,18 +79,42 @@
     
     <!-- 批量插入幻灯片图片 -->
     <insert id="saveSlidePicInfo" parameterType="java.util.List">    
-        INSERT INTO slide_pic (pic_path,url,hover_tips,create_date,order_no,create_by) values
+        INSERT INTO slide_pic (pic_path,url,hover_tips,create_date,order_no,create_by,enabled) values
         <foreach collection="list" item="item" index="index" separator="," >
-            (#{item.picPath},#{item.url},#{item.hoverTips},now(),#{item.orderNo},#{item.createBy})
+            (#{item.picPath},#{item.url},#{item.hoverTips},now(),#{item.orderNo},#{item.createBy},1)
         </foreach>
     </insert> 
     
         <!-- 批量修改幻灯片图片 -->
         <update id="updateSlidePic"  parameterType="java.util.List">
-           <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+           <foreach collection="list" item="item" index="index" open="" close="" separator=";">
                     UPDATE slide_pic
-                    <set>
-                            url=#{item.url}, update_date=now(), update_by=#{item.id}
+                    <set >
+                      <if test="item.picPath != null" >
+                        pic_path = #{item.picPath,jdbcType=VARCHAR},
+                      </if>
+                      <if test="item.url != null" >
+                        url = #{item.url,jdbcType=VARCHAR},
+                      </if>
+                      <if test="item.hoverTips != null" >
+                        hover_tips = #{item.hoverTips,jdbcType=VARCHAR},
+                      </if>
+                      <if test="item.orderNo != null" >
+                        order_no = #{item.orderNo,jdbcType=INTEGER},
+                      </if>
+                      <if test="item.createDate != null" >
+                        create_date = #{item.createDate,jdbcType=TIMESTAMP},
+                      </if>
+                      <if test="item.createBy != null" >
+                        create_by = #{item.createBy,jdbcType=INTEGER},
+                      </if>
+                        update_date = now(),
+                      <if test="item.updateBy != null" >
+                        update_by = #{item.id,jdbcType=INTEGER},
+                      </if>
+                      <if test="item.enabled != null">
+                        enabled = #{item.enabled,jdbcType=TINYINT},
+                    </if>
                     </set>
                     where 1=1 and id = #{item.id}
            </foreach>
@@ -73,6 +123,30 @@
        <delete id="deleteSlidePic" parameterType="java.lang.String">
             DELETE FROM slide_pic where id=#{id}
         </delete>
-          
+    
+    <!-- 获取幻灯片总数量 -->
+    <select id="countAllSlidePic" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(id) from slide_pic
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="enabled != null">
+                enabled = #{enabled}
+            </if>
+        </trim>     
+    </select>
+       
+    <!-- 批量获取幻灯片 -->
+    <select id="getSlidePics" parameterType="java.util.List" resultMap="slidePicMap">
+            SELECT <include refid="slidePic_Column_List" /> FROM slide_pic WHERE id IN
+            <foreach collection="list" item="id" index="index" open="(" separator="," close=")" >
+               #{id} 
+            </foreach>
+     </select>
+     <!-- 批量删除幻灯片 -->
+     <delete id="deleteSlidePics" parameterType="java.util.List">
+            DELETE FROM slide_pic WHERE id IN
+            <foreach collection="list" item="id" index="index" open="(" separator="," close=")" >
+                #{id}
+            </foreach>
+     </delete>
     
 </mapper>

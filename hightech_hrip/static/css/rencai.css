@@ -1,0 +1,143 @@
+#content{
+    width:80%;
+    height:auto;
+    margin:0 auto;
+    margin-top:30px;
+}
+.search{
+    width:100%;
+    height:280px;
+    background:#f9f9f9;
+    border:1px solid #f1f1f1;
+    border-radius: 5px;
+    padding-left: 3%;
+    padding-top: 2%;
+    margin-bottom:2%;
+}
+.key-word{
+    width:46%;
+    height:40px;
+    border:1px solid #f1f1f1;
+    border-radius: 5px;
+    float:left;
+    margin-right:4%;
+    margin-bottom:2%;
+}
+.key-word span{
+    width:20%;
+    height:40px;
+    text-align: center;
+    line-height:40px;
+    background:#e5e5e5;
+    float:left;
+    border-radius:5px 0 0 5px;
+}
+.key-word input{
+    width:80%;
+    height:40px;
+    float:left;
+    text-indent:24px;
+    border:0;
+    border-radius:0 5px 5px 0;
+}
+.key-word input:focus{
+    outline:0;
+}
+.condition{
+    width:21%;
+    height:40px;
+    margin-right:4%;
+    margin-bottom:2%;
+    float:left;
+}
+.condition span{
+    width:28%;
+    line-height: 40px;
+    text-align: center;
+    float:left;
+}
+.condition .dropdown button{
+    width:72%;
+    height:40px;
+    text-align: center;
+
+}
+.condition .dropdown button span{
+    width:80%;
+    text-align: center;
+    line-height:26px;
+}
+.condition .dropdown button:hover{
+    box-shadow: none;
+    outline: 0;
+    background:#fff;
+}
+.open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover,.btn-default.active, .btn-default:active, .open>.dropdown-toggle.btn-default {
+    background:#fff;
+}
+.condition .dropdown button i{
+    float:right;
+    line-height:26px;
+}
+.dropdown-menu {
+    width:72%;
+    left:28%;
+}
+.search .bottom{
+    text-align: center;
+}
+.search .button{
+    width:15%;
+    line-height:40px;
+    text-align:center;
+    background: #00a0e6;
+    color:#fff;
+    border:0;
+    border-radius: 5px;
+}
+.search .button:focus{
+    outline: 0;
+}
+.search .reset{
+    color:#00a0e6;
+    margin-left:1%;
+}
+.search .reset:hover,.search .reset:focus{
+    color:#00a0e6;
+    text-decoration: underline!important;
+}
+
+.search-result h3{
+    line-height:38px;
+    font-size:18px;
+    font-weight: bold;
+    margin:0;
+}
+.table{
+    width:100%;
+    height:auto;
+    margin-bottom:2%;
+    text-align: center;
+
+}
+.table>thead>tr>th,.table>tbody>tr>td{
+    border:0;
+    text-align: center;
+    line-height:40px;
+}
+.table tr{
+    border-bottom: 1px solid #f6f6f6;
+}
+.table thead tr{
+    background:#f1f1f1;
+}
+.table .blue a{
+    color:#00a0e6;
+}
+.table .blue a:hover{
+    color:#00a0e6;
+    text-decoration: underline!important;
+}
+
+
+

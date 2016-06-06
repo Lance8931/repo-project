@@ -99,7 +99,7 @@ public class DataValidation {
         ai = ai + strVerifyCode;
 
         if (idStr.length() == 18) {
-            if (!ai.equals(idStr)) {
+            if (!ai.equalsIgnoreCase(idStr)) {
                 errorInfo = "身份证无效，不是合法的身份证号码";
                 return errorInfo;
             }

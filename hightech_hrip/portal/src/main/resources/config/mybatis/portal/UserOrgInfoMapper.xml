@@ -4,183 +4,78 @@
   <resultMap id="BaseResultMap" type="com.siping.domain.portal.entity.UserOrgInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="org_code" property="orgCode" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
-    <result column="psd_question" property="psdQuestion" jdbcType="VARCHAR" />
-    <result column="psd_answer" property="psdAnswer" jdbcType="VARCHAR" />
     <result column="registered_no" property="registeredNo" jdbcType="VARCHAR" />
     <result column="license_pic" property="licensePic" jdbcType="VARCHAR" />
     <result column="org_name" property="orgName" jdbcType="VARCHAR" />
-    <result column="is_hightech" property="isHightech" jdbcType="BIT" />
     <result column="org_type_id" property="orgTypeId" jdbcType="INTEGER" />
-    <result column="industry" property="industry" jdbcType="VARCHAR" />
-    <result column="turnover" property="turnover" jdbcType="DOUBLE" />
+    <result column="main_industry" property="mainIndustry" jdbcType="VARCHAR" />
+    <result column="secondary_industry" property="secondaryIndustry" jdbcType="VARCHAR" />
     <result column="employees" property="employees" jdbcType="INTEGER" />
-    <result column="legal_person" property="legalPerson" jdbcType="VARCHAR" />
-    <result column="found_date" property="foundDate" jdbcType="DATE" />
     <result column="province" property="province" jdbcType="INTEGER" />
     <result column="city" property="city" jdbcType="INTEGER" />
     <result column="county" property="county" jdbcType="INTEGER" />
+    <result column="provincename" property="provinceName" jdbcType="VARCHAR" />
+    <result column="cityname" property="cityName" jdbcType="VARCHAR" />
+    <result column="countyname" property="countyName" jdbcType="VARCHAR" />
     <result column="street" property="street" jdbcType="VARCHAR" />
     <result column="org_profile" property="orgProfile" jdbcType="VARCHAR" />
-    <result column="product" property="product" jdbcType="VARCHAR" />
-    <result column="business_scope" property="businessScope" jdbcType="VARCHAR" />
+    <result column="logo_pic" property="logoPic" jdbcType="VARCHAR" />
     <result column="contacts" property="contacts" jdbcType="VARCHAR" />
     <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
     <result column="fax" property="fax" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="postcode" property="postcode" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="website" property="website" jdbcType="VARCHAR" />
+    <result column="hr_contacts" property="hrContacts" jdbcType="VARCHAR" />
+    <result column="hr_telephone" property="hrTelephone" jdbcType="VARCHAR" />
+    <result column="hr_email" property="hrEmail" jdbcType="VARCHAR" />
+    <result column="hr_cellphone" property="hrCellphone" jdbcType="VARCHAR" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
   </resultMap>
-  <select id="selectOrg" resultMap="BaseResultMap" parameterType="com.siping.domain.portal.entity.UserOrgInfo" >
-    select * from user_org_info where org_code = #{orgCode,jdbcType=VARCHAR}
+  
+  <resultMap id="OrgTypeMap" type="com.siping.domain.portal.entity.OrgType" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_by" property="createBy" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="user_org_list">
+        id, username, org_code, registered_no, license_pic, org_name, org_type_id, main_industry,
+        secondary_industry, employees, province, city, license_pic, county, street, org_profile,
+        logo_pic, contacts, telephone, cellphone, email, postcode, address, website,hr_contacts, 
+        hr_telephone, hr_email, hr_cellphone, fax,DATE_FORMAT(create_date,"%Y-%m-%d %H:%i:%s") create_date,
+        DATE_FORMAT(update_date,"%Y-%m-%d") update_date, update_by
+  </sql>
+  
+  <select id="selectOrg" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select <include refid="user_org_list" /> 
+    from user_org_info where username = #{username, jdbcType=VARCHAR} 
   </select>
   
   <select id="selectUserName" parameterType="com.siping.domain.portal.entity.User"
         resultType="java.lang.Integer">
-        select count(t.username) from users t where t.username =
-        #{username,jdbcType=VARCHAR}
-    </select>
-    
-    <select id="verifyAnswer" parameterType="com.siping.domain.portal.entity.UserOrgInfo" resultType="java.lang.Integer">
-    select COUNT(*)  from user_org_info
-    where org_code = #{orgCode,jdbcType=VARCHAR} and psd_answer = #{psdAnswer,jdbcType=VARCHAR}
+        select count(t.username) from users t where t.user_type=2 and t.username =
+        #{username,jdbcType=VARCHAR} and t.enabled = 1
   </select>
-    
-    <update id="updateUser" parameterType="com.siping.domain.portal.entity.User">
-        update users
-        <set>
-            <if test="pwdHash != null">
-                pwd_hash = #{pwdHash,jdbcType=VARCHAR},
-            </if>
-            <if test="pwdIterator != null">
-                pwd_iterator = #{pwdIterator,jdbcType=INTEGER},
-            </if>
-            <if test="pwdSalt != null">
-                pwd_salt= #{pwdSalt,jdbcType=VARCHAR},
-            </if>
-            <if test="userType != null">
-                user_type= #{userType,jdbcType=INTEGER},
-            </if>
-            <if test="createDate != null">
-                create_date=
-                STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-            </if>
-            <if test="updateDate != null">
-                update_date=
-                STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-            </if>
-            <if test="enabled != null">
-                enabled = #{enabled,jdbcType=TINYINT},
-            </if>
-            <if test="createBy != null">
-                create_by = #{createBy,jdbcType=TINYINT},
-            </if>
-            <if test="updateBy != null">
-                update_by = #{updateBy,jdbcType=TINYINT},
-            </if>
-        </set>
-        where username = #{username,jdbcType=VARCHAR}
-    </update>
   
-  <insert id="addUser" parameterType="com.siping.domain.portal.entity.User">
-        INSERT INTO users
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="username != null">
-                username,
-            </if>
-            <if test="pwdHash != null">
-                pwd_hash,
-            </if>
-            <if test="pwdIterator != null">
-                pwd_iterator,
-            </if>
-            <if test="pwdSalt != null">
-                pwd_salt,
-            </if>
-            <if test="userType != null">
-                user_type,
-            </if>
-            <if test="createDate != null">
-                create_date,
-            </if>
-            <if test="updateDate != null">
-                update_date,
-            </if>
-            <if test="enabled != null">
-                enabled,
-            </if>
-            <if test="createBy != null">
-                create_by,
-            </if>
-            <if test="updateBy != null">
-                update_by,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-
-            <if test="username != null">
-                #{username,jdbcType=VARCHAR},
-            </if>
-            <if test="pwdHash != null">
-                #{pwdHash,jdbcType=VARCHAR},
-            </if>
-            <if test="pwdIterator != null">
-                #{pwdIterator,jdbcType=INTEGER},
-            </if>
-            <if test="pwdSalt != null">
-                #{pwdSalt,jdbcType=VARCHAR},
-            </if>
-            <if test="userType != null">
-                #{userType,jdbcType=INTEGER},
-            </if>
-            <if test="createDate != null">
-                STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-            </if>
-            <if test="updateDate != null">
-                STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-            </if>
-            <if test="enabled != null">
-                #{enabled,jdbcType=TINYINT},
-            </if>
-            <if test="createBy != null">
-                #{createBy,jdbcType=TINYINT},
-            </if>
-            <if test="updateBy != null">
-                #{updateBy,jdbcType=TINYINT},
-            </if>
-        </trim>
-    </insert>
-  
+  <!-- 新增企业用户 -->
   <insert id="addOrg" parameterType="com.siping.domain.portal.entity.UserOrgInfo" >
     insert into user_org_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
+      <if test="username != null" >
+        username,
       </if>
       <if test="orgCode != null" >
         org_code,
-      </if>
-      <if test="createDate != null" >
-        create_date,
-      </if>
-      <if test="updateDate != null" >
-        update_date,
-      </if>
-      <if test="updateBy != null" >
-        update_by,
-      </if>
-      <if test="psdQuestion != null" >
-        psd_question,
-      </if>
-      <if test="psdAnswer != null" >
-        psd_answer,
       </if>
       <if test="registeredNo != null" >
         registered_no,
@@ -191,26 +86,17 @@
       <if test="orgName != null" >
         org_name,
       </if>
-      <if test="isHightech != null" >
-        is_hightech,
-      </if>
       <if test="orgTypeId != null" >
         org_type_id,
       </if>
-      <if test="industry != null" >
-        industry,
+      <if test="mainIndustry != null" >
+        main_industry,
       </if>
-      <if test="turnover != null" >
-        turnover,
+      <if test="secondaryIndustry != null" >
+        secondary_industry,
       </if>
       <if test="employees != null" >
         employees,
-      </if>
-      <if test="legalPerson != null" >
-        legal_person,
-      </if>
-      <if test="foundDate != null" >
-        found_date,
       </if>
       <if test="province != null" >
         province,
@@ -227,11 +113,8 @@
       <if test="orgProfile != null" >
         org_profile,
       </if>
-      <if test="product != null" >
-        product,
-      </if>
-      <if test="businessScope != null" >
-        business_scope,
+      <if test="logoPic != null" >
+        logo_pic,
       </if>
       <if test="contacts != null" >
         contacts,
@@ -239,8 +122,8 @@
       <if test="telephone != null" >
         telephone,
       </if>
-      <if test="fax != null" >
-        fax,
+      <if test="cellphone != null" >
+        cellphone,
       </if>
       <if test="email != null" >
         email,
@@ -254,30 +137,35 @@
       <if test="website != null" >
         website,
       </if>
+      <if test="hrContacts != null" >
+        hr_contacts,
+      </if>
+      <if test="hrTelephone != null" >
+        hr_telephone,
+      </if>
+      <if test="hrEmail != null" >
+        hr_email,
+      </if>
+      <if test="hrCellphone != null" >
+        hr_cellphone,
+      </if>
+      <if test="fax != null" >
+        fax,
+      </if>
+        create_date,
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
       </if>
       <if test="orgCode != null" >
         #{orgCode,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null" >
-      STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-      </if>
-      <if test="updateDate != null" >
-      STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-      </if>
-      <if test="updateBy != null" >
-        #{updateBy,jdbcType=INTEGER},
-      </if>
-      <if test="psdQuestion != null" >
-        #{psdQuestion,jdbcType=VARCHAR},
-      </if>
-      <if test="psdAnswer != null" >
-        #{psdAnswer,jdbcType=VARCHAR},
       </if>
       <if test="registeredNo != null" >
         #{registeredNo,jdbcType=VARCHAR},
@@ -288,26 +176,17 @@
       <if test="orgName != null" >
         #{orgName,jdbcType=VARCHAR},
       </if>
-      <if test="isHightech != null" >
-        #{isHightech,jdbcType=BIT},
-      </if>
       <if test="orgTypeId != null" >
         #{orgTypeId,jdbcType=INTEGER},
       </if>
-      <if test="industry != null" >
-        #{industry,jdbcType=VARCHAR},
+      <if test="mainIndustry != null" >
+        #{mainIndustry,jdbcType=VARCHAR},
       </if>
-      <if test="turnover != null" >
-        #{turnover,jdbcType=DOUBLE},
+      <if test="secondaryIndustry != null" >
+        #{secondaryIndustry,jdbcType=VARCHAR},
       </if>
       <if test="employees != null" >
         #{employees,jdbcType=INTEGER},
-      </if>
-      <if test="legalPerson != null" >
-        #{legalPerson,jdbcType=VARCHAR},
-      </if>
-      <if test="foundDate != null" >
-      STR_TO_DATE(#{foundDate,jdbcType=TIMESTAMP},'%Y-%m-%d'),
       </if>
       <if test="province != null" >
         #{province,jdbcType=INTEGER},
@@ -324,11 +203,8 @@
       <if test="orgProfile != null" >
         #{orgProfile,jdbcType=VARCHAR},
       </if>
-      <if test="product != null" >
-        #{product,jdbcType=VARCHAR},
-      </if>
-      <if test="businessScope != null" >
-        #{businessScope,jdbcType=VARCHAR},
+      <if test="logoPic != null" >
+        #{logoPic,jdbcType=VARCHAR},
       </if>
       <if test="contacts != null" >
         #{contacts,jdbcType=VARCHAR},
@@ -336,8 +212,8 @@
       <if test="telephone != null" >
         #{telephone,jdbcType=VARCHAR},
       </if>
-      <if test="fax != null" >
-        #{fax,jdbcType=VARCHAR},
+      <if test="cellphone != null" >
+        #{cellphone,jdbcType=VARCHAR},
       </if>
       <if test="email != null" >
         #{email,jdbcType=VARCHAR},
@@ -351,50 +227,58 @@
       <if test="website != null" >
         #{website,jdbcType=VARCHAR},
       </if>
+      <if test="hrContacts != null" >
+        #{hrContacts,jdbcType=VARCHAR},
+      </if>
+      <if test="hrTelephone != null" >
+        #{hrTelephone,jdbcType=VARCHAR},
+      </if>
+      <if test="hrEmail != null" >
+        #{hrEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="hrCellphone != null" >
+        #{hrCellphone,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        #{fax,jdbcType=VARCHAR},
+      </if>
+        now(),
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
+  
+  <!-- 修改企业用户信息 -->
   <update id="updateOrg" parameterType="com.siping.domain.portal.entity.UserOrgInfo" >
     update user_org_info
     <set >
-      <if test="createDate != null" >
-        create_date=
-                STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
+      <if test="orgCode != null" >
+        org_code = #{orgCode,jdbcType=VARCHAR},
       </if>
-      <if test="updateDate != null" >
-        update_date=
-                STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-      </if>
-      <if test="updateBy != null" >
-        update_by = #{updateBy,jdbcType=INTEGER},
-      </if>
-      <if test="psdQuestion != null" >
-        psd_question = #{psdQuestion,jdbcType=VARCHAR},
-      </if>
-      <if test="psdAnswer != null" >
-        psd_answer = #{psdAnswer,jdbcType=VARCHAR},
+      <if test="registeredNo != null" >
+        registered_no = #{registeredNo,jdbcType=VARCHAR},
       </if>
       <if test="licensePic != null" >
         license_pic = #{licensePic,jdbcType=VARCHAR},
       </if>
-      <if test="isHightech != null" >
-        is_hightech = #{isHightech,jdbcType=BIT},
+      <if test="orgName != null" >
+        org_name = #{orgName,jdbcType=VARCHAR},
       </if>
       <if test="orgTypeId != null" >
         org_type_id = #{orgTypeId,jdbcType=INTEGER},
       </if>
-      <if test="industry != null" >
-        industry = #{industry,jdbcType=VARCHAR},
+      <if test="mainIndustry != null" >
+        main_industry = #{mainIndustry,jdbcType=VARCHAR},
       </if>
-      <if test="turnover != null" >
-        turnover = #{turnover,jdbcType=DOUBLE},
+      <if test="secondaryIndustry != null" >
+        secondary_industry = #{secondaryIndustry,jdbcType=VARCHAR},
       </if>
       <if test="employees != null" >
         employees = #{employees,jdbcType=INTEGER},
-      </if>
-      <if test="legalPerson != null" >
-        legal_person = #{legalPerson,jdbcType=VARCHAR},
       </if>
       <if test="province != null" >
         province = #{province,jdbcType=INTEGER},
@@ -411,11 +295,8 @@
       <if test="orgProfile != null" >
         org_profile = #{orgProfile,jdbcType=VARCHAR},
       </if>
-      <if test="product != null" >
-        product = #{product,jdbcType=VARCHAR},
-      </if>
-      <if test="businessScope != null" >
-        business_scope = #{businessScope,jdbcType=VARCHAR},
+      <if test="logoPic != null" >
+        logo_pic = #{logoPic,jdbcType=VARCHAR},
       </if>
       <if test="contacts != null" >
         contacts = #{contacts,jdbcType=VARCHAR},
@@ -423,11 +304,8 @@
       <if test="telephone != null" >
         telephone = #{telephone,jdbcType=VARCHAR},
       </if>
-      <if test="fax != null" >
-        fax = #{fax,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null" >
-        email = #{email,jdbcType=VARCHAR},
+      <if test="cellphone != null" >
+        cellphone = #{cellphone,jdbcType=VARCHAR},
       </if>
       <if test="postcode != null" >
         postcode = #{postcode,jdbcType=VARCHAR},
@@ -438,7 +316,139 @@
       <if test="website != null" >
         website = #{website,jdbcType=VARCHAR},
       </if>
+      <if test="hrContacts != null" >
+        hr_contacts = #{hrContacts,jdbcType=VARCHAR},
+      </if>
+      <if test="hrTelephone != null" >
+        hr_telephone = #{hrTelephone,jdbcType=VARCHAR},
+      </if>
+      <if test="hrEmail != null" >
+        hr_email = #{hrEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="hrCellphone != null" >
+        hr_cellphone = #{hrCellphone,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        fax = #{fax,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+        update_date = now(),
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
     </set>
-    where org_code = #{orgCode,jdbcType=VARCHAR}
+    where username = #{username,jdbcType=INTEGER}
   </update>
+  
+  <!-- 查询所有企业用户信息 -->
+    <select id="getAllOrg" parameterType="java.util.Map"
+        resultMap="BaseResultMap">
+        SELECT  u.id,u.username,u.org_code,u.registered_no,u.license_pic,u.org_name,u.org_type_id,u.main_industry,
+                u.secondary_industry,u.employees,u.license_pic,u.street,u.org_profile,
+                u.province province, p.province provincename, c.city cityname, u.city city , ct.county  countyName, u.county county, 
+                u.logo_pic,u.contacts,u.telephone,u.cellphone,u.email,u.postcode,u.address,u.website,hr_contacts,
+                u.hr_telephone,u.hr_email,u.hr_cellphone,u.fax, DATE_FORMAT(u.create_date,"%Y-%m-%du.%H:%i:%s")create_date,
+                DATE_FORMAT(u.update_date,"%Y-%m-%d")update_date,u.update_by
+         FROM 
+            user_org_info u
+         LEFT JOIN 
+            siping_province p ON u.province=p.province_id
+         LEFT JOIN 
+            siping_city c ON  u.city=c.city_id
+         LEFT JOIN 
+            siping_county ct On u.county=ct.county 
+        <trim prefix="where" prefixOverrides="and|or">
+                u.username in (select username from users where user_type = 2
+               <if test="enabled != null">
+                   and enabled = #{enabled} 
+               </if>
+               ) 
+            <if test="org.username != null">
+                and u.org_code LIKE CONCAT(CONCAT('%',
+                #{org.username}), '%')
+            </if>
+            <if test="org.registeredNo != null">
+                or u.registered_no LIKE CONCAT(CONCAT('%',
+                #{org.registeredNo}), '%')
+            </if>
+            <if test="org.orgName != null">
+                or u.org_name LIKE CONCAT(CONCAT('%',
+                #{org.orgName}), '%')
+            </if>
+            <if test="org.orgTypeId != null">
+                and u.org_type_id = #{org.orgTypeId}
+            </if>
+            <if test="org.province != null">
+                and u.province = #{org.province}
+            </if>
+            <if test="org.city != null">
+                and u.city = #{org.city}
+            </if>
+            <if test="org.county != null">
+                and u.county = #{org.county}
+            </if>
+        </trim>
+        <if test="pageRequest.startNo != null">
+            LIMIT #{pageRequest.startNo},#{pageRequest.pageSize}
+        </if>
+    </select>
+    
+    <!-- 获取企业用户总条数 -->
+    <select id="getTotalOrg" parameterType="java.util.Map"
+        resultType="java.lang.Integer">
+        select count(id) from user_org_info t
+            <trim prefix="where" prefixOverrides="and|or">
+                t.username in (select username from users   
+               <if test="enabled != null">
+                   where enabled = #{enabled} and user_type = 2
+               </if>
+               )
+            <if test="orgCode != null">
+                and t.org_code LIKE CONCAT(CONCAT('%',
+                #{org.orgCode}), '%')
+            </if>
+            <if test="registeredNo != null">
+                or t.registered_no LIKE CONCAT(CONCAT('%',
+                #{org.registeredNo}), '%')
+            </if>
+            <if test="orgName != null">
+                or t.org_name LIKE CONCAT(CONCAT('%',
+                #{org.orgName}), '%')
+            </if>
+            <if test="orgTypeId != null">
+                and t.org_type_id = #{org.orgTypeId}
+            </if>
+            <if test="org.province != null">
+                and t.province = #{org.province}
+            </if>
+            <if test="org.city != null">
+                and t.city = #{org.city}
+            </if>
+            <if test="org.county != null">
+                and t.county = #{org.county}
+            </if>
+        </trim>
+        </select>
+        
+    <!-- 删除企业用户账号信息 -->
+    <delete id="deleteUserOrg" parameterType="java.util.List">
+            DELETE FROM user_org_info WHERE username IN
+            <foreach collection="list" item="username" index="index" open="(" separator="," close=")" >
+                #{username}
+            </foreach>
+     </delete>
+     
+     <select id="getOrgList"  parameterType="java.util.List" resultMap="BaseResultMap">
+            SELECT <include refid="user_org_list" /> FROM user_org_info WHERE username IN
+            <foreach collection="list" item="username" index="index" open="(" separator="," close=")" >
+               #{username} 
+            </foreach>
+     </select>
+     <!-- 获取企业类型 -->
+     <select id="getOrgType" resultMap="OrgTypeMap">
+            SELECT id,type_name,create_by,create_date,update_by,update_date FROM org_type 
+     </select>
+     
 </mapper>

@@ -12,72 +12,63 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.stroma.framework.core.exception.BusinessProcessException;
 import org.stroma.framework.core.util.DigestUtils;
 
 import com.siping.domain.common.ResultMsg;
 import com.siping.domain.portal.entity.User;
-import com.siping.domain.portal.entity.UserLoginRequest;
 import com.siping.hrip.portal.user.mapper.LoginMapper;
 import com.siping.hrip.portal.user.service.LoginService;
 
+/**
+ * 用户登录
+ * @author yangxu
+ *
+ */
 @Service
 public class LoginServiceImpl implements LoginService{
     @Autowired
     private LoginMapper loginMapper;
-
     
     public User get(BigInteger id) {
-        return loginMapper.get(id);
-    }
-    /**
-     * 用户登录
-     * @param userLoginRequest
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-    public ResultMsg login(UserLoginRequest userLoginRequest,HttpServletRequest request) throws Exception {
-//        if(!StringUtils.hasText(userLoginRequest.getUsername()))
-//            throw new BusinessProcessException("账号为空！");
-//        if(!StringUtils.hasText(userLoginRequest.getPassword()))
-//            throw new BusinessProcessException("密码为空！");
         
-        User user = new User(); //用于登录过后将信息存入session，方便后续业务从中取信息 
+        return null;
+    }
+
+    /**
+     * 登录
+     */
+    @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+    public ResultMsg login(String username, String password, HttpServletRequest request) throws Exception {
+        if(StringUtils.isEmpty(username))
+            return new ResultMsg(false, "用户名不能为空");
+        if(StringUtils.isEmpty(password))
+            return new ResultMsg(false, "密码不能为空");
+        User user = new User(); 
         HttpSession session = request.getSession();
         
-        if("admin".equals(userLoginRequest.getUsername())){
-            //admin账号,读取properties文件中admin账号的信息
-            String pwdHash = DigestUtils.calculatePasswordHashWithSha512(userLoginRequest.getPassword(), "AR1SYc", 7);
-            String filePath = getResourcePath("i18n/identify.properties");
-            FileInputStream in = new FileInputStream(new File(filePath));
-            Properties prop = new Properties();
-            prop.load(in);
-            in.close();
-            String pwd = prop.getProperty("siping.i18n.sys.identify");//文件中存入的密码
-            if(pwdHash.equals(pwd)){
-               user.setUsername("admin");
-               user.setPwdHash(pwdHash);
-               user.setPwdIterator(7);
-               user.setPwdSalt("AR1SYc");
+        if("admin".equals(username)){
+            if(checkAdminPwd(password)){
+                user.setUsername(username);
             }else{
                 return new ResultMsg(false, "登录密码错误");
-            }         
+            }
         }else{
-            //普通账号     
-            user = loginMapper.login(userLoginRequest);                 
-            if(null == user)
-                return new ResultMsg(false, "登录账号不存在");         
-            String pwdHash = DigestUtils.calculatePasswordHashWithSha512(userLoginRequest.getPassword(), user.getPwdSalt(), user.getPwdIterator());
-            if (!pwdHash.equalsIgnoreCase(user.getPwdHash()))
-                return new ResultMsg(false, "登录密码错误");             
+            user = loginMapper.login(username);
+            if((null == user) || (!user.getPwdHash().equalsIgnoreCase(
+                    DigestUtils.calculatePasswordHashWithSha512(password, user.getPwdSalt(), user.getPwdIterator())))){
+                return new ResultMsg(false, "账号或密码错误");
+            }    
         }        
-        session.setAttribute("user", user);  
+        session.setAttribute("loggeduser", user);
         return new ResultMsg(true, "登录成功");
     }
     
@@ -89,49 +80,51 @@ public class LoginServiceImpl implements LoginService{
      * @return
      * @throws Exception
      */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public ResultMsg resetPwd(String oldPwd, String pwd, HttpServletRequest request) throws Exception{
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = false, propagation = Propagation.REQUIRED)
+    public ResultMsg resetPwd(String oldPwd, String pwd, HttpServletRequest request) throws Exception {
+        if(StringUtils.isEmpty(oldPwd))
+            return new ResultMsg(false, "原始密码不能为空");
+        if(StringUtils.isEmpty(pwd))
+            return new ResultMsg(false, "新密码不能为空");
+        
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        
         if(null == user)
-            return new ResultMsg(false, "请重新登录");
-        if(!"admin".equalsIgnoreCase(user.getUsername())){
-            //非admin账号修改密码
-            String pwdHash = DigestUtils.calculatePasswordHashWithSha512(oldPwd, user.getPwdSalt(), user.getPwdIterator());
-            if(!user.getPwdHash().equalsIgnoreCase(pwdHash))
+            return new ResultMsg(false, "请重新登陆");
+        
+        if("admin".equalsIgnoreCase(user.getUsername())){
+            if(checkAdminPwd(oldPwd)){
+                Properties prop = new Properties();
+                String filePath;
+                FileOutputStream fos = null;
+                filePath = getResourcePath("i18n/identify.properties");
+                String newPwdHash = DigestUtils.calculatePasswordHashWithSha512(pwd, "AR1SYc", 7);
+                prop.setProperty("siping.i18n.sys.identify", newPwdHash);
+                fos = new FileOutputStream(new File(filePath));    
+                prop.store(fos, "siping.i18n.sys.identify");
+                fos.close();    
+            }else{
                 return new ResultMsg(false, "原密码错误");
-            String newPwdHash = DigestUtils.calculatePasswordHashWithSha512(pwd, user.getPwdSalt(), user.getPwdIterator());
-            Integer isReset = loginMapper.resetPwd(user.getId(), user.getUsername().toString(), newPwdHash);
-            if(isReset != 1)
-                throw new BusinessProcessException("修改失败");                
+            }
         }else{
-            //admin账号修改密码
-            if(!checkAdminPwd(oldPwd))
-                return new ResultMsg(false, "原密码错误");
-            resetAdminPwd(oldPwd, pwd);
+            String oldpwdHash = DigestUtils.calculatePasswordHashWithSha512(oldPwd, user.getPwdSalt(), user.getPwdIterator());
+            String salt = RandomStringUtils.randomAlphanumeric(6);
+            Integer iterator = RandomUtils.nextInt((10) + 1);
+            String pwdHash = DigestUtils.calculatePasswordHashWithSha512(pwd, salt, iterator);
+            if(oldpwdHash.equalsIgnoreCase(loginMapper.login(user.getUsername()).getPwdHash())){
+                user.setPwdHash(pwdHash);
+                user.setPwdSalt(salt);
+                user.setPwdIterator(iterator);
+                loginMapper.resetPwd(user);
+            }else{
+                return new ResultMsg(false, "原密码不正确");
+            }    
         } 
+        session.setAttribute("user", user);
         return new ResultMsg(true, "修改成功");
     }
-   
-    /**
-     * 重置admin账号密码
-     * @param oldPwd
-     * @param pwd
-     * @return
-     * @throws Exception
-     */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    private Boolean resetAdminPwd(String oldPwd, String pwd) throws Exception {      
-        Properties prop = new Properties();
-        String filePath = getResourcePath("i18n/identify.properties");
-        String newPwdHash = DigestUtils.calculatePasswordHashWithSha512(pwd, "AR1SYc", 7);
-        prop.setProperty("siping.i18n.sys.identify", newPwdHash);
-        FileOutputStream fos = new FileOutputStream(new File(filePath));    
-        prop.store(fos, "siping.i18n.sys.identify");
-        fos.close(); 
-        return true;
-}
+
     
     /**
      * admin账号密码校验
@@ -139,17 +132,20 @@ public class LoginServiceImpl implements LoginService{
      * @return
      * @throws Exception
      */
-    private Boolean checkAdminPwd(String oldPwd) throws Exception {
+    private Boolean checkAdminPwd(String pwd) throws Exception{
         Properties prop = new Properties();
-        String pwdHash = DigestUtils.calculatePasswordHashWithSha512(oldPwd, "AR1SYc", 7);
+        FileInputStream fis = null;
+        String pwdHash = DigestUtils.calculatePasswordHashWithSha512(pwd, "AR1SYc", 7);
         String filePath = getResourcePath("i18n/identify.properties");
-        FileInputStream fis = new FileInputStream(new File(filePath));
+        fis = new FileInputStream(new File(filePath));
         prop.load(fis);
         fis.close();
         String adminPwd = prop.getProperty("siping.i18n.sys.identify");
-        if(!pwdHash.equals(adminPwd))
+        if(pwdHash.equals(adminPwd)){
+            return true;
+        }else{
             return false;
-        return true;
+        }    
     }
     
     /**

@@ -1,0 +1,142 @@
+*{
+    margin:0;
+    padding:0;
+}
+
+li{
+    list-style: none;
+}
+
+a{
+    text-decoration: none!important;
+}
+
+span {
+    display: block;
+
+}
+
+#main {
+    height: 100%!important;
+    top: 0!important;
+    padding-top: 67px!important;
+}
+
+.notice-nav{
+    width:100%;
+    height:50px;
+    border-bottom:1px solid #e5e5e5;
+}
+#new-notice h2{
+    border:0;
+    float:left;
+    margin-right: 58%;
+}
+.notice-nav a{
+    width:84px;
+    line-height:49px;
+    float:left;
+    text-align: center;
+    color:#8c8c8c;
+    display:block;
+}
+.notice-nav a:hover,.notice-nav a.active{
+    border-bottom:1px solid #00a0e6;
+    color:#8c8c8c;
+    line-height:49px;
+}
+#new-notice li .line {
+    height: 340px;
+    padding: 0;
+}
+#new-notice .pic-block{
+    width: 100%;
+    height: 200px;
+    background:#8c8c8c;
+    float:left;
+    overflow: hidden;
+}
+
+#new-notice .pic-block img{
+    width: 100%;
+    transition: all 1s;
+}
+
+#new-notice li .line p {
+    margin: 5px 12px;
+    height: 25px;
+    overflow: hidden;
+}
+#new-notice li .line span{
+    color: #b0b0b0;
+    line-height:38px;
+    float:right;
+    margin-right: 12px;
+}
+
+#new-notice li .line .resource{
+    float: left;
+    margin-left: 12px;
+}
+
+
+
+#main{
+    background-color: rgb(229, 229, 229) !important;
+}
+
+.nav-box{
+    height: 40px;
+    border-radius: 3px;
+    background: #fff;
+    box-shadow: 0 5px 3px #ccc;
+}
+
+.nav-box li{
+    float: left;
+    width: 90px;
+    text-align: center;
+    line-height: 40px;
+    position: relative;
+}
+
+.nav-box li:first-child {
+    border-radius: 3px 0 0 3px;
+}
+
+.nav-box .active{
+    background: #00a0e6;
+}
+
+.nav-box li a{
+    color: rgba(85, 85, 85, 0.97);
+}
+
+.nav-box .active a{
+    color: #fff;
+}
+
+.nav-box .active i{
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    position: absolute;
+    top: 101%;
+    left: 46%;
+    border-top: 4px solid #008af5;
+}
+
+.fa{
+    color: rgba(0, 160, 230, 0.46);
+    margin-right: 2px;
+}
+
+.box{
+    margin: 15px 13px;
+    background: #f3f7fb;
+    border-radius: 3px;
+    box-shadow: 0 2px 3px #ddd;
+}
+
+#new-notice .hyzx, #new-notice .mtgz{
+    display: none;
+}
