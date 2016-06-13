@@ -249,7 +249,7 @@ public class PhoneController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			// phoneMapper.dropTable(tempTableName);
+			phoneMapper.dropTable(tempTableName);
 		}
 		return new ResultMsg(false, "导入失败");
 	}
