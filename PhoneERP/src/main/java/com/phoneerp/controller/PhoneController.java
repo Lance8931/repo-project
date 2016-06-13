@@ -1,21 +1,36 @@
 package com.phoneerp.controller;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.phoneerp.bean.Allot;
+import com.phoneerp.bean.ExcelProperties;
 import com.phoneerp.bean.Orders;
 import com.phoneerp.bean.Phone;
+import com.phoneerp.bean.PhoneImportBean;
 import com.phoneerp.bean.Purchase;
 import com.phoneerp.bean.ResultMsg;
 import com.phoneerp.bean.SearchPhoneListBean;
 import com.phoneerp.dao.AllotMapper;
+import com.phoneerp.dao.BrandMapper;
+import com.phoneerp.dao.ColorMapper;
+import com.phoneerp.dao.ModelMapper;
 import com.phoneerp.dao.OrdersMapper;
 import com.phoneerp.dao.PhoneMapper;
 import com.phoneerp.dao.PurchaseMapper;
@@ -41,6 +56,15 @@ public class PhoneController {
 
 	@Autowired
 	private OrdersMapper ordersMapper;
+
+	@Autowired
+	private ColorMapper colorMapper;
+
+	@Autowired
+	private BrandMapper brandMapper;
+
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@RequestMapping("/imeiNoCheck")
 	@ResponseBody
@@ -170,4 +194,122 @@ public class PhoneController {
 		}
 	}
 
+	@RequestMapping(value = "/importPhones", method = RequestMethod.POST)
+	@ResponseBody
+	public ResultMsg importPurPhones(@RequestParam MultipartFile importExcel) throws Exception {
+		return excelImport(importExcel);
+	}
+
+	private ResultMsg excelImport(MultipartFile multipartFiles) throws Exception {
+		ExcelProperties properties = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<PhoneImportBean> list = new ArrayList<PhoneImportBean>();
+		String tempTableName = "phone_temp_" + new Date().getTime();
+		map.put("tableName", tempTableName);
+		try {
+			phoneMapper.createTable(tempTableName);
+			properties = new ExcelProperties(multipartFiles.getInputStream(), multipartFiles.getOriginalFilename(), 0);
+			for (int j = 1, lastRowNum = properties.getLastRowNum(); j <= lastRowNum; j++) {
+				Row row = properties.getSheet().getRow(j);
+				if (null != row) {
+					PhoneImportBean importBean = null;
+					for (int i = 0, totalCellNum = row.getLastCellNum(); i < totalCellNum; i++) {
+						Cell cell = row.getCell(i, Row.RETURN_BLANK_AS_NULL);// 空白的单元格返回null
+						CellValue cellValue = properties.getFormulaEvaluator().evaluate(cell);
+						if (null != cell && cellValue != null) {
+							if (null != importBean) {
+								importBean = setPhoneExportBean(importBean, i, getCellValue(cell));
+							} else {
+								importBean = new PhoneImportBean();
+								importBean = setPhoneExportBean(importBean, i, getCellValue(cell));
+							}
+						}
+					}
+					if (null != importBean) {
+						list.add(importBean);
+					}
+				}
+				if (list.size() == 1000) {
+					map.put("list", list);
+					phoneMapper.insertBatch(map);
+					map.remove("list");
+					list.clear();
+				}
+			}
+			if (list.size() > 0) {// 有数据时才进行操作
+				map.put("list", list);
+				phoneMapper.insertBatch(map);
+			}
+
+			phoneMapper.insertDatasFromTemp(tempTableName);
+
+			phoneMapper.insertPurDatas(tempTableName);
+
+			return new ResultMsg(true, "导入成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// phoneMapper.dropTable(tempTableName);
+		}
+		return new ResultMsg(false, "导入失败");
+	}
+
+	private PhoneImportBean setPhoneExportBean(PhoneImportBean importBean, int i, String value) {
+		switch (i) {
+		case 0:
+			importBean.setPurTime(value);
+			break;
+		case 1:
+			importBean.setImeiNo(value);
+			break;
+		case 2:
+			importBean.setColor(value);
+			break;
+		case 3:
+			importBean.setBrand(value);
+			break;
+		case 4:
+			importBean.setModel(value);
+			break;
+		case 5:
+			importBean.setPurPrice(value);
+			break;
+		case 6:
+			importBean.setCurrentShop(value);
+			break;
+		case 8:
+			importBean.setPhoneType(value);
+			break;
+		default:
+			break;
+		}
+		return importBean;
+	}
+
+	private String getCellValue(Cell cell) {
+		String value = "";
+		switch (cell.getCellType()) {
+		case Cell.CELL_TYPE_NUMERIC:
+			if (DateUtil.isCellDateFormatted(cell)) {
+				// 如果是date类型则 ，获取该cell的date值
+				value = DateFormat.getDateInstance().format(DateUtil.getJavaDate(cell.getNumericCellValue()));// 返回算好的值
+			} else {
+				value = String.valueOf(Double.valueOf(cell.getNumericCellValue()).intValue());
+			}
+			break;
+		case Cell.CELL_TYPE_BLANK:
+			value = "";
+			break;
+		case Cell.CELL_TYPE_BOOLEAN:
+			value = (cell.getBooleanCellValue() == true ? 1 : 0) + "";
+			break;
+		case Cell.CELL_TYPE_ERROR:
+			break;
+		case Cell.CELL_TYPE_STRING:
+			value = cell.getStringCellValue();
+		default:
+			break;
+		}
+		return value;
+	}
 }

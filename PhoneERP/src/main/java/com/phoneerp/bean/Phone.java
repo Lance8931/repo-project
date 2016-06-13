@@ -12,6 +12,8 @@ public class Phone {
 
 	private Integer brandId;
 
+	private String phoneType;
+
 	private BigDecimal purPrice;
 
 	private BigDecimal salePrice;
@@ -183,4 +185,13 @@ public class Phone {
 	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
+
+	public String getPhoneType() {
+		return phoneType;
+	}
+
+	public void setPhoneType(String phoneType) {
+		this.phoneType = phoneType;
+	}
+
 }

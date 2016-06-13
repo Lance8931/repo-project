@@ -27,6 +27,8 @@ public class SearchPhoneListBean {
 
 	private String colorId;
 
+	private String phoneType;
+
 	private BigDecimal purStartPrice;
 
 	private BigDecimal purEndPrice;
@@ -162,4 +164,13 @@ public class SearchPhoneListBean {
 	public void setSaleEndPrice(BigDecimal saleEndPrice) {
 		this.saleEndPrice = saleEndPrice;
 	}
+
+	public String getPhoneType() {
+		return phoneType;
+	}
+
+	public void setPhoneType(String phoneType) {
+		this.phoneType = phoneType;
+	}
+
 }

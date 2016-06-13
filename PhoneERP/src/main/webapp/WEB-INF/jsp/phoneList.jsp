@@ -61,6 +61,12 @@
 		    			</td>
 		    		</tr>
 		    		<tr> 
+		    			<td width="150px" align="right">机型:</td>
+		    			<td>
+							<input class="easyui-combobox" id="ccPhoneType" name="phoneType" style="width:120px;" data-options="
+														valueField: 'label',textField: 'value',
+														data: [{label: '智能机',value: '智能机'},{label: '按键机',value: '按键机'}]" />
+		    			</td>
 		    			<td width="150px" align="right">实际销售金额:</td>
 		    			<td colspan="4">
 		    				<input  type="text" class="easyui-numberbox" style="width:120px;" prompt="从" name="saleStartPrice" />
@@ -103,6 +109,13 @@
 	    			<td><input class="easyui-combobox" required="true" id="fmccModel" missingMessage="必须填写" name="modelId" /></td>
 	    		</tr>
 	    		<tr>
+	    			<td width="80px" align="right">机型:</td>
+	    			<td><input class="easyui-combobox" id="fmccPhoneType" name="phoneType" required="true" missingMessage="必须填写" data-options="
+														valueField: 'label',textField: 'value',
+														data: [{label: '智能机',value: '智能机'},{label: '按键机',value: '按键机'}]" />
+	    			</td>
+	    		</tr>
+	    		<tr>
 	    			<td width="80px" align="right">批发商:</td>
 	    			<td><input class="easyui-combobox" required="true" id="fmccSupplier" missingMessage="必须填写" name="purchase.supplierId" /></td>
 	    		</tr>
@@ -131,7 +144,7 @@
     </div>
     <div id="dlg-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="savePur()" style="width:90px">保存</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
     </div>
     
     <div id="dlgAllot" class="easyui-dialog" style="width:400px;padding:10px 20px"
@@ -162,7 +175,7 @@
     </div>
     <div id="dlgAllot-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveAllot()" style="width:90px">保存</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgAllot').dialog('close')" style="width:90px">Cancel</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgAllot').dialog('close')" style="width:90px">取消</a>
     </div>
     
     <div id="dlgOrders" class="easyui-dialog" style="width:400px;padding:10px 20px"
@@ -213,7 +226,7 @@
     </div>
     <div id="dlgOrders-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveOrders()" style="width:90px">保存</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgOrders').dialog('close')" style="width:90px">Cancel</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgOrders').dialog('close')" style="width:90px">取消</a>
     </div>
     
     <script type="text/javascript">
@@ -536,14 +549,15 @@
 	       		rownumbers : true,
 	       		fitColumns : true,
 	       		singleSelect : true,
-	       		height : 'auto',
+	       		height : "300px",
 	       		columns:[[    
 			        {field:'supplier.supplierName',title:'批发商',width:'80px'},
 			        {field:'purchase.purTime',title:'进货日期',width:'80px'},
-			        {field:'imeiNo',title:'手机串号',width:'80px'},
+			        {field:'imeiNo',title:'手机串号',width:'120px'},
 			        {field:'brandId',title:'手机牌子',width:'80px',formatter:formatterBrand}, 
 			        {field:'colorId',title:'手机颜色',width:'80px',formatter:formatterColor}, 
 			        {field:'modelId',title:'手机型号',width:'80px',formatter:formatterModel}, 
+			        {field:'phoneType',title:'机型',width:'80px'}, 
 			        {field:'amount',title:'数量',width:'80px'}, 
 			        {field:'purPrice',title:'进货价格',width:'80px'}, 
 			        {field:'orders.billPrice',title:'实际销售价格',width:'80px'},
