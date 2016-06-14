@@ -31,7 +31,7 @@
 			</form>
 		</div>
 		<div data-options="region:'center',title:'查询结果'">
-			<table id="dg" title="手机牌子列表" class="easyui-datagrid" style="height:250px"
+			<table id="dg" title="手机牌子列表" class="easyui-datagrid" style="height:300px"
 		            url="getBrandList" toolbar="#toolbar"
 		            rownumbers="true" fitColumns="true" singleSelect="true">
 		        <thead>

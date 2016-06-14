@@ -44,7 +44,7 @@
 		    <div id="toolbar">
 		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newSupplier()">新增供应商</a>
 		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editSupplier()">编辑供应商</a>
-		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroySupplier()">删除供应商</a>
+		        <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroySupplier()">删除供应商</a> -->
 		    </div>
 		</div>
 	</div>

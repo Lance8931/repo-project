@@ -6,6 +6,7 @@
     <result column="imei_no" property="imeiNo" jdbcType="VARCHAR" />
     <result column="color_id" property="colorId" jdbcType="INTEGER" />
     <result column="brand_id" property="brandId" jdbcType="INTEGER" />
+    <result column="phone_type" property="phoneType" jdbcType="VARCHAR" />
     <result column="pur_price" property="purPrice" jdbcType="DECIMAL" />
     <result column="sale_price" property="salePrice" jdbcType="DECIMAL" />
     <result column="model_id" property="modelId" jdbcType="INTEGER" />
@@ -17,7 +18,7 @@
     <result column="amount" property="amount" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, imei_no, color_id, brand_id, pur_price, sale_price, model_id, current_shop_id, 
+    id, imei_no, color_id, brand_id, phone_type, pur_price, sale_price, model_id, current_shop_id, 
     is_sold, remark, create_time, is_deleted, amount
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -32,12 +33,12 @@
   </delete>
   <insert id="insert" parameterType="com.phoneerp.bean.Phone" >
     insert into phone (id, imei_no, color_id, 
-      brand_id, pur_price, sale_price, 
+      brand_id, phone_type, pur_price, sale_price, 
       model_id, current_shop_id, is_sold, 
       remark, create_time, is_deleted, 
       amount)
     values (#{id,jdbcType=INTEGER}, #{imeiNo,jdbcType=VARCHAR}, #{colorId,jdbcType=INTEGER}, 
-      #{brandId,jdbcType=INTEGER}, #{purPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, 
+      #{brandId,jdbcType=INTEGER}, #{phoneType,jdbcType=VARCHAR}, #{purPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, 
       #{modelId,jdbcType=INTEGER}, #{currentShopId,jdbcType=INTEGER}, #{isSold,jdbcType=BIT}, 
       #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, 
       #{amount,jdbcType=INTEGER})
@@ -56,6 +57,9 @@
       </if>
       <if test="brandId != null" >
         brand_id,
+      </if>
+      <if test="phoneType != null">
+      	phone_type,
       </if>
       <if test="purPrice != null" >
         pur_price,
@@ -98,6 +102,9 @@
       <if test="brandId != null" >
         #{brandId,jdbcType=INTEGER},
       </if>
+      <if test="phoneType != null" >
+        #{phoneType,jdbcType=VARCHAR},
+      </if>
       <if test="purPrice != null" >
         #{purPrice,jdbcType=DECIMAL},
       </if>
@@ -139,6 +146,9 @@
       <if test="brandId != null" >
         brand_id = #{brandId,jdbcType=INTEGER},
       </if>
+      <if test="phoneType != null" >
+        phone_type = #{phoneType,jdbcType=VARCHAR},
+      </if>
       <if test="purPrice != null" >
         pur_price = #{purPrice,jdbcType=DECIMAL},
       </if>
@@ -174,6 +184,7 @@
     set imei_no = #{imeiNo,jdbcType=VARCHAR},
       color_id = #{colorId,jdbcType=INTEGER},
       brand_id = #{brandId,jdbcType=INTEGER},
+      phone_type = #{phoneType,jdbcType=VARCHAR},
       pur_price = #{purPrice,jdbcType=DECIMAL},
       sale_price = #{salePrice,jdbcType=DECIMAL},
       model_id = #{modelId,jdbcType=INTEGER},
@@ -209,6 +220,9 @@
       </if>
       <if test="searchBean.brandId != null" >
         and  t.brand_id = #{searchBean.brandId}
+      </if>
+      <if test="searchBean.phoneType != null" >
+        and  t.phone_type = #{searchBean.phoneType}
       </if>
       <if test="searchBean.purStartTime != null" >
         and  a.pur_time &gt;= #{searchBean.purStartTime}
@@ -270,6 +284,7 @@
 		t.imei_no,
 		t.color_id,
 		t.brand_id,
+		t.phone_type,
 		t.pur_price,
 		t.sale_price,
 		t.model_id,
@@ -299,4 +314,79 @@
 		limit #{startNo},#{pageSize}
 	</if>
   </select>
+  
+  <update id="createTable" parameterType="java.lang.String">
+  	CREATE TABLE ${_parameter} ( 
+	  `pur_time` varchar(20) DEFAULT NULL,
+	  `imei_no` varchar(50) DEFAULT NULL,
+	  `color` varchar(20) DEFAULT NULL,
+	  `brand` varchar(255) DEFAULT NULL,
+	  `model` varchar(255) DEFAULT NULL,
+	  `pur_price` varchar(20) DEFAULT NULL,
+	  `current_shop` varchar(11) DEFAULT NULL,
+	  `phone_type` varchar(255) DEFAULT NULL
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8
+  </update>
+  
+  <insert id="insertDatasFromTemp" parameterType="java.lang.String">
+  	INSERT INTO phone (
+		imei_no,
+		color_id,
+		brand_id,
+		phone_type,
+		pur_price,
+		model_id,
+		current_shop_id,
+		is_sold,
+		is_deleted,
+		amount
+	) SELECT
+		a.imei_no,
+		e.id,
+		b.id,
+		a.phone_type,
+		a.pur_price,
+		c.id,
+		d.id,
+		0,
+		0,
+		1
+	FROM
+		${_parameter} a
+	LEFT OUTER JOIN brand b ON a.brand = b.brand_name
+	LEFT OUTER JOIN model c ON a.model = c.model_name
+	LEFT OUTER JOIN shop d on a.current_shop = d.shop_name
+	LEFT OUTER JOIN color e on a.color = e.color_name
+  </insert>
+  
+  <insert id="insertPurDatas" parameterType="java.lang.String">
+  	INSERT INTO purchase (
+		shop_id,
+		price,
+		phone_id,
+		pur_time
+	) SELECT
+		b.current_shop_id,
+		b.pur_price,
+		b.id,
+		a.pur_time
+	FROM
+		${_parameter} a
+	LEFT OUTER JOIN phone b ON a.imei_no = b.imei_no
+  </insert>
+  
+  <update id="dropTable" parameterType="java.lang.String">
+  	drop table ${_parameter}
+  </update>
+  
+  <insert id="insertBatch" parameterType="java.util.Map" >
+    insert into ${tableName} (pur_time,imei_no,color,brand,model,pur_price,current_shop,phone_type
+      )
+    values 
+    <foreach collection="list" item="item" index="index" separator="," >  
+        ( #{item.purTime,jdbcType=VARCHAR}, #{item.imeiNo,jdbcType=VARCHAR}, #{item.color,jdbcType=VARCHAR}, 
+	      #{item.brand,jdbcType=VARCHAR}, #{item.model,jdbcType=VARCHAR}, #{item.purPrice,jdbcType=VARCHAR}, 
+	      #{item.currentShop,jdbcType=VARCHAR}, #{item.phoneType,jdbcType=VARCHAR}) 
+    </foreach>
+  </insert>
 </mapper>

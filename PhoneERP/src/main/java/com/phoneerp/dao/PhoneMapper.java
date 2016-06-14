@@ -21,4 +21,14 @@ public interface PhoneMapper {
 	Integer getCount(Map<?, ?> map);
 
 	List<Phone> getList(Map<?, ?> map);
+
+	int createTable(String tableName);
+
+	int insertBatch(Map<String, Object> map);
+
+	int insertDatasFromTemp(String tableName);
+
+	int insertPurDatas(String tableName);
+
+	int dropTable(String tableName);
 }

@@ -54,6 +54,7 @@
 		                <th data-options="field:'purTime',width:'120px'">采购日期(发货日期)</th>
 		                <th data-options="field:'supplier.supplierName',width:'120px'">发货单位</th>
 		                <th data-options="field:'shop.shopName',width:'120px'">收货单位</th>
+		                <th data-options="field:'price',width:'120px'">采购价格</th>
 		                <th data-options="field:'remark',width:'120px'">备注</th>
 		            </tr>
 		        </thead>

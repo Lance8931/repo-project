@@ -32,6 +32,13 @@ public class Purchase {
 
 	private String imeiNo;
 
+	public Purchase() {
+	}
+
+	public Purchase(String purTime) {
+		this.purTime = purTime;
+	}
+
 	public Integer getId() {
 		return id;
 	}

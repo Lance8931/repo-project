@@ -5,6 +5,7 @@
 		<title>手机店ERP</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<script type="text/javascript" src="../resources/jquery-2.2.1.min.js" charset="utf-8" ></script>
+		<script type="text/javascript" src="../resources/jquery.form.js" charset="utf-8" ></script>
 	</head>
 <body>
 	<h3>基础数据</h3>
@@ -16,7 +17,13 @@
 	<a href="../admin/showModel">手机型号</a>
 	<h3>商品</h3>
 	<a href="../admin/showPhone">手机</a>
-	<a href="#">配件</a>
+	<br /><br /><br />
+	<form id="phone_import_form" action="../phone/importPhones" method="post" enctype="multipart/form-data">
+		<input type="file" name="importExcel" />
+		<button type="button" onclick="tijiao()">导入</button>
+	</form>
+	
+	<a href="#">配件(待开发)</a>
 	<h3>采购</h3>
 	<a href="../admin/showPur">采购单</a>
 	<h3>销售</h3>
@@ -28,6 +35,21 @@
 	<script type="text/javascript">
 		$(function(){
 		});
+		
+		function tijiao(){
+			$("#phone_import_form").ajaxSubmit({
+				success:function(result){
+					if(result.success){
+						alert(result.msg);
+					}else{
+						alert(result.msg);
+					}
+				},
+				error: function(){
+					alert("系统发生异常。");
+				}
+			});
+		}
 	</script>
 </body>
 </html>

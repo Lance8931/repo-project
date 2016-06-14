@@ -45,7 +45,7 @@
 		    <div id="toolbar">
 		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newShop()">新增店铺</a>
 		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editShop()">编辑店铺</a>
-		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyShop()">删除店铺</a>
+		        <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyShop()">删除店铺</a> -->
 		    </div>
 		</div>
 	</div>
@@ -66,8 +66,8 @@
         </form>
     </div>
     <div id="dlg-buttons">
-        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveShop()" style="width:90px">Save</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveShop()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
     </div>
     <script type="text/javascript">
         var url;
@@ -117,7 +117,7 @@
                 }
             });
         }
-        function destroyShop(){
+        /*function destroyShop(){
             var row = $('#dg').datagrid('getSelected');
             if (row){
                 $.messager.confirm('Confirm','确定要删除该店铺？',function(r){
@@ -135,7 +135,7 @@
                     }
                 });
             }
-        }
+        }*/
         
         function query(){
         	$('#dg').datagrid('load',$('#queryForm').form('serialize'))
