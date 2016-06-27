@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.siping.hrip.portal.user.mapper.AdminMapper">
+    <resultMap id="BaseResultMap" type="com.siping.domain.portal.entity.UserPersonalInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="id_code" property="idCode" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="psd_question" property="psdQuestion" jdbcType="VARCHAR" />
+    <result column="psd_answer" property="psdAnswer" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="realname" property="realname" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="province" property="province" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+    <result column="county" property="county" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="BIT" />
+    <result column="nation" property="nation" jdbcType="VARCHAR" />
+    <result column="politics_status" property="politicsStatus" jdbcType="VARCHAR" />
+    <result column="marital_status" property="maritalStatus" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="fax" property="fax" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="website" property="website" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <resultMap id="EmployeeMap" type="com.siping.domain.portal.entity.HrEmployee" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="userName" jdbcType="VARCHAR" />
+    <result column="emp_no" property="empNo" jdbcType="INTEGER" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="BIT" />
+    <result column="department" property="department" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="BIT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="BIGINT" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+  </resultMap>
+
+<resultMap id="OrgMap" type="com.siping.domain.portal.entity.UserOrgInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="org_code" property="orgCode" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="psd_question" property="psdQuestion" jdbcType="VARCHAR" />
+    <result column="psd_answer" property="psdAnswer" jdbcType="VARCHAR" />
+    <result column="registered_no" property="registeredNo" jdbcType="VARCHAR" />
+    <result column="license_pic" property="licensePic" jdbcType="VARCHAR" />
+    <result column="org_name" property="orgName" jdbcType="VARCHAR" />
+    <result column="is_hightech" property="isHightech" jdbcType="BIT" />
+    <result column="org_type_id" property="orgTypeId" jdbcType="INTEGER" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="turnover" property="turnover" jdbcType="DOUBLE" />
+    <result column="employees" property="employees" jdbcType="INTEGER" />
+    <result column="legal_person" property="legalPerson" jdbcType="VARCHAR" />
+    <result column="found_date" property="foundDate" jdbcType="DATE" />
+    <result column="province" property="province" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+    <result column="county" property="county" jdbcType="INTEGER" />
+     <result column="provincename" property="provinceName" jdbcType="VARCHAR" />
+    <result column="cityname" property="cityName" jdbcType="VARCHAR" />
+    <result column="countyname" property="countyName" jdbcType="VARCHAR" />
+    <result column="street" property="street" jdbcType="VARCHAR" />
+    <result column="org_profile" property="orgProfile" jdbcType="VARCHAR" />
+    <result column="product" property="product" jdbcType="VARCHAR" />
+    <result column="business_scope" property="businessScope" jdbcType="VARCHAR" />
+    <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="fax" property="fax" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="postcode" property="postcode" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="website" property="website" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="UserMap" type="com.siping.domain.portal.entity.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="pwd_hash" property="pwdHash" jdbcType="VARCHAR" />
+    <result column="pwd_iterator" property="pwdIterator" jdbcType="INTEGER" />
+    <result column="pwd_salt" property="pwdSalt" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="SMALLINT" />
+    <result column="enabled" property="enabled" jdbcType="BIT" />
+    <result column="is_verified" property="isVerified" jdbcType="SMALLINT" />
+    <result column="verified_time" property="verifiedTime" jdbcType="TIMESTAMP" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="INTEGER" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+  </resultMap>
+  
+
+	<insert id="addUser" parameterType="com.siping.domain.portal.entity.User">
+		INSERT INTO users
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="username != null">
+				username,
+			</if>
+			<if test="pwdHash != null">
+				pwd_hash,
+			</if>
+			<if test="pwdIterator != null">
+				pwd_iterator,
+			</if>
+			<if test="pwdSalt != null">
+				pwd_salt,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="enabled != null">
+				enabled,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="isVerified != null">
+				is_verified,
+			</if>
+			create_date
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="pwdHash != null">
+				#{pwdHash,jdbcType=VARCHAR},
+			</if>
+			<if test="pwdIterator != null">
+				#{pwdIterator,jdbcType=INTEGER},
+			</if>
+			<if test="pwdSalt != null">
+				#{pwdSalt,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=INTEGER},
+			</if>
+			<if test="enabled != null">
+				#{enabled,jdbcType=TINYINT},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=TINYINT},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="isVerified != null">
+				#{isVerified,jdbcType=TINYINT},
+			</if>
+			now()
+		</trim>
+	</insert>
+
+
+	<insert id="addHrEmployee" parameterType="com.siping.domain.portal.entity.HrEmployee">
+		insert into hr_employee
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        username,
+      </if>
+      <if test="empNo != null" >
+        emp_no,
+      </if>
+      <if test="empName != null" >
+        emp_name,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="cellphone != null" >
+        cellphone,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      create_date
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="empNo != null" >
+        #{empNo,jdbcType=INTEGER},
+      </if>
+      <if test="empName != null" >
+        #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="cellphone != null" >
+        #{cellphone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=BIT},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=BIGINT},
+      </if>
+      now()
+    </trim>
+	</insert>
+
+
+	<select id="selectUserName" parameterType="com.siping.domain.portal.entity.User"
+		resultType="java.lang.Integer">
+		select count(t.username) from users t 
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="username != null">
+               and t.username = #{username,jdbcType=VARCHAR}
+            </if>
+            <if test="pwdHash != null">
+                and t.pwd_hash = #{pwdHash,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                and t.email = #{email,jdbcType=VARCHAR},
+            </if>
+        </trim>
+	</select>
+	
+	<select id="getUser" parameterType="java.lang.String"
+		resultMap="UserMap">
+		select * from users t where t.username =
+		#{userName,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getOrg" parameterType="com.siping.domain.portal.entity.UserOrgInfo"
+		resultMap="OrgMap">
+		select * from user_org_info t 
+		<trim prefix="where" prefixOverrides="and|or">
+            <if test="orgCode != null">
+               and t.org_code = #{orgCode,jdbcType=VARCHAR}
+            </if>
+            <if test="psdAnswer != null">
+                and t.psd_answer = #{psdAnswer,jdbcType=VARCHAR}
+            </if>
+        </trim>
+	</select>
+	
+	<select id="getPersonal" parameterType="com.siping.domain.portal.entity.UserPersonalInfo"
+		resultMap="BaseResultMap">
+		select * from user_personal_info t 
+		<trim prefix="where" prefixOverrides="and|or">
+            <if test="idCode != null">
+               and t.id_code = #{idCode,jdbcType=VARCHAR}
+            </if>
+            <if test="psdAnswer != null">
+                and t.psd_answer = #{psdAnswer,jdbcType=VARCHAR}
+            </if>
+        </trim>
+	</select>
+
+
+	<select id="selectHrEmployee" parameterType="com.siping.domain.portal.entity.HrEmployee"
+		resultType="java.lang.Integer">
+		select count(t.emp_no) from hr_employee t where t.emp_no =
+		#{empNo,jdbcType=INTEGER}
+	</select>
+
+
+	<update id="updateUser" parameterType="com.siping.domain.portal.entity.User">
+		update users
+		<set>
+			<if test="pwdHash != null">
+				pwd_hash = #{pwdHash,jdbcType=VARCHAR},
+			</if>
+			<if test="pwdIterator != null">
+				pwd_iterator = #{pwdIterator,jdbcType=INTEGER},
+			</if>
+			<if test="pwdSalt != null">
+				pwd_salt= #{pwdSalt,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				user_type= #{userType,jdbcType=INTEGER},
+			</if>
+			<if test="enabled != null">
+				enabled = #{enabled,jdbcType=TINYINT},
+			</if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=TINYINT},
+			</if>
+			update_date=now()
+		</set>
+		where username = #{username,jdbcType=VARCHAR}
+	</update>
+
+
+	<update id="updateHrEmployee" parameterType="com.siping.domain.portal.entity.HrEmployee">
+		update hr_employee
+		<set >
+      <if test="empNo != null" >
+        emp_no = #{empNo,jdbcType=INTEGER},
+      </if>
+      <if test="empName != null" >
+        emp_name = #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="cellphone != null" >
+        cellphone = #{cellphone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=BIT},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      update_date = now()
+    </set>
+		where username = #{userName,jdbcType=VARCHAR}
+	</update>
+    
+    <select id="getEmployeeAll" resultMap="EmployeeMap">
+        select * from hr_employee
+    </select>
+    
+    <select id="getEmployeeTotal" resultType="java.lang.Integer">
+        select count(*) from hr_employee
+    </select>
+
+
+	<select id="getAllEmployee" parameterType="java.util.Map"
+		resultMap="EmployeeMap">
+		select * from hr_employee t
+		<trim prefix="where" prefixOverrides="and|or">
+		      t.username in 
+		          (select username from users where enabled = #{enabled}) 
+			<if test="hrEmployee.userName != null">
+				and t.username LIKE CONCAT(CONCAT('%',
+				#{hrEmployee.userName}), '%')
+			</if>
+			<if test="hrEmployee.empNo != null">
+				or t.emp_no LIKE CONCAT(CONCAT('%',
+				#{hrEmployee.empNo}), '%')
+			</if>
+			<if test="hrEmployee.empName != null">
+				or t.emp_name LIKE CONCAT(CONCAT('%',
+				#{hrEmployee.empName}), '%')
+			</if>
+			<if test="hrEmployee.isDelete != null">
+				or t.is_delete = #{hrEmployee.isDelete,jdbcType=BIT}
+			</if>
+		</trim>
+		<if test="pageRequest.startNo != null">
+			LIMIT #{pageRequest.startNo},#{pageRequest.pageSize}
+		</if>
+	</select>
+	<select id="getTotalEmployee" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*) from hr_employee t
+        <trim prefix="where" prefixOverrides="and|or">
+              t.username in 
+                  (select username from users where enabled = #{enabled}) 
+            <if test="hrEmployee.userName != null">
+                and t.username LIKE CONCAT(CONCAT('%',
+                #{hrEmployee.userName}), '%')
+            </if>
+            <if test="hrEmployee.empNo != null">
+                or t.emp_no LIKE CONCAT(CONCAT('%',
+                #{hrEmployee.empNo}), '%')
+            </if>
+            <if test="hrEmployee.empName != null">
+                or t.emp_name LIKE CONCAT(CONCAT('%',
+                #{hrEmployee.empName}), '%')
+            </if>
+            <if test="hrEmployee.isDelete != null">
+                or t.is_delete = #{hrEmployee.isDelete,jdbcType=BIT}
+            </if>
+        </trim>
+	</select>
+
+	<update id="deleteUserHrEmployee" parameterType="java.util.List">
+		update
+		hr_employee h,users u set h.is_delete = 1 ,u.enabled = 0 where
+		u.username in
+		  <foreach collection="list" item="userName" index="index" open="(" close=")" separator=",">
+		  #{userName}
+		  </foreach>
+		 AND h.username in
+		 <foreach collection="list" item="userName" index="index" open="(" close=")" separator=",">
+          #{userName}
+          </foreach>
+	</update>
+
+	<select id="getHrEmployee" resultMap="EmployeeMap"
+		parameterType="java.lang.String">
+		select * from hr_employee where username =
+		#{username,jdbcType=VARCHAR}
+	</select>
+    
+</mapper>

@@ -6,19 +6,26 @@
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="author" property="author" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
+    <result column="display_position" property="displayPosition" jdbcType="VARCHAR" />
+    <result column="msg_type_id" property="msgTypeId" jdbcType="INTEGER" />
     <result column="enabled" property="enabled" jdbcType="BIT" />
     <result column="is_delete" property="isDelete" jdbcType="BIT" />
-    <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+    <result column="publish_time" property="publishTime" jdbcType="DATE" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="create_by" property="createBy" jdbcType="INTEGER" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <association column="msg_type_id" property="msgType" javaType="com.siping.domain.portal.entity.MsgType">
+        <id column="type_id" property="id" jdbcType="INTEGER"/>
+        <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+    </association>
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.siping.domain.portal.entity.Article" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, title, author, type, enabled, is_delete, publish_time, create_date, create_by, 
+    id, title, author, type,pic_path,display_position, msg_type_id, enabled, is_delete, publish_time, create_date, create_by, 
     update_date, update_by
   </sql>
   <sql id="Blob_Column_List" >
@@ -46,6 +53,15 @@
       </if>
       <if test="type != null" >
         type,
+      </if>
+      <if test="msgTypeId != null">
+        msg_type_id,
+      </if>
+      <if test="displayPosition != null">
+        display_position,
+      </if>
+      <if test="picPath != null">
+        pic_path,
       </if>
       <if test="enabled != null" >
         enabled,
@@ -85,6 +101,15 @@
       <if test="type != null" >
         #{type,jdbcType=VARCHAR},
       </if>
+      <if test="msgTypeId != null">
+        #{msgTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="displayPosition != null">
+        #{displayPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="picPath != null">
+        #{picPath,jdbcType=VARCHAR},
+      </if>
       <if test="enabled != null" >
         #{enabled,jdbcType=BIT},
       </if>
@@ -92,7 +117,7 @@
         #{isDelete,jdbcType=BIT},
       </if>
       <if test="publishTime != null" >
-        #{publishTime,jdbcType=TIMESTAMP},
+        #{publishTime,jdbcType=DATE},
       </if>
       <if test="createDate != null" >
         #{createDate,jdbcType=TIMESTAMP},
@@ -123,14 +148,23 @@
       <if test="type != null" >
         type = #{type,jdbcType=VARCHAR},
       </if>
+      <if test="displayPosition != null">
+        display_position = #{displayPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="picPath != null">
+        pic_path = #{picPath,jdbcType=VARCHAR},
+      </if>
+      <if test="msgTypeId != null">
+        msg_type_id = #{msgTypeId,jdbcType=INTEGER},
+      </if>
       <if test="enabled != null" >
-        enabled = NOT enabled,
+        enabled = #{enabled,jdbcType=BIT},
       </if>
       <if test="isDelete != null" >
         is_delete = #{isDelete,jdbcType=BIT},
       </if>
       <if test="publishTime != null" >
-        publish_time = #{publishTime,jdbcType=TIMESTAMP},
+        publish_time = #{publishTime,jdbcType=DATE},
       </if>
       <if test="createDate != null" >
         create_date = #{createDate,jdbcType=TIMESTAMP},
@@ -152,42 +186,51 @@
   </update>
   <sql id="conditions" >
     <trim prefix="where" prefixOverrides="and|or" >
-       1 = 1
-      <if test="id != null" >
-        and t.id = #{id}
+      1 = 1
+      <if test="article.id != null" >
+        and t.id = #{article.id}
       </if>
-      <if test="title != null" >
-        and t.title = #{title}
+      <if test="article.title != null" >
+        and t.title like CONCAT('%',#{article.title},'%') 
       </if>
-      <if test="author != null" >
-        and t.author = #{author}
+      <if test="article.author != null" >
+        and t.author = #{article.author}
       </if>
-      <if test="type != null" >
-        and t.type = #{type}
+      <if test="article.type != null" >
+        and t.type = #{article.type}
       </if>
-      <if test="enabled != null" >
-        and t.enabled = #{enabled}
+      <if test="article.msgTypeId != null" >
+        and t.msg_type_id = #{article.msgTypeId}
       </if>
-      <if test="isDelete != null" >
-        and t.is_delete = #{isDelete}
+      <if test="article.enabled != null" >
+        and t.enabled = #{article.enabled}
       </if>
-      <if test="publishTime != null" >
-        and t.publish_time = #{publishTime}
+      <if test="article.isDelete != null">
+        and t.is_delete = #{article.isDelete}
       </if>
-      <if test="createDate != null" >
-        and t.create_date = #{createDate}
+      <if test="article.publishTime != null" >
+        and t.publish_time = #{article.publishTime}
       </if>
-      <if test="createBy != null" >
-        and t.create_by = #{createBy}
+      <if test="article.createDate != null" >
+        and t.create_date = #{article.createDate}
       </if>
-      <if test="updateDate != null" >
-        and t.update_date = #{updateDate}
+      <if test="article.createBy != null" >
+        and t.create_by = #{article.createBy}
       </if>
-      <if test="updateBy != null" >
-        and t.update_by = #{updateBy}
+      <if test="article.updateDate != null" >
+        and t.update_date = #{article.updateDate}
       </if>
-      <if test="content != null" >
-        and t.content = #{content}
+      <if test="article.updateBy != null" >
+        and t.update_by = #{article.updateBy}
+      </if>
+      <if test="article.content != null" >
+        and t.content like CONCAT('%',#{article.content},'%')
+      </if>
+      <if test="messages != null" >
+        and t.display_position is not NULL ORDER BY display_position
+      </if>
+      <if test="orderPublish != null" >
+        ORDER BY publish_time DESC
       </if>
     </trim>
   </sql>
@@ -201,5 +244,64 @@
     <if test="startNo != null" >
       LIMIT #{startNo},#{pageSize}
     </if>
+  </select>
+  
+  <update id="updateStatusBatch" parameterType="java.util.Map">
+    <foreach collection="list" item="item" separator=";">
+        update article set
+            <if test="action == 'delete'">
+	            is_delete = 0,
+	        </if>
+	        <if test="action == 'enabled'">
+	            enabled = 0,
+	        </if>
+	        <if test="action == 'disabled'">
+                enabled = 1,
+            </if>
+        update_date = #{item.updateDate,jdbcType=TIMESTAMP},
+        update_by = #{item.updateBy,jdbcType=INTEGER}
+        where id = #{item.id}
+    </foreach>
+  </update>
+  
+  <update id="updateDisplayPosition" parameterType="java.util.Map">
+        update article set 
+        display_position = #{null},
+        update_date = #{article.updateDate,jdbcType=TIMESTAMP},
+        update_by = #{article.updateBy,jdbcType=INTEGER}
+        where display_position = #{article.displayPosition}
+        <if test="article.type != '001' and article.type != '002'">
+         and type not in ('001','002')
+         </if>
+        <if test="article.type == '001'">
+         and type = '001'
+         </if>
+        <if test="article.type == '002'">
+         and type = '002'
+         </if>
+         
+  </update>
+  
+  <select id="getListByPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+	    t.id AS id,
+	    t.author AS author,
+	    t.enabled,
+	    t.publish_time AS publish_time,
+	    t.title AS title,
+        t.pic_path,
+        t.display_position,
+	    t.msg_type_id,
+	    t.content,
+	    b.id as type_id,
+	    b.type_name
+	FROM
+	    article AS t
+	LEFT OUTER JOIN msg_type AS b ON t.msg_type_id = b.id
+    <include refid="conditions"/>
+    <if test="startNo != null" >
+      LIMIT #{startNo},#{pageSize}
+    </if>
+    
   </select>
 </mapper>

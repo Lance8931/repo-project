@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.siping.hrip.portal.user.mapper.GroupsMapper" >
-  <resultMap id="BaseResultMap" type="com.siping.domain.portal.entity.Groups" >
+<mapper namespace="com.siping.hrip.portal.user.mapper.PermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.siping.domain.portal.entity.Permission" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="menu_id" property="menuId" jdbcType="INTEGER" />
+    <result column="addible" property="addible" jdbcType="BIT" />
+    <result column="editable" property="editable" jdbcType="BIT" />
+    <result column="deletable" property="deletable" jdbcType="BIT" />
+    <result column="readable" property="readable" jdbcType="BIT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="RoleMap" type="com.siping.domain.portal.entity.Groups" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_name" property="groupName" jdbcType="VARCHAR" />
     <result column="description" property="description" jdbcType="VARCHAR" />
@@ -10,76 +21,83 @@
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="INTEGER" />
   </resultMap>
+  <resultMap id="UserGroupMap" type="com.siping.domain.portal.entity.UserGroup" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, group_name, description, create_date, create_by, update_date, update_by
   </sql>
-  <select id="selectGroups" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
+  <select id="selectGroups" resultMap="RoleMap" parameterType="java.lang.Integer" >
+    select *
     from groups
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{groupId,jdbcType=INTEGER}
   </select>
   
-  <select id="selectUserGroup" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+  <select id="selectUserGroup" resultType="java.lang.Integer" parameterType="java.util.List" >
     select count(*)
-    from user_group
-    where group_id = #{groupId,jdbcType=INTEGER}
+    from user_group where group_id in 
+    <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+        #{item}
+     </foreach>
   </select>
   
-  <delete id="deleteGroup" parameterType="java.lang.Integer" >
+  <select id="listRole" resultMap="RoleMap" parameterType="java.util.Map" >
+    select * from groups
+    <if test="pageNo != null">
+            LIMIT #{startNo},#{pageSize}
+        </if>
+  </select>
+  
+  <select id="listPermission" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * from permission 
+    <if test="_parameter != null">
+        where group_id = #{roleId,jdbcType=INTEGER}
+    </if>
+  </select>
+  
+  <select id="totalRole" resultType="java.lang.Integer"  >
+    select count(*) from groups
+  </select>
+  
+  <select id="listRoleHr" resultMap="UserGroupMap"  >
+    select * from user_group
+  </select>
+  
+  <delete id="deleteGroup" parameterType="java.util.List" >
     delete from groups
-    where id = #{id,jdbcType=INTEGER}
+    where id in 
+     <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+          #{item}
+          </foreach>
   </delete>
   
   <insert id="addGroup" parameterType="com.siping.domain.portal.entity.Groups" >
     insert into groups
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="groupName != null" >
         group_name,
       </if>
       <if test="description != null" >
         description,
       </if>
-      <if test="createDate != null" >
-        create_date,
-      </if>
       <if test="createBy != null" >
         create_by,
       </if>
-      <if test="updateDate != null" >
-        update_date,
-      </if>
-      <if test="updateBy != null" >
-        update_by,
-      </if>
+      create_date
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="groupName != null" >
         #{groupName,jdbcType=VARCHAR},
       </if>
       <if test="description != null" >
         #{description,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null" >
-        STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-      </if>
       <if test="createBy != null" >
         #{createBy,jdbcType=INTEGER},
       </if>
-      <if test="updateDate != null" >
-        STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-      </if>
-      <if test="updateBy != null" >
-        #{updateBy,jdbcType=INTEGER},
-      </if>
+      now()
     </trim>
   </insert>
   <update id="updateGroup" parameterType="com.siping.domain.portal.entity.Groups" >
@@ -91,23 +109,85 @@
       <if test="description != null" >
         description = #{description,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null" >
-        create_date=
-                STR_TO_DATE(#{createDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-      </if>
-      <if test="createBy != null" >
-        create_by = #{createBy,jdbcType=INTEGER},
-      </if>
-      <if test="updateDate != null" >
-        update_date=
-                STR_TO_DATE(#{updateDate,jdbcType=TIMESTAMP},'%Y-%m-%d
-                %H:%i:%s'),
-      </if>
       <if test="updateBy != null" >
         update_by = #{updateBy,jdbcType=INTEGER},
       </if>
+       update_date = now()
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <insert id="addUpdateMenu" parameterType="java.util.List" >
+    insert into permission(
+        group_id,
+        menu_id,
+        create_by,
+        addible,
+        deletable,
+        editable,
+	    readable,
+        create_date
+        ) values
+    <foreach collection="list" index="index" item="itme" separator=",">
+        (#{itme.groupId,jdbcType=INTEGER},
+        #{itme.menuId,jdbcType=INTEGER},
+        #{itme.createBy,jdbcType=INTEGER},
+        #{itme.addible,jdbcType=BIT},
+        #{itme.editable,jdbcType=BIT},
+        #{itme.deletable,jdbcType=BIT},
+        #{itme.readable,jdbcType=BIT},
+        now()
+        )
+    </foreach>
+  </insert>
+  
+  
+  <delete id="deletePermission" parameterType="java.util.List" >
+    delete from permission
+        where group_id in 
+     <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+          #{item}
+          </foreach>
+  </delete>
+  
+  
+  
+  
+  <insert id="addUpdateUserGroup" parameterType="com.siping.domain.portal.entity.UserGroup" >
+    insert into user_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <delete id="deleteUserGroup" parameterType="java.lang.String" >
+    delete from user_group
+    where username = #{username,jdbcType=VARCHAR}
+  </delete>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 </mapper>

@@ -15,6 +15,7 @@ public class SlidePic extends Common implements Serializable {
     private String url;
     private String hoverTips;
     private Integer orderNo;
+    private Byte enabled;
     public String getPicPath() {
         return picPath;
     }
@@ -38,6 +39,12 @@ public class SlidePic extends Common implements Serializable {
     }
     public void setHoverTips(String hoverTips) {
         this.hoverTips = hoverTips;
+    }
+    public Byte getEnabled() {
+        return enabled;
+    }
+    public void setEnabled(Byte enabled) {
+        this.enabled = enabled;
     }
     
     

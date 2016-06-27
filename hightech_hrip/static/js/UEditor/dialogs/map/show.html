@@ -14,7 +14,10 @@
             overflow: hidden;
         }
     </style>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
+    <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script> -->
+    
+    <!-- ak密钥为个人所有 -->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=C8qK88SCRyOZV9K5QbrOGdxcA1vAsrHD"></script>
 </head>
 
 <body onload="initMap();">
@@ -40,7 +43,7 @@
             return;
         }
         var dituContent = document.getElementById('dituContent');
-        dituContent.style.width = widthParam + 'px';
+        dituContent.style.width = widthParam;
         dituContent.style.height = heightParam + 'px';
 
         createMap();//创建地图
@@ -106,7 +109,7 @@
         function mapListenerHandler() {
             var zoom = map.getZoom(),
                 center = map.getCenter(),
-                marker = window.marker.getPoint();
+                marker = window.marker.getPosition();
             containerIframe.src = containerIframe.src.
                 replace(new RegExp('([?#&])center=([^?#&]+)', 'i'), '$1center=' + center.lng + ',' + center.lat).
                 replace(new RegExp('([?#&])markers=([^?#&]+)', 'i'), '$1markers=' + marker.lng + ',' + marker.lat).

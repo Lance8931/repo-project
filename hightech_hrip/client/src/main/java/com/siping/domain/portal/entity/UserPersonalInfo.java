@@ -11,64 +11,136 @@ public class UserPersonalInfo extends Common implements Serializable {
      */
     private static final long serialVersionUID = -1303643984951724364L;
 
-    private String idCode; // 身份证号
+    /**
+     * 用户名
+     */
+    private String username;
 
-    private String psdQuestion; // 找回密码的问题
+    /**
+     * 国籍
+     */
+    private String nationality;
 
-    private String psdAnswer; // 问题答案
+    /**
+     * 昵称
+     */
+    private String nickname;
 
-    private String nickname; // 昵称
+    /**
+     * 真实姓名
+     */
+    private String realname;
 
-    private String realname; // 真实姓名
+    /**
+     * 外文名字
+     */
+    private String foreignName;
 
-    private String birthday; // 出生年月日
+    /**
+     * 出生地
+     */
+    private String birthplace;
 
-    private Integer province; // 所在省
+    /**
+     * 出生日期
+     */
+    private String birthday;
 
-    private Integer city; // 市
+    /**
+     * 所在省
+     */
+    private Integer province;
 
-    private Integer county; // 区
+    /**
+     * 所在市
+     */
+    private Integer city;
 
-    private String address; // 街道详情
+    /**
+     * 所在区
+     */
+    private Integer county;
 
-    private Boolean sex; // 性别
+    /**
+     * 所在街道详细地址
+     */
+    private String address;
 
-    private String nation; // 民族
+    /**
+     * 性别，0女，1男
+     */
+    private Boolean sex;
 
-    private String politicsStatus; // 政治面貌
+    /**
+     * 民族
+     */
+    private String nation;
 
-    private String maritalStatus; // 婚姻情况
+    /**
+     * 政治面貌
+     */
+    private String politicsStatus;
 
-    private String telephone; // 电话
+    /**
+     * 婚姻状况
+     */
+    private String maritalStatus;
 
-    private String fax; // 传真
+    /**
+     * 办公电话
+     */
+    private String telephone;
 
-    private String email; // 邮箱
+    /**
+     * 手机
+     */
+    private String cellphone;
 
-    private String website; // 博客
+    /**
+     * 传真
+     */
+    private String fax;
 
-    public String getIdCode() {
-        return idCode;
+    /**
+     * 电子邮件
+     */
+    private String email;
+
+    /**
+     * 个人网址/博客
+     */
+    private String website;
+
+    /**
+     * 参加工作年份
+     */
+    private Integer startWorkYear;
+
+    /**
+     * 户口所在城市
+     */
+    private Integer residentCity;
+
+    private Area provinceArea;
+
+    private Area cityArea;
+
+    private Area countyArea;
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setIdCode(String idCode) {
-        this.idCode = idCode == null ? null : idCode.trim();
+    public void setUsername(String username) {
+        this.username = username == null ? null : username.trim();
     }
 
-    public String getPsdQuestion() {
-        return psdQuestion;
+    public String getNationality() {
+        return nationality;
     }
 
-    public void setPsdQuestion(String psdQuestion) {
-        this.psdQuestion = psdQuestion == null ? null : psdQuestion.trim();
-    }
-
-    public String getPsdAnswer() {
-        return psdAnswer;
-    }
-
-    public void setPsdAnswer(String psdAnswer) {
-        this.psdAnswer = psdAnswer == null ? null : psdAnswer.trim();
+    public void setNationality(String nationality) {
+        this.nationality = nationality == null ? null : nationality.trim();
     }
 
     public String getNickname() {
@@ -85,6 +157,22 @@ public class UserPersonalInfo extends Common implements Serializable {
 
     public void setRealname(String realname) {
         this.realname = realname == null ? null : realname.trim();
+    }
+
+    public String getForeignName() {
+        return foreignName;
+    }
+
+    public void setForeignName(String foreignName) {
+        this.foreignName = foreignName == null ? null : foreignName.trim();
+    }
+
+    public String getBirthplace() {
+        return birthplace;
+    }
+
+    public void setBirthplace(String birthplace) {
+        this.birthplace = birthplace == null ? null : birthplace.trim();
     }
 
     public String getBirthday() {
@@ -167,6 +255,14 @@ public class UserPersonalInfo extends Common implements Serializable {
         this.telephone = telephone == null ? null : telephone.trim();
     }
 
+    public String getCellphone() {
+        return cellphone;
+    }
+
+    public void setCellphone(String cellphone) {
+        this.cellphone = cellphone == null ? null : cellphone.trim();
+    }
+
     public String getFax() {
         return fax;
     }
@@ -190,4 +286,45 @@ public class UserPersonalInfo extends Common implements Serializable {
     public void setWebsite(String website) {
         this.website = website == null ? null : website.trim();
     }
+
+    public Integer getStartWorkYear() {
+        return startWorkYear;
+    }
+
+    public void setStartWorkYear(Integer startWorkYear) {
+        this.startWorkYear = startWorkYear;
+    }
+
+    public Integer getResidentCity() {
+        return residentCity;
+    }
+
+    public void setResidentCity(Integer residentCity) {
+        this.residentCity = residentCity;
+    }
+
+    public Area getProvinceArea() {
+        return provinceArea;
+    }
+
+    public void setProvinceArea(Area provinceArea) {
+        this.provinceArea = provinceArea;
+    }
+
+    public Area getCityArea() {
+        return cityArea;
+    }
+
+    public void setCityArea(Area cityArea) {
+        this.cityArea = cityArea;
+    }
+
+    public Area getCountyArea() {
+        return countyArea;
+    }
+
+    public void setCountyArea(Area countyArea) {
+        this.countyArea = countyArea;
+    }
+
 }

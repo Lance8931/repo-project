@@ -22,13 +22,14 @@ import org.stroma.framework.core.platform.StromaScopeResolver;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import com.siping.hrip.common.log.ServiceLogMessageFilter;
+import com.siping.hrip.common.log.PortalLogMessageFilter;
 
 @Configuration
 @ComponentScan(basePackageClasses = AppConfig.class, scopeResolver = StromaScopeResolver.class, includeFilters = { @Filter(type = FilterType.ANNOTATION, value = org.springframework.stereotype.Controller.class) }, excludeFilters = @Filter(type = FilterType.ANNOTATION, value = org.springframework.stereotype.Service.class))
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
-@PropertySource({ "classpath:/site-master.properties", "classpath:/site-jdbc.properties", "classpath:/site-redis.properties", "classpath:/site-version.properties", "classpath:/site-social.properties" })
+@PropertySource({ "classpath:/site-master.properties", "classpath:/site-jdbc.properties", "classpath:/site-redis.properties", "classpath:/site-version.properties",
+        "classpath:/site-social.properties", "classpath:/site-log.properties" })
 public class AppConfig extends DbConfig {
 
     @Bean
@@ -49,7 +50,7 @@ public class AppConfig extends DbConfig {
     @Override
     public LogSettings logSettings() {
         LogSettings congig = super.logSettings();
-        congig.setLogMessageFilter(new ServiceLogMessageFilter());
+        congig.setLogMessageFilter(new PortalLogMessageFilter());
         return congig;
     }
 

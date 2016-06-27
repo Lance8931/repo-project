@@ -1,0 +1,27 @@
+.search .bottom{
+    margin-bottom:2%;
+}
+.search p{
+    font-size:12px;
+}
+.search p em,.search p i{
+    font-style:normal;
+}
+.search-result{
+    width:100%;
+  /*  margin-right: 2%;
+    float:left;*/
+}
+/*
+.tuijian{
+    width:20%;
+    float:left;
+    margin-top:3%;
+}
+.tuijian li{
+    width:100%;
+    margin-bottom:10%;
+}
+.tuijian li img{
+    width:100%;
+}*/

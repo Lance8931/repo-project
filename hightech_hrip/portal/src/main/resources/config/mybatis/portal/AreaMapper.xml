@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.siping.hrip.portal.common.mapper.AreaMapper" >
+    <resultMap id="BaseResultMap" type="com.siping.domain.portal.entity.Area" >
+        <result column="value" property="value" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getProvinceList" resultMap="BaseResultMap">
+        SELECT
+		    province_id AS 'value',
+		    province AS 'name'
+		FROM
+		    siping_province
+    </select>
+
+    <select id="getCityByPID" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+		    city_id AS 'value',
+		    city AS 'name'
+		FROM
+		    siping_city
+		WHERE parent_id = #{_parameter}
+    </select>
+    
+    <select id="getCountyByCID" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+            county_id AS 'value',
+            county AS 'name'
+        FROM
+            siping_county
+        WHERE parent_id = #{_parameter}
+    </select>
+</mapper>

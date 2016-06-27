@@ -15,6 +15,19 @@ public class User extends Common implements Serializable {
     private String pwdSalt;
     private Integer userType; // 用户类型：1，平台管理员用户；2，平台普通用户；3，企业用户；4，普通用户（求职者）
     private Integer enabled;
+    private Integer isVerified; // 审核标识，0 未审核，1通过，2不通过
+    private String email;
+
+    private UserPersonalInfo personalInfo;
+
+    public Integer getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(Integer isVerified) {
+        this.isVerified = isVerified;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -61,5 +74,21 @@ public class User extends Common implements Serializable {
 
     public void setEnabled(Integer enabled) {
         this.enabled = enabled;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public UserPersonalInfo getPersonalInfo() {
+        return personalInfo;
+    }
+
+    public void setPersonalInfo(UserPersonalInfo personalInfo) {
+        this.personalInfo = personalInfo;
     }
 }

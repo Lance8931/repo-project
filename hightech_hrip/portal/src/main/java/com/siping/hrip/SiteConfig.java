@@ -5,6 +5,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.stroma.framework.core.platform.StromaSiteWebConfig;
 import org.stroma.framework.core.platform.im4j.service.manager.ThumbnailProviderType;
 import org.stroma.framework.core.platform.intercept.LocaleInterceptor;
+import org.stroma.framework.core.platform.intercept.TokenInteceptor;
 import org.stroma.framework.core.platform.web.RuntimeEnvironment;
 import org.stroma.framework.core.platform.web.session.SessionProviderType;
 import org.stroma.framework.core.platform.web.site.layout.ModelBuilder;
@@ -17,6 +18,7 @@ import org.stroma.framework.core.setting.SsoSettings;
 import org.stroma.framework.core.setting.ThumbnailSettings;
 import org.stroma.framework.core.util.TimeLength;
 
+import com.siping.domain.interceptor.LoginInterceptor;
 import com.siping.hrip.common.constant.SsoConstants;
 import com.siping.hrip.common.freemarker.MasterLayout;
 import com.siping.hrip.common.freemarker.MasterTemplateModelBuilder;
@@ -128,8 +130,21 @@ public abstract class SiteConfig extends StromaSiteWebConfig {
         // 5.启用页面渲染防止出现很难看的错误页面
         registry.addInterceptor(exceptionInterceptor());
 
+        registry.addInterceptor(loginInterceptor());
+        
+        registry.addInterceptor(tokenInteceptor());
         // 6.增加业务拦截器
         addBusinessInterceptors(registry);
+    }
+
+    @Bean
+    public LoginInterceptor loginInterceptor() {
+        return new LoginInterceptor();
+    }
+
+    @Bean
+    public TokenInteceptor tokenInteceptor() {
+        return new TokenInteceptor();
     }
 
     public abstract void addBusinessInterceptors(InterceptorRegistry registry);

@@ -89,22 +89,22 @@
   <sql id="conditions" >
     <trim prefix="where" prefixOverrides="and|or" >
        1 = 1
-      <if test="id != null" >
+      <if test="id != null and id != ''" >
         and t.id = #{id}
       </if>
-      <if test="typeName != null" >
+      <if test="typeName != null and typeName != ''" >
         and t.type_name = #{typeName}
       </if>
-      <if test="createDate != null" >
+      <if test="createDate != null and createDate != ''" >
         and t.create_date = #{createDate}
       </if>
-      <if test="createBy != null" >
+      <if test="createBy != null and createBy != ''" >
         and t.create_by = #{createBy}
       </if>
-      <if test="updateDate != null" >
+      <if test="updateDate != null and updateDate != ''" >
         and t.update_date = #{updateDate}
       </if>
-      <if test="updateBy != null" >
+      <if test="updateBy != null and updateBy != ''" >
         and t.update_by = #{updateBy}
       </if>
     </trim>
