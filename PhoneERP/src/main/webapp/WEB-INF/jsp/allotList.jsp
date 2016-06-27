@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>调拨管理</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" type="text/css" href="../resources/themes/default/easyui.css">
 	    <link rel="stylesheet" type="text/css" href="../resources/themes/icon.css">
