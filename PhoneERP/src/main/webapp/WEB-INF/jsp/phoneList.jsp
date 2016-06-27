@@ -536,7 +536,7 @@
 		
 		function formatterProfit(value,row){
         	if(row.isSold){
-        		return row.purPrice - row.orders.billPrice;
+        		return row.orders.billPrice - row.purPrice;
         	}else{
         		return '-';
         	}

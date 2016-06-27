@@ -96,4 +96,7 @@
     </trim>
   </sql>
   
+  <select id="getCountByShopName" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(*) from shop where shop_name = ${_parameter}
+  </select>
 </mapper>

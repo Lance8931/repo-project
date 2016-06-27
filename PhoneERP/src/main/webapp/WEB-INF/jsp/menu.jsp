@@ -18,7 +18,7 @@
 	<h3>商品</h3>
 	<a href="../admin/showPhone">手机</a>
 	<br /><br /><br />
-	<form id="phone_import_form" action="../phone/importPhones" method="post" enctype="multipart/form-data">
+	<!--  --><form id="phone_import_form" method="post" enctype="multipart/form-data">
 		<input type="file" name="importExcel" />
 		<button type="button" onclick="tijiao()">导入</button>
 	</form>
@@ -38,9 +38,17 @@
 		
 		function tijiao(){
 			$("#phone_import_form").ajaxSubmit({
+				url:'../phone/valiPhones',
 				success:function(result){
 					if(result.success){
-						alert(result.msg);
+						$("#phone_import_form").ajaxSubmit({
+							url:'../phone/importPhones',
+							success:function(result){
+								if(result.success){
+									alert(result.msg);
+								}
+							}
+						});
 					}else{
 						alert(result.msg);
 					}

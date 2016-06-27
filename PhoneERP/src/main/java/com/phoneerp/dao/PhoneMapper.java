@@ -31,4 +31,6 @@ public interface PhoneMapper {
 	int insertPurDatas(String tableName);
 
 	int dropTable(String tableName);
+
+	Integer getCountByImeiNo(String imeiNo);
 }

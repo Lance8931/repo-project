@@ -389,4 +389,11 @@
 	      #{item.currentShop,jdbcType=VARCHAR}, #{item.phoneType,jdbcType=VARCHAR}) 
     </foreach>
   </insert>
+  
+  <select id="getCountByImeiNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(*) from phone where imei_no = ${_parameter}
+  </select>
+  
+  
+  
 </mapper>

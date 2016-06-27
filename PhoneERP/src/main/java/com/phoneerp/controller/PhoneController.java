@@ -34,6 +34,7 @@ import com.phoneerp.dao.ModelMapper;
 import com.phoneerp.dao.OrdersMapper;
 import com.phoneerp.dao.PhoneMapper;
 import com.phoneerp.dao.PurchaseMapper;
+import com.phoneerp.dao.ShopMapper;
 
 /**
  *
@@ -65,6 +66,9 @@ public class PhoneController {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	@Autowired
+	private ShopMapper shopMapper;
 
 	@RequestMapping("/imeiNoCheck")
 	@ResponseBody
@@ -198,6 +202,55 @@ public class PhoneController {
 	@ResponseBody
 	public ResultMsg importPurPhones(@RequestParam MultipartFile importExcel) throws Exception {
 		return excelImport(importExcel);
+	}
+
+	@RequestMapping(value = "/valiPhones", method = RequestMethod.POST)
+	@ResponseBody
+	public ResultMsg valiPhoneDatas(@RequestParam MultipartFile importExcel) throws Exception {
+		return validata(importExcel);
+	}
+
+	private ResultMsg validata(MultipartFile multipartFile) throws Exception {
+		ExcelProperties properties = null;
+		try {
+			properties = new ExcelProperties(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), 0);
+			for (int j = 1, lastRowNum = properties.getLastRowNum(); j <= lastRowNum; j++) {
+				Row row = properties.getSheet().getRow(j);
+				if (null != row) {
+					for (int i = 0, totalCellNum = row.getLastCellNum(); i < totalCellNum; i++) {
+						String cellValue = getCellValue(row.getCell(i));
+						if (i == 1) {
+							if (phoneMapper.getCountByImeiNo(cellValue) > 0) {
+								return new ResultMsg(false, "第" + (j + 1) + "行手机串号：" + cellValue + "已存在。");
+							}
+						}
+						if (i == 2) {
+							if (colorMapper.getCountByColorName(cellValue) <= 0) {
+								return new ResultMsg(false, "第" + (j + 1) + "行手机颜色：" + cellValue + "不存在。");
+							}
+						}
+						if (i == 3) {
+							if (brandMapper.getCountByBrandName(cellValue) <= 0) {
+								return new ResultMsg(false, "第" + (j + 1) + "行手机牌子：" + cellValue + "不存在。");
+							}
+						}
+						if (i == 4) {
+							if (modelMapper.getCountByModelName(cellValue) <= 0) {
+								return new ResultMsg(false, "第" + (j + 1) + "行手机型号：" + cellValue + "不存在。");
+							}
+						}
+						if (i == 6) {
+							if (shopMapper.getCountByShopName(cellValue) <= 0) {
+								return new ResultMsg(false, "第" + (j + 1) + "行所属店铺：" + cellValue + "不存在。");
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResultMsg(true, null);
 	}
 
 	private ResultMsg excelImport(MultipartFile multipartFiles) throws Exception {

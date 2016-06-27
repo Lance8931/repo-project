@@ -93,4 +93,7 @@
     </trim>
   </sql>
   
+  <select id="getCountByModelName" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(*) from model where model_name = ${_parameter}
+  </select>
 </mapper>

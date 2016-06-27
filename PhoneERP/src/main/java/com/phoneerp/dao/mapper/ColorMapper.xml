@@ -93,4 +93,8 @@
     </trim>
   </sql>
   
+  <select id="getCountByColorName" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(*) from color where color_name = ${_parameter}
+  </select>
+  
 </mapper>

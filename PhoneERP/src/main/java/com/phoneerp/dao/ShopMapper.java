@@ -19,4 +19,6 @@ public interface ShopMapper {
 	int updateByPrimaryKey(Shop record);
 
 	List<Shop> getList(Map<?, ?> map);
+
+	Integer getCountByShopName(String shopName);
 }

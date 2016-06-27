@@ -19,4 +19,6 @@ public interface ColorMapper {
 	int updateByPrimaryKey(Color record);
 
 	List<Color> getList(Map<?, ?> map);
+
+	Integer getCountByColorName(String colorName);
 }

@@ -19,4 +19,6 @@ public interface ModelMapper {
 	int updateByPrimaryKey(Model record);
 
 	List<Model> getList(Map<?, ?> map);
+
+	Integer getCountByModelName(String modelName);
 }

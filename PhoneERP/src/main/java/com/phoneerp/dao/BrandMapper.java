@@ -19,4 +19,6 @@ public interface BrandMapper {
 	int updateByPrimaryKey(Brand record);
 
 	List<Brand> getList(Map<?, ?> map);
+
+	Integer getCountByBrandName(String brandName);
 }
