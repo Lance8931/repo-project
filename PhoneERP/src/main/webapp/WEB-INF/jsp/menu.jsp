@@ -6,6 +6,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<script type="text/javascript" src="../resources/jquery-2.2.1.min.js" charset="utf-8" ></script>
 		<script type="text/javascript" src="../resources/jquery.form.js" charset="utf-8" ></script>
+		<script type="text/javascript" src="../resources/jquery.easyui.min.js" charset="utf-8" ></script>
+		<script type="text/javascript" src="../resources/easyui-lang-zh_CN.js" charset="utf-8"></script>
 	</head>
 <body>
 	<h3>基础数据</h3>
@@ -37,6 +39,7 @@
 		});
 		
 		function tijiao(){
+			
 			$("#phone_import_form").ajaxSubmit({
 				url:'../phone/valiPhones',
 				success:function(result){
