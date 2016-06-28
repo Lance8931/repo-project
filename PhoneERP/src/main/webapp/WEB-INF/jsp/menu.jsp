@@ -33,7 +33,7 @@
 	<form id="phone_import_form" method="post">
         <table cellpadding="5">
             <tr>
-                <td><input name="importExcel" class="easyui-filebox" data-options="prompt:'请选择一个文件...',width:'300px',buttonText: '选择文件'"></input></td>
+                <td><input name="importExcel" class="easyui-filebox" data-options="prompt:'请点击右侧的选择文件，选择一个文件...',width:'300px',buttonText: '选择文件'"></input></td>
             </tr>
             <tr>
                 <td><a href="javascript:void(0)" class="easyui-linkbutton" onclick="tijiao()">导入</a></td>
