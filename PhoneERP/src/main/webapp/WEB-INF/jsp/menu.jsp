@@ -4,6 +4,9 @@
 	<head>
 		<title>手机店ERP</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" type="text/css" href="../resources/themes/default/easyui.css">
+	    <link rel="stylesheet" type="text/css" href="../resources/themes/icon.css">
+	    <link rel="stylesheet" type="text/css" href="../resources/themes/color.css">
 		<script type="text/javascript" src="../resources/jquery-2.2.1.min.js" charset="utf-8" ></script>
 		<script type="text/javascript" src="../resources/jquery.form.js" charset="utf-8" ></script>
 		<script type="text/javascript" src="../resources/jquery.easyui.min.js" charset="utf-8" ></script>
@@ -39,25 +42,54 @@
 		});
 		
 		function tijiao(){
-			
+			$.messager.progress({
+                title:'导入数据',
+                msg:'正在验证数据。。。。。'
+            });
 			$("#phone_import_form").ajaxSubmit({
 				url:'../phone/valiPhones',
 				success:function(result){
+					$.messager.progress('close');
 					if(result.success){
+						$.messager.progress({
+			                title:'导入数据',
+			                msg:'正在导入数据。。。。。'
+			            });
 						$("#phone_import_form").ajaxSubmit({
 							url:'../phone/importPhones',
 							success:function(result){
+								$.messager.progress('close');
+								$("#phone_import_form").resetForm();
 								if(result.success){
-									alert(result.msg);
+									$.messager.alert(
+			                    			'提示信息',
+			                    			result.msg,
+			                    			'info'
+			                    	);
+								}else{
+									$.messager.alert(
+			                    			'提示信息',
+			                    			result.msg,
+			                    			'info'
+			                    	);
 								}
 							}
 						});
 					}else{
-						alert(result.msg);
+						$.messager.alert(
+                    			'提示信息',
+                    			result.msg,
+                    			'warning'
+                    	);
 					}
 				},
 				error: function(){
-					alert("系统发生异常。");
+					$.messager.progress('close');
+					$.messager.alert(
+                			'提示信息',
+                			'系统发生异常',
+                			'warning'
+                	);
 				}
 			});
 		}

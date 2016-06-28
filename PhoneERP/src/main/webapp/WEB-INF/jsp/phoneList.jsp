@@ -534,7 +534,6 @@
         	}
 		}
 		
-<<<<<<< HEAD
 		function formatterProfit(value,row){
         	if(row.isSold){
         		return row.orders.billPrice - row.purPrice;
@@ -543,8 +542,6 @@
         	}
 		}
 		
-=======
->>>>>>> efa9824b6fe0bdcc89a240de6a2ca9e075adf2a1
 		function initGrid(){
 	       	$("#dg").datagrid({
 	       		url : '../phone/getPhoneList',
