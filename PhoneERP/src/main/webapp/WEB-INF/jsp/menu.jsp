@@ -23,10 +23,23 @@
 	<h3>商品</h3>
 	<a href="../admin/showPhone">手机</a>
 	<br /><br /><br />
-	<!--  --><form id="phone_import_form" method="post" enctype="multipart/form-data">
+	<!-- <form id="phone_import_form1" method="post" enctype="multipart/form-data">
 		<input type="file" name="importExcel" />
+		<br>
 		<button type="button" onclick="tijiao()">导入</button>
-	</form>
+	</form> -->
+	
+	
+	<form id="phone_import_form" method="post">
+        <table cellpadding="5">
+            <tr>
+                <td><input name="importExcel" class="easyui-filebox" data-options="prompt:'请选择一个文件...',width:'300px',buttonText: '选择文件'"></input></td>
+            </tr>
+            <tr>
+                <td><a href="javascript:void(0)" class="easyui-linkbutton" onclick="tijiao()">导入</a></td>
+            </tr>
+        </table>
+    </form>
 	
 	<a href="#">配件(待开发)</a>
 	<h3>采购</h3>
@@ -76,6 +89,7 @@
 							}
 						});
 					}else{
+						$("#phone_import_form").resetForm();
 						$.messager.alert(
                     			'提示信息',
                     			result.msg,
@@ -84,6 +98,7 @@
 					}
 				},
 				error: function(){
+					$("#phone_import_form").resetForm();
 					$.messager.progress('close');
 					$.messager.alert(
                 			'提示信息',
