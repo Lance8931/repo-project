@@ -583,7 +583,7 @@
 		}
 		
 		function downloadExcel(){
-			window.location="http://localhost:8080/PhoneERP/phone/download?"+$("#phoneList_queryForm").serialize();
+			window.location="../phone/download?"+$("#phoneList_queryForm").serialize();
 		}
 		
     </script>

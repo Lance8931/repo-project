@@ -253,7 +253,7 @@ public class PhoneController {
 		filePath = excelExportController.exportData(queryData, new ExcelHeadConfig().getPhonesExcelHead(), "手机列表",
 				request);
 		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		headers.setContentDispositionFormData("attachment", new String("模板下载.xlsx".getBytes("UTF-8"), "iso-8859-1"));
+		headers.setContentDispositionFormData("attachment", new String("手机信息下载.xlsx".getBytes("UTF-8"), "iso-8859-1"));
 		return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(new File(filePath)), headers,
 				HttpStatus.CREATED);
 	}
