@@ -560,12 +560,13 @@
 			        {field:'phoneType',title:'机型',width:'80px'}, 
 			        {field:'amount',title:'数量',width:'80px'}, 
 			        {field:'purPrice',title:'进货价格',width:'80px'}, 
-			        {field:'remark',title:'备注',width:'80px'}, 
+			        {field:'orders.billPrice',title:'实际销售价格',width:'80px'}, 
+			        {field:'profit',title:'利润',width:'80px',formatter:formatterProfit},
 			        {field:'shop.shopName',title:'当前所在店铺',width:'80px'}, 
 			        {field:'isSold',title:'是否卖出',width:'80px',formatter:formatterIsSold}, 
-			        {field:'orders.billPrice',title:'实际销售价格',width:'80px'}, 
 			        {field:'saler.salerName',title:'销售员',width:'80px'}, 
-			        {field:'orders.orderTime',title:'销售日期',width:'80px'},     
+			        {field:'orders.orderTime',title:'销售日期',width:'80px'},   
+			        {field:'remark',title:'备注',width:'80px'}
 			    ]],
 			    toolbar:'#toolbar',
 			    pagination: true
