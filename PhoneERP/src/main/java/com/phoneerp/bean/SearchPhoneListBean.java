@@ -33,9 +33,9 @@ public class SearchPhoneListBean {
 
 	private BigDecimal purEndPrice;
 
-	private BigDecimal saleStartPrice;
+	private BigDecimal billStartPrice;
 
-	private BigDecimal saleEndPrice;
+	private BigDecimal billEndPrice;
 
 	public String getImeiNo() {
 		return imeiNo;
@@ -149,28 +149,28 @@ public class SearchPhoneListBean {
 		this.purEndPrice = purEndPrice;
 	}
 
-	public BigDecimal getSaleStartPrice() {
-		return saleStartPrice;
-	}
-
-	public void setSaleStartPrice(BigDecimal saleStartPrice) {
-		this.saleStartPrice = saleStartPrice;
-	}
-
-	public BigDecimal getSaleEndPrice() {
-		return saleEndPrice;
-	}
-
-	public void setSaleEndPrice(BigDecimal saleEndPrice) {
-		this.saleEndPrice = saleEndPrice;
-	}
-
 	public String getPhoneType() {
 		return phoneType;
 	}
 
 	public void setPhoneType(String phoneType) {
 		this.phoneType = phoneType;
+	}
+
+	public BigDecimal getBillStartPrice() {
+		return billStartPrice;
+	}
+
+	public void setBillStartPrice(BigDecimal billStartPrice) {
+		this.billStartPrice = billStartPrice;
+	}
+
+	public BigDecimal getBillEndPrice() {
+		return billEndPrice;
+	}
+
+	public void setBillEndPrice(BigDecimal billEndPrice) {
+		this.billEndPrice = billEndPrice;
 	}
 
 }

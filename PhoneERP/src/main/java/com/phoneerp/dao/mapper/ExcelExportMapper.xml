@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.phoneerp.dao.ExcelExportMapper" >
+  <sql id="conditions">
+  	<trim prefix="where" prefixOverrides="and|or" >
+      <if test="searchBean.imeiNo != null and searchBean.imeiNo != ''" >
+        and  t.imei_no like CONCAT('%',#{searchBean.imeiNo},'%')
+      </if>
+      <if test="searchBean.supplierId != null and searchBean.supplierId != ''" >
+        and  h.id = #{searchBean.supplierId}
+      </if>
+      <if test="searchBean.brandId != null and searchBean.brandId != ''" >
+        and  t.brand_id = #{searchBean.brandId}
+      </if>
+      <if test="searchBean.phoneType != null and searchBean.phoneType != ''" >
+        and  t.phone_type = #{searchBean.phoneType}
+      </if>
+      <if test="searchBean.purStartTime != null and searchBean.purStartTime != ''" >
+        and  a.pur_time &gt;= #{searchBean.purStartTime}
+      </if>
+      <if test="searchBean.purEndTime != null and searchBean.purEndTime != ''" >
+        and  a.pur_time &lt;= #{searchBean.purEndTime}
+      </if>
+      <if test="searchBean.currentShopId != null and searchBean.currentShopId != ''" >
+        and  t.current_shop_id = #{searchBean.currentShopId}
+      </if>
+      <if test="searchBean.isSold != null and searchBean.isSold != ''" >
+        and  t.is_sold = #{searchBean.isSold}
+      </if>
+      <if test="searchBean.salerId != null and searchBean.salerId != ''" >
+        and  e.saler_id = #{searchBean.salerId}
+      </if>
+      <if test="searchBean.saleStartTime != null and searchBean.saleStartTime != ''" >
+        and  e.order_time &gt;= #{searchBean.saleStartTime}
+      </if>
+      <if test="searchBean.saleEndTime != null and searchBean.saleEndTime != ''" >
+        and  e.order_time &lt;= #{searchBean.saleEndTime}
+      </if>
+      <if test="searchBean.modelId != null and searchBean.modelId != ''" >
+        and  t.model_id = #{searchBean.modelId}
+      </if>
+      <if test="searchBean.colorId != null and searchBean.colorId != ''" >
+        and  t.color_id = #{searchBean.colorId}
+      </if>
+      <if test="searchBean.purStartPrice != null and searchBean.purStartPrice != ''" >
+        and  t.pur_price &gt;= #{searchBean.purStartPrice}
+      </if>
+      <if test="searchBean.purEndPrice != null and searchBean.purEndPrice != ''" >
+        and  t.pur_price &lt;= #{searchBean.purEndPrice}
+      </if>
+      <if test="searchBean.billStartPrice != null and searchBean.billStartPrice != ''" >
+        and  e.bill_price &gt;= #{searchBean.billStartPrice}
+      </if>
+      <if test="searchBean.billEndPrice != null and searchBean.billEndPrice != ''" >
+        and  e.bill_price &lt;= #{searchBean.billEndPrice}
+      </if>
+    </trim>
+  </sql>
+  
+  <resultMap type="com.phoneerp.bean.PhoneExportBean" id="ListResultMap">
+	<result column="imei_no" property="imeiNo" jdbcType="VARCHAR" />
+	<result column="brand_name" property="brandName" jdbcType="VARCHAR" /> 
+	<result column="color_name" property="colorName" jdbcType="VARCHAR" /> 
+	<result column="model_name" property="modelName" jdbcType="VARCHAR" /> 
+	<result column="phone_type" property="phoneType" jdbcType="VARCHAR" /> 
+	<result column="pur_price" property="purPrice" jdbcType="VARCHAR" /> 
+	<result column="profit" property="profit" jdbcType="VARCHAR" /> 
+	<result column="is_sold" property="isSold" jdbcType="VARCHAR" /> 
+  	<result column="pur_time" property="purTime" jdbcType="VARCHAR" />
+  	<result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+  	<result column="bill_price" property="billPrice" jdbcType="VARCHAR" />
+  	<result column="order_time" property="orderTime" jdbcType="VARCHAR" />
+  	<result column="saler_name" property="salerName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="getList" parameterType="java.util.Map" resultMap="ListResultMap">
+	SELECT
+		t.imei_no,
+		b.brand_name,
+		c.color_name,
+		d.model_name,
+		t.phone_type,
+		t.pur_price,
+		CASE
+	WHEN e.bill_price IS NULL THEN
+		'0'
+	WHEN e.bill_price > 0 THEN
+		e.bill_price
+	END bill_price,
+	 CASE t.is_sold
+	WHEN 0 IS NULL THEN
+		'0'
+	WHEN 1 THEN
+		e.bill_price - t.pur_price
+	END AS 'profit',
+	 f.shop_name,
+	 CASE is_sold
+	WHEN 0 THEN
+		'否'
+	WHEN 1 THEN
+		'是'
+	END 'is_sold',
+	 g.saler_name,
+	 e.order_time,
+ 	 a.pur_time
+	FROM
+		phone t
+	LEFT OUTER JOIN purchase a ON t.id = a.phone_id
+	LEFT OUTER JOIN brand b ON t.brand_id = b.id
+	LEFT OUTER JOIN color c ON t.color_id = c.id
+	LEFT OUTER JOIN model d ON t.brand_id = d.id
+	LEFT OUTER JOIN orders e ON t.id = e.phone_id
+	LEFT OUTER JOIN shop f ON t.current_shop_id = f.id
+	LEFT OUTER JOIN saler g ON e.saler_id = g.id
+	LEFT OUTER JOIN supplier h ON a.supplier_id = h.id
+	<include refid="conditions" />
+  </select>
+</mapper>

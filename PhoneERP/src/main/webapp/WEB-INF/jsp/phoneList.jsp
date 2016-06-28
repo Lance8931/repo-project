@@ -69,9 +69,9 @@
 		    			</td>
 		    			<td width="150px" align="right">实际销售金额:</td>
 		    			<td colspan="4">
-		    				<input  type="text" class="easyui-numberbox" style="width:120px;" prompt="从" name="saleStartPrice" />
+		    				<input  type="text" class="easyui-numberbox" style="width:120px;" prompt="从" name="billStartPrice" />
 		    				至
-		    				<input  type="text" class="easyui-numberbox" style="width:120px;" prompt="止" name="saleEndPrice" />
+		    				<input  type="text" class="easyui-numberbox" style="width:120px;" prompt="止" name="billEndPrice" />
 		    				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px" onclick="query()">查询</a>
 		    				<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px" onclick="reset()">重置</a>
 		    			</td>
@@ -85,6 +85,7 @@
 		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newPur()">采购</a>
 		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newAllot()">调拨</a>
 		        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newOrders()">销售</a>
+		    	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="downloadExcel()">下载</a>
 		    </div>
 		</div>
 	</div>
@@ -579,6 +580,10 @@
 		
 		function reset(){
 			$("#phoneList_queryForm").form('reset');
+		}
+		
+		function downloadExcel(){
+			window.location="http://localhost:8080/PhoneERP/phone/download?"+$("#phoneList_queryForm").serialize();
 		}
 		
     </script>

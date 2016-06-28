@@ -23,6 +23,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Repository;
 
 /**
  *
@@ -31,6 +32,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @date 2016年6月28日下午4:37:02
  * @version 1.0
  */
+@Repository
 public class ExcelExportController {
 	/**
 	 * 导出Excel数据 exportData
@@ -45,13 +47,11 @@ public class ExcelExportController {
 	 * @throws Exception
 	 *             文件输出异常
 	 */
-	public String exportData(List<?> queryData, Map<String, String> tableHead,
-			String fileName, HttpServletRequest request) throws Exception {
+	public String exportData(List<?> queryData, Map<String, String> tableHead, String fileName,
+			HttpServletRequest request) throws Exception {
 		Workbook wb = new XSSFWorkbook();
 		writeToExcel(queryData, tableHead, fileName, wb);
-		String templateFilePath = request.getServletContext().getRealPath(
-				"/resources/")
-				+ "Template.xls";
+		String templateFilePath = request.getServletContext().getRealPath("/resources/") + "Template.xls";
 		File targetFile = new File(templateFilePath);
 		FileOutputStream outputStream = null;
 		try {
@@ -71,8 +71,7 @@ public class ExcelExportController {
 	}
 
 	// 将数据写入到Excel中
-	public void writeToExcel(List<?> queryData, Map<String, String> tableHead,
-			String fileName, Workbook wb) {
+	public void writeToExcel(List<?> queryData, Map<String, String> tableHead, String fileName, Workbook wb) {
 		// 获取易于处理表头
 		String[] tabHead = getTabHead(tableHead);
 		// 创建sheet表单
@@ -96,8 +95,7 @@ public class ExcelExportController {
 	}
 
 	// 将对应数据读取到excel中
-	public static String writeToExcel(List<?> queryData, String[] tableHead,
-			Workbook wb, Sheet sheet) {
+	public static String writeToExcel(List<?> queryData, String[] tableHead, Workbook wb, Sheet sheet) {
 		try {
 			CellStyle cellStyle = getCellStyle(wb);
 			Map<String, String> map = null;
@@ -117,8 +115,7 @@ public class ExcelExportController {
 	}
 
 	// 设置表头信息
-	public static void setTableHead(Row headRow, Map<String, String> tableHead,
-			Workbook wb, Sheet sheet) {
+	public static void setTableHead(Row headRow, Map<String, String> tableHead, Workbook wb, Sheet sheet) {
 		CellStyle cellStyle = getCellStyle(wb);
 		Font font = wb.createFont();
 		font.setFontName("微软雅黑");
@@ -161,14 +158,13 @@ public class ExcelExportController {
 	 *             如果调用属性的 setter 方法失败
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static Map convertBean(Object bean) throws IntrospectionException,
-			IllegalAccessException, InvocationTargetException {
+	public static Map convertBean(Object bean)
+			throws IntrospectionException, IllegalAccessException, InvocationTargetException {
 		Class type = bean.getClass();
 		Map returnMap = new HashMap();
 		BeanInfo beanInfo = Introspector.getBeanInfo(type);
 
-		PropertyDescriptor[] propertyDescriptors = beanInfo
-				.getPropertyDescriptors();
+		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 		for (int i = 0; i < propertyDescriptors.length; i++) {
 			PropertyDescriptor descriptor = propertyDescriptors[i];
 			String propertyName = descriptor.getName();

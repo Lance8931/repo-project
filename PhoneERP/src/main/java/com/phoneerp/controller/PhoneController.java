@@ -31,6 +31,7 @@ import com.phoneerp.bean.Allot;
 import com.phoneerp.bean.ExcelProperties;
 import com.phoneerp.bean.Orders;
 import com.phoneerp.bean.Phone;
+import com.phoneerp.bean.PhoneExportBean;
 import com.phoneerp.bean.PhoneImportBean;
 import com.phoneerp.bean.Purchase;
 import com.phoneerp.bean.ResultMsg;
@@ -38,6 +39,7 @@ import com.phoneerp.bean.SearchPhoneListBean;
 import com.phoneerp.dao.AllotMapper;
 import com.phoneerp.dao.BrandMapper;
 import com.phoneerp.dao.ColorMapper;
+import com.phoneerp.dao.ExcelExportMapper;
 import com.phoneerp.dao.ModelMapper;
 import com.phoneerp.dao.OrdersMapper;
 import com.phoneerp.dao.PhoneMapper;
@@ -83,6 +85,9 @@ public class PhoneController {
 
 	@Autowired
 	private HttpServletRequest request;
+
+	@Autowired
+	private ExcelExportMapper excelExportMapper;
 
 	@RequestMapping("/imeiNoCheck")
 	@ResponseBody
@@ -135,11 +140,9 @@ public class PhoneController {
 	 * @date 2016年5月18日下午3:59:57
 	 * @author siping-L.J.H
 	 */
-	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST,
-			RequestMethod.GET })
+	@RequestMapping(value = "/getPhoneList", method = { RequestMethod.POST, RequestMethod.GET })
 	@ResponseBody
-	public Map<String, Object> getPhoneList(
-			SearchPhoneListBean searchPhoneListBean, Long page, Long rows) {
+	public Map<String, Object> getPhoneList(SearchPhoneListBean searchPhoneListBean, Long page, Long rows) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("searchBean", searchPhoneListBean);
@@ -216,8 +219,7 @@ public class PhoneController {
 
 	@RequestMapping(value = "/importPhones", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultMsg importPurPhones(@RequestParam MultipartFile importExcel)
-			throws Exception {
+	public ResultMsg importPurPhones(@RequestParam MultipartFile importExcel) throws Exception {
 		// try {
 		// Thread.sleep(5000);
 		// System.out.println("sdfsd");
@@ -230,8 +232,7 @@ public class PhoneController {
 
 	@RequestMapping(value = "/valiPhones", method = RequestMethod.POST)
 	@ResponseBody
-	public ResultMsg valiPhoneDatas(@RequestParam MultipartFile importExcel)
-			throws Exception {
+	public ResultMsg valiPhoneDatas(@RequestParam MultipartFile importExcel) throws Exception {
 		// try {
 		// Thread.sleep(5000);
 		// System.out.println("sdfsdf");
@@ -243,24 +244,24 @@ public class PhoneController {
 	}
 
 	@RequestMapping("/download")
-	public ResponseEntity<byte[]> download(String type) throws Exception {
+	public ResponseEntity<byte[]> download(SearchPhoneListBean searchPhoneListBean, String type) throws Exception {
 		HttpHeaders headers = new HttpHeaders();
 		String filePath = null;
-		filePath = excelExportController.exportData(queryData, tableHead,
-				fileName, request);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("searchBean", searchPhoneListBean);
+		List<PhoneExportBean> queryData = excelExportMapper.getList(paramMap);
+		filePath = excelExportController.exportData(queryData, new ExcelHeadConfig().getPhonesExcelHead(), "手机列表",
+				request);
 		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		headers.setContentDispositionFormData("attachment", new String(
-				"模板下载.xls".getBytes("UTF-8"), "iso-8859-1"));
-		return new ResponseEntity<byte[]>(
-				FileUtils.readFileToByteArray(new File(filePath)), headers,
+		headers.setContentDispositionFormData("attachment", new String("模板下载.xlsx".getBytes("UTF-8"), "iso-8859-1"));
+		return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(new File(filePath)), headers,
 				HttpStatus.CREATED);
 	}
 
 	private ResultMsg validata(MultipartFile multipartFile) throws Exception {
 		ExcelProperties properties = null;
 		try {
-			properties = new ExcelProperties(multipartFile.getInputStream(),
-					multipartFile.getOriginalFilename(), 0);
+			properties = new ExcelProperties(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), 0);
 			for (int j = 1, lastRowNum = properties.getLastRowNum(); j <= lastRowNum; j++) {
 				Row row = properties.getSheet().getRow(j);
 				if (null != row) {
@@ -268,32 +269,27 @@ public class PhoneController {
 						String cellValue = getCellValue(row.getCell(i));
 						if (i == 1) {
 							if (phoneMapper.getCountByImeiNo(cellValue) > 0) {
-								return new ResultMsg(false, "第" + (j + 1)
-										+ "行手机串号：" + cellValue + "已存在。");
+								return new ResultMsg(false, "第" + (j + 1) + "行手机串号：" + cellValue + "已存在。");
 							}
 						}
 						if (i == 2) {
 							if (colorMapper.getCountByColorName(cellValue) <= 0) {
-								return new ResultMsg(false, "第" + (j + 1)
-										+ "行手机颜色：" + cellValue + "不存在。");
+								return new ResultMsg(false, "第" + (j + 1) + "行手机颜色：" + cellValue + "不存在。");
 							}
 						}
 						if (i == 3) {
 							if (brandMapper.getCountByBrandName(cellValue) <= 0) {
-								return new ResultMsg(false, "第" + (j + 1)
-										+ "行手机牌子：" + cellValue + "不存在。");
+								return new ResultMsg(false, "第" + (j + 1) + "行手机牌子：" + cellValue + "不存在。");
 							}
 						}
 						if (i == 4) {
 							if (modelMapper.getCountByModelName(cellValue) <= 0) {
-								return new ResultMsg(false, "第" + (j + 1)
-										+ "行手机型号：" + cellValue + "不存在。");
+								return new ResultMsg(false, "第" + (j + 1) + "行手机型号：" + cellValue + "不存在。");
 							}
 						}
 						if (i == 6) {
 							if (shopMapper.getCountByShopName(cellValue) <= 0) {
-								return new ResultMsg(false, "第" + (j + 1)
-										+ "行所属店铺：" + cellValue + "不存在。");
+								return new ResultMsg(false, "第" + (j + 1) + "行所属店铺：" + cellValue + "不存在。");
 							}
 						}
 					}
@@ -305,8 +301,7 @@ public class PhoneController {
 		return new ResultMsg(true, null);
 	}
 
-	private ResultMsg excelImport(MultipartFile multipartFiles)
-			throws Exception {
+	private ResultMsg excelImport(MultipartFile multipartFiles) throws Exception {
 		ExcelProperties properties = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<PhoneImportBean> list = new ArrayList<PhoneImportBean>();
@@ -314,24 +309,20 @@ public class PhoneController {
 		map.put("tableName", tempTableName);
 		try {
 			phoneMapper.createTable(tempTableName);
-			properties = new ExcelProperties(multipartFiles.getInputStream(),
-					multipartFiles.getOriginalFilename(), 0);
+			properties = new ExcelProperties(multipartFiles.getInputStream(), multipartFiles.getOriginalFilename(), 0);
 			for (int j = 1, lastRowNum = properties.getLastRowNum(); j <= lastRowNum; j++) {
 				Row row = properties.getSheet().getRow(j);
 				if (null != row) {
 					PhoneImportBean importBean = null;
 					for (int i = 0, totalCellNum = row.getLastCellNum(); i < totalCellNum; i++) {
 						Cell cell = row.getCell(i, Row.RETURN_BLANK_AS_NULL);// 空白的单元格返回null
-						CellValue cellValue = properties.getFormulaEvaluator()
-								.evaluate(cell);
+						CellValue cellValue = properties.getFormulaEvaluator().evaluate(cell);
 						if (null != cell && cellValue != null) {
 							if (null != importBean) {
-								importBean = setPhoneExportBean(importBean, i,
-										getCellValue(cell));
+								importBean = setPhoneExportBean(importBean, i, getCellValue(cell));
 							} else {
 								importBean = new PhoneImportBean();
-								importBean = setPhoneExportBean(importBean, i,
-										getCellValue(cell));
+								importBean = setPhoneExportBean(importBean, i, getCellValue(cell));
 							}
 						}
 					}
@@ -364,8 +355,7 @@ public class PhoneController {
 		return new ResultMsg(false, "导入失败");
 	}
 
-	private PhoneImportBean setPhoneExportBean(PhoneImportBean importBean,
-			int i, String value) {
+	private PhoneImportBean setPhoneExportBean(PhoneImportBean importBean, int i, String value) {
 		switch (i) {
 		case 0:
 			importBean.setPurTime(value);
@@ -403,11 +393,9 @@ public class PhoneController {
 		case Cell.CELL_TYPE_NUMERIC:
 			if (DateUtil.isCellDateFormatted(cell)) {
 				// 如果是date类型则 ，获取该cell的date值
-				value = DateFormat.getDateInstance().format(
-						DateUtil.getJavaDate(cell.getNumericCellValue()));// 返回算好的值
+				value = DateFormat.getDateInstance().format(DateUtil.getJavaDate(cell.getNumericCellValue()));// 返回算好的值
 			} else {
-				value = String.valueOf(Double.valueOf(
-						cell.getNumericCellValue()).intValue());
+				value = String.valueOf(Double.valueOf(cell.getNumericCellValue()).intValue());
 			}
 			break;
 		case Cell.CELL_TYPE_BLANK:

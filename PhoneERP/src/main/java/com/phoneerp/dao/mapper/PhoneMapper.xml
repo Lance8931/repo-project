@@ -257,11 +257,11 @@
       <if test="searchBean.purEndPrice != null" >
         and  t.pur_price &lt;= #{searchBean.purEndPrice}
       </if>
-      <if test="searchBean.saleStartPrice != null" >
-        and  t.sale_price &gt;= #{searchBean.saleStartPrice}
+      <if test="searchBean.billStartPrice != null" >
+        and  d.bill_price &gt;= #{searchBean.billStartPrice}
       </if>
-      <if test="searchBean.saleEndPrice != null" >
-        and  t.sale_price &lt;= #{searchBean.saleEndPrice}
+      <if test="searchBean.billEndPrice != null" >
+        and  d.bill_price &lt;= #{searchBean.billEndPrice}
       </if>
     </trim>
   </sql>
