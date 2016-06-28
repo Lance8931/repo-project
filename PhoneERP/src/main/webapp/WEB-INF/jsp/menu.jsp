@@ -8,7 +8,6 @@
 	    <link rel="stylesheet" type="text/css" href="../resources/themes/icon.css">
 	    <link rel="stylesheet" type="text/css" href="../resources/themes/color.css">
 		<script type="text/javascript" src="../resources/jquery-2.2.1.min.js" charset="utf-8" ></script>
-		<script type="text/javascript" src="../resources/jquery.form.js" charset="utf-8" ></script>
 		<script type="text/javascript" src="../resources/jquery.easyui.min.js" charset="utf-8" ></script>
 		<script type="text/javascript" src="../resources/easyui-lang-zh_CN.js" charset="utf-8"></script>
 	</head>
@@ -23,14 +22,8 @@
 	<h3>商品</h3>
 	<a href="../admin/showPhone">手机</a>
 	<br /><br /><br />
-	<!-- <form id="phone_import_form1" method="post" enctype="multipart/form-data">
-		<input type="file" name="importExcel" />
-		<br>
-		<button type="button" onclick="tijiao()">导入</button>
-	</form> -->
 	
-	
-	<form id="phone_import_form" method="post">
+	<form id="phone_import_form" method="post" enctype="multipart/form-data">
         <table cellpadding="5">
             <tr>
                 <td><input name="importExcel" class="easyui-filebox" data-options="prompt:'请点击右侧的选择文件，选择一个文件...',width:'300px',buttonText: '选择文件'"></input></td>
@@ -59,20 +52,22 @@
                 title:'导入数据',
                 msg:'正在验证数据。。。。。'
             });
-			$("#phone_import_form").ajaxSubmit({
+			$("#phone_import_form").form('submit',{
 				url:'../phone/valiPhones',
 				success:function(result){
 					$.messager.progress('close');
+					result = eval('('+result+')');
 					if(result.success){
 						$.messager.progress({
 			                title:'导入数据',
 			                msg:'正在导入数据。。。。。'
 			            });
-						$("#phone_import_form").ajaxSubmit({
+						$("#phone_import_form").form('submit',{
 							url:'../phone/importPhones',
 							success:function(result){
 								$.messager.progress('close');
-								$("#phone_import_form").resetForm();
+								$("#phone_import_form").form('reset');
+								result = eval('('+result+')');
 								if(result.success){
 									$.messager.alert(
 			                    			'提示信息',
@@ -89,7 +84,7 @@
 							}
 						});
 					}else{
-						$("#phone_import_form").resetForm();
+						$("#phone_import_form").form('reset');
 						$.messager.alert(
                     			'提示信息',
                     			result.msg,
@@ -98,7 +93,7 @@
 					}
 				},
 				error: function(){
-					$("#phone_import_form").resetForm();
+					$("#phone_import_form").form('reset');
 					$.messager.progress('close');
 					$.messager.alert(
                 			'提示信息',
