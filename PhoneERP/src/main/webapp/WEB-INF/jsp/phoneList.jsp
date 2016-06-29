@@ -237,7 +237,7 @@
     	var supplierDatas,brandDatas,shopDatas,salerDatas,modelDatas,colorDatas;
     	$(function(){
     		getJSONDatas();
-    		setTimeout("initGrid()",3000);
+    		setTimeout("initGrid()",5000);
     	});
     	
         var url;
