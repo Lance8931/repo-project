@@ -237,7 +237,6 @@
     	var supplierDatas,brandDatas,shopDatas,salerDatas,modelDatas,colorDatas;
     	$(function(){
     		getJSONDatas();
-    		setTimeout("initGrid()",5000);
     	});
     	
         var url;
@@ -450,52 +449,58 @@
     	        			data:result.rows
     	        		});
     					brandDatas = result.rows;
+    					$.getJSON("getColorList",
+    		      				  function(result){
+    				      			$('#ccColor').combobox({
+    				        			valueField:'id',
+    				        			textField:'colorName',
+    				        			data:result.rows
+    				        		});
+    		      					colorDatas = result.rows;
+    		      					$.getJSON("getModelList",
+    		    		      				  function(result){
+    		    				      			$('#ccModel').combobox({
+    		    				        			valueField:'id',
+    		    				        			textField:'modelName',
+    		    				        			data:result.rows
+    		    				        		});
+    		    		      					modelDatas = result.rows;
+    		    		      					$.getJSON("getShopList",
+    		    		    		    				  function(result){
+    		    		    				      			$('#ccShop').combobox({
+    		    		    				        			valueField:'id',
+    		    		    				        			textField:'shopName',
+    		    		    				        			data:result.rows
+    		    		    				        		});
+    		    		    		    					shopDatas = result.rows;
+    		    		    		    					$.getJSON("getSupplierList",
+    		      		    		    		  				  function(result){
+    		      		    		    				      			$('#ccSupplier').combobox({
+    		      		    		    				        			valueField:'id',
+    		      		    		    				        			textField:'supplierName',
+    		      		    		    				        			data:result.rows
+    		      		    		    				        		});
+    		      		    		    		  						supplierDatas = result.rows;
+	    		      		    		    		  					$.getJSON("getSalerList",
+	    	    		      		    		    		    				  function(result){
+	    	    		      		    		    		  		      			$('#ccSaler').combobox({
+	    	    		      		    		    		  		        			valueField:'id',
+	    	    		      		    		    		  		        			textField:'salerName',
+	    	    		      		    		    		  		        			data:result.rows
+	    	    		      		    		    		  		        		});
+	    	    		      		    		    		    					salerDatas = result.rows;
+	    	    		      		    		    		    					initGrid();
+	    	    		      		    		    		    		});
+    		      		    		    		  			});
+    		      		    		    		      		
+    		    		    		    		});
+    		    		    		      		
+    		    		      		});
+    		    		      		
+    		      		});
+    		      		
     		});
-      		$.getJSON("getColorList",
-      				  function(result){
-		      			$('#ccColor').combobox({
-		        			valueField:'id',
-		        			textField:'colorName',
-		        			data:result.rows
-		        		});
-      					colorDatas = result.rows;
-      		});
-      		$.getJSON("getModelList",
-      				  function(result){
-		      			$('#ccModel').combobox({
-		        			valueField:'id',
-		        			textField:'modelName',
-		        			data:result.rows
-		        		});
-      					modelDatas = result.rows;
-      		});
-      		$.getJSON("getShopList",
-    				  function(result){
-		      			$('#ccShop').combobox({
-		        			valueField:'id',
-		        			textField:'shopName',
-		        			data:result.rows
-		        		});
-    					shopDatas = result.rows;
-    		});
-      		$.getJSON("getSupplierList",
-  				  function(result){
-		      			$('#ccSupplier').combobox({
-		        			valueField:'id',
-		        			textField:'supplierName',
-		        			data:result.rows
-		        		});
-  						supplierDatas = result.rows;
-  			});
-      		$.getJSON("getSalerList",
-    				  function(result){
-  		      			$('#ccSaler').combobox({
-  		        			valueField:'id',
-  		        			textField:'salerName',
-  		        			data:result.rows
-  		        		});
-    					salerDatas = result.rows;
-    		});
+      		
     	}
         
        
