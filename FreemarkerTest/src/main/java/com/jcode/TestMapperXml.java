@@ -25,10 +25,10 @@ public class TestMapperXml {
 	public static void main(String[] args) {
 		DBTable dbTable = new DBTable("article", "Article");
 		String javaFileName = dbTable.getJavaBeanName();
-		String packageName = "com.jcode";
+		String packageName = "com.jcode.";
 		String mapperJavaFileName = javaFileName + "Mapper";
 		String xmlFileName = mapperJavaFileName;
-		String nameSpace = "com.jcode.dao";
+		String nameSpace = "com.jcode.dao." + mapperJavaFileName;
 
 		Configuration cfg = new Configuration();
 		try {
