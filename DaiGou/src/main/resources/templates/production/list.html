@@ -5,69 +5,52 @@
   <meta name="renderer" content="webkit" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>开始使用layui</title>
+  <title>代购</title>
   <link rel="stylesheet" th:href="@{/layui/css/layui.css}" />
 </head>
 <body style="margin:20px 20px 20px 20px">
-<button class="layui-btn">
+<button class="layui-btn" onclick="goAdd()">
   <i class="layui-icon">&#xe608;</i> 添加
 </button> 
 <table class="layui-hide" id="test" lay-filter="demo"></table>
 
 <script type="text/html" id="barDemo">
-  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+  <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail">详情</a>
+  <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="uploadphoto">上传图片</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deletephoto">删除图片</a>
   <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script th:src="@{/layui/layui.js}"></script>
 <script>
+var tableIns;
 layui.use('table', function(){
   var table = layui.table;
-  table.render({
+  tableIns = table.render({
     elem: '#test'
     ,url: '/production/'
     ,request: {
     	pageName: 'currentPage'
     	,limitName: 'pageSize'
     }
+    ,response: {
+  	  countName: 'totalNum' //数据总数的字段名称，默认：count
+  	 ,dataName: 'items' //数据列表的字段名称，默认：data
+  	}  
     ,cols: [[
       {type:'numbers'}
       ,{type:'checkbox'}
-      ,{field:'username', width:100, title: '产品名称'}
-      ,{field:'sex', width:100, title: '牌子-中文'}
-      ,{field:'city', width:100, title: '牌子-英文'}
-      ,{field:'sign', title: '规格', width: 100}
-      ,{field:'experience', width:100, title: '原价(HKD)'}
-      ,{field:'score', width:130, title: '购买价格(HKD)'}
-      ,{field:'classify', width:100, title: '购买地址'}
-      ,{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}
+      ,{field:'proName', width:200, title: '产品名称', align:'center'}
+      ,{field:'zhName', width:100, title: '牌子-中文', align:'center'}
+      ,{field:'enName', width:100, title: '牌子-英文', align:'center'}
+      ,{field:'spec', width: 100, title: '规格', align:'center'}
+      ,{field:'orgiPrice', width:100, title: '原价(HKD)', align:'center'}
+      ,{field:'buyPrice', width:130, title: '购买价格(HKD)', align:'center'}
+      ,{field:'buyAddress', width:100, title: '购买地址', align:'center'}
+      ,{fixed: 'right', width:300, title: '操作', align:'center', toolbar: '#barDemo'}
     ]]
     ,page: true
-    ,data: [{
-        "id": "10001"
-        ,"username": "杜甫"
-        ,"email": "xianxin@layui.com"
-        ,"sex": "男"
-        ,"city": "浙江杭州"
-        ,"sign": "人生恰似一场修行"
-        ,"experience": "116"
-        ,"ip": "192.168.0.8"
-        ,"logins": "108"
-        ,"joinTime": "2016-10-14"
-      }, {
-        "id": "10002"
-        ,"username": "李白"
-        ,"email": "xianxin@layui.com"
-        ,"sex": "男"
-        ,"city": "浙江杭州"
-        ,"sign": "人生恰似一场修行"
-        ,"experience": "12"
-        ,"ip": "192.168.0.8"
-        ,"logins": "106"
-        ,"joinTime": "2016-10-14"
-        ,"LAY_CHECKED": true
-      }]
-    });
+  });
   //监听表格复选框选择
   table.on('checkbox(demo)', function(obj){
     console.log(obj)
@@ -87,6 +70,21 @@ layui.use('table', function(){
     }
   });
 });
+
+  function goAdd(){
+    layer.open({
+      type: 2,
+      title: '产品信息添加',
+      area: ['800px', '550px'],
+      content: '/production/add'
+    });
+  }
+  
+  function reloadList(){
+    tableIns.reload({
+      url: '/production/'
+    });
+  }
 </script> 
 </body>
 </html>
